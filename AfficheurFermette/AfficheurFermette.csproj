@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -93,6 +94,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\atelier.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="atelier.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="repas.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="actu.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="educateur.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="free-vector-birthday-icon_102051_Birthday_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="share.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="balloon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cake.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="paint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="lineseparation.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
