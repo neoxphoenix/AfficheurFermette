@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AfficheurFermette"
         mc:Ignorable="d"
-        Title="Ecran Fermette" Height="650" Width="1000" Background="Cyan" ResizeMode="CanResizeWithGrip">
+        Title="Ecran Fermette" Height="650" Width="1000" Background="Cyan" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
 
     <Grid>
         <Grid.Background>

@@ -31,10 +31,10 @@ namespace AfficheurFermette
             InitializeComponent();
 			string[] stab = sChConn.Split('=');
 			string[] stab2 = stab[2].Split(';');
+			OpenFileDialog dlgChargerDB = new OpenFileDialog();
 			if (!System.IO.File.Exists(stab2[0]))
 			{
 				bool boucle = false;
-				OpenFileDialog dlgChargerDB = new OpenFileDialog();
 				do
 				{
 					if (MessageBox.Show("La base de donnée par défaut est introuvable.\nSouhaitez-vous indiquer un autre emplacement ?", "Base de données introuvable", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
@@ -56,6 +56,31 @@ namespace AfficheurFermette
 				}
 				while (boucle);
 			}
+			if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
+			{
+
+			}
 		}
-    }
+
+			private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			this.WindowStyle = WindowStyle.None;
+			this.WindowState = WindowState.Maximized;
+		}
+
+		private void Window_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Return)
+			{
+				// On veut modifier les données => Lancement d'un nouvelle fenêtre
+				MessageBox.Show("Test");
+			}
+			else if (e.Key == Key.Escape)
+			{
+				// On veut quitter le programme
+				if (MessageBox.Show("Êtes-vous sûrs de vouloir fermer l'application ?", "Confirmer", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+					this.Close();
+			}
+		}
+	}
 }
