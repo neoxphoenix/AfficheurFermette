@@ -66,7 +66,7 @@
                     <DropShadowEffect/>
                 </Label.Effect>
             </Label>
-            <Image Source="atelier.jpeg" Stretch="Fill" Grid.Column="2"/>
+            <Image Source="{Binding Path=\Images\atelier.jpeg}"  Stretch="Fill" Grid.Column="2"/>
             <Label Content="Ateliers" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Background="#00000000" Foreground="#FF7A62E6" Grid.Column="2">
                 <Label.Effect>
                     <DropShadowEffect/>

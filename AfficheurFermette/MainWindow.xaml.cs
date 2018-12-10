@@ -14,9 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 
-using Projet_AFFICHEURFERMETTE.MDF.Classes;
-using Projet_AFFICHEURFERMETTE.MDF.Acces;
-using Projet_AFFICHEURFERMETTE.MDF.Gestion;
+//using Projet_AFFICHEURFERMETTE.MDF.Classes;
+//using Projet_AFFICHEURFERMETTE.MDF.Acces;
+//using Projet_AFFICHEURFERMETTE.MDF.Gestion;
+
 
 namespace AfficheurFermette
 {

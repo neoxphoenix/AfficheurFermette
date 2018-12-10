@@ -106,9 +106,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\atelier.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="atelier.jpeg" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +134,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="lineseparation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
