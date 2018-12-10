@@ -18,7 +18,6 @@ using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 
-// HElloo
 
 namespace AfficheurFermette
 {
