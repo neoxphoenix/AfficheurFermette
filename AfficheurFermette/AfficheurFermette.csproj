@@ -36,16 +36,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AFacces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="AFacces">
       <HintPath>..\AFacces.dll</HintPath>
     </Reference>
-    <Reference Include="AFclasses, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="AFclasses">
       <HintPath>..\AFclasses.dll</HintPath>
     </Reference>
-    <Reference Include="AFgestion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="AFgestion">
       <HintPath>..\AFgestion.dll</HintPath>
     </Reference>
     <Reference Include="System" />
