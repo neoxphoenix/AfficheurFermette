@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="AFacces">
+      <HintPath>..\AFacces.dll</HintPath>
+    </Reference>
+    <Reference Include="AFclasses">
+      <HintPath>..\AFclasses.dll</HintPath>
+    </Reference>
+    <Reference Include="AFgestion">
+      <HintPath>..\AFgestion.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

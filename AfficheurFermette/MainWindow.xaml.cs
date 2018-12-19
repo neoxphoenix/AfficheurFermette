@@ -60,6 +60,7 @@ namespace AfficheurFermette
 			}
 			if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
 			{
+                // tests
                 List<C_ViewMenuDuJour> menus = new G_ViewMenuDuJour(sChConn).Lire("");
                 C_ViewMenuDuJour menu = new G_ViewMenuDuJour(sChConn).Lire_ID(1);
                 menu = new G_ViewMenuDuJour(sChConn).Lire_Date(new DateTime(2018, 12, 12));
