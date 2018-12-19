@@ -26,6 +26,11 @@ namespace ShowableData
             Role = OriPersonne.Role ? "éducateur" : "bénéficiaire";
         }
 
+        public C_Personne GetOriginal()
+        {
+            return new C_Personne(ID, Nom, Prenom, DateTime.Parse(DateNaissance), Photo, Role == "éducateur" ? true : false);
+        }
+
         #region Accesseurs
         public int ID
         {

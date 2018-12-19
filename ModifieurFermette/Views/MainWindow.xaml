@@ -38,7 +38,8 @@
                         CanUserSortColumns="True"
                         CanUserAddRows="False"
                         CanUserDeleteRows="False"
-                        CanUserResizeColumns="False"          
+                        CanUserResizeColumns="False"    
+                        IsReadOnly="True"
                         AutoGenerateColumns="False"
                         materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                         materialDesign:DataGridAssist.ColumnHeaderPadding="8"
@@ -47,7 +48,7 @@
                                 <DataGridCheckBoxColumn
                                 Binding="{Binding IsSelected}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto">
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto" IsReadOnly="False">
                                     <DataGridCheckBoxColumn.Header>
                                         <!--padding to allow hit test to pass thru for sorting -->
                                         <Border
@@ -78,7 +79,7 @@
                                 MaxLength="100"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
                                 <materialDesign:MaterialDataGridTextColumn
-                                Binding="{Binding Type}"
+                                Binding="{Binding TypeEvenement}"
                                 Header="Type"
                                 MaxLength="15"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
@@ -150,7 +151,9 @@
                         ItemsSource="{Binding PersonnesAff}"
                         CanUserSortColumns="True"
                         CanUserAddRows="False"
+                        CanUserDeleteRows="False"
                         CanUserResizeColumns="False"
+                        IsReadOnly="True"
                         AutoGenerateColumns="False"
                         materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                         materialDesign:DataGridAssist.ColumnHeaderPadding="8"
@@ -159,7 +162,7 @@
                                 <DataGridCheckBoxColumn
                                 Binding="{Binding IsSelected}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto">
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto" IsReadOnly="False">
                                     <DataGridCheckBoxColumn.Header>
                                         <!--padding to allow hit test to pass thru for sorting -->
                                         <Border
@@ -262,7 +265,9 @@
                         ItemsSource="{Binding MenusAff}"
                         CanUserSortColumns="True"
                         CanUserAddRows="False"
+                        CanUserDeleteRows="False"
                         CanUserResizeColumns="False"
+                        IsReadOnly="True"
                         AutoGenerateColumns="False"
                         materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                         materialDesign:DataGridAssist.ColumnHeaderPadding="8"
@@ -271,7 +276,7 @@
                             <DataGridCheckBoxColumn
                                 Binding="{Binding IsSelected}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto">
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto"  IsReadOnly="False">
                                 <DataGridCheckBoxColumn.Header>
                                     <!--padding to allow hit test to pass thru for sorting -->
                                     <Border
