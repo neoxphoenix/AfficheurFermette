@@ -13,13 +13,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.IO;
+using Microsoft.Win32;
+using System.Collections.ObjectModel;
 
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
-using Microsoft.Win32;
-using System.Collections.ObjectModel;
+using ShowableData;
 
 namespace ModifieurFermette
 {
@@ -29,9 +29,12 @@ namespace ModifieurFermette
 	public partial class MainWindow : Window
 	{
         private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\picho\Nextcloud\Cours\Informatique\2e bac\POO\Q2\db\Location_DVD.mdf;Integrated Security=True";
-        public ObservableCollection<C_ViewMenuDuJour> Menus;
-        public ObservableCollection<C_ViewEvenement> Evenements;
-        public ObservableCollection<C_Personne> Personnes;
+        public ObservableCollection<ShowViewMenuDuJour> MenusAff;
+        public ObservableCollection<ShowViewEvenement> EvenementsAff;
+        public ObservableCollection<ShowPersonne> PersonnesAff;
+        public List<C_ViewMenuDuJour> Menus;
+        public List<C_ViewEvenement> Evenements;
+        public List<C_Personne> Personnes;
 
         public MainWindow()
 		{
@@ -73,25 +76,25 @@ namespace ModifieurFermette
         private void ChargerDonnees()
         {
             // Extraction des données de la DB
-            List<C_ViewMenuDuJour> TmpMenus = new G_ViewMenuDuJour(sChConn).Lire("");
-            List<C_ViewEvenement> TmpEvenements = new G_ViewEvenement(sChConn).Lire("");
-            List<C_Personne> TmpPersonnes = new G_Personne(sChConn).Lire("");
+            Menus = new G_ViewMenuDuJour(sChConn).Lire("");
+            Evenements = new G_ViewEvenement(sChConn).Lire("");
+            Personnes = new G_Personne(sChConn).Lire("");
 
             // Placement dans des Oservables
-            Menus = new ObservableCollection<C_ViewMenuDuJour>();
-            Evenements = new ObservableCollection<C_ViewEvenement>();
-            Personnes = new ObservableCollection<C_Personne>();
-            foreach (C_ViewMenuDuJour TmpMenu in TmpMenus)
-            { Menus.Add(TmpMenu); }
-            foreach (C_ViewEvenement TmpEvenement in TmpEvenements)
-            { Evenements.Add(TmpEvenement); }
-            foreach (C_Personne TmpPersonne in TmpPersonnes)
-            { Personnes.Add(TmpPersonne); }
+            MenusAff = new ObservableCollection<ShowViewMenuDuJour>();
+            EvenementsAff = new ObservableCollection<ShowViewEvenement>();
+            PersonnesAff = new ObservableCollection<ShowPersonne>();
+            foreach (C_ViewMenuDuJour TmpMenu in Menus)
+            { MenusAff.Add(new ShowViewMenuDuJour(TmpMenu)); }
+            foreach (C_ViewEvenement TmpEvenement in Evenements)
+            { EvenementsAff.Add(new ShowViewEvenement(TmpEvenement)); }
+            foreach (C_Personne TmpPersonne in Personnes)
+            { PersonnesAff.Add(new ShowPersonne(TmpPersonne)); }
 
             // Mise à jour des DataGrid
-            DGmenus.ItemsSource = Menus;
-            DGevenements.ItemsSource = Evenements;
-            dgpersonnes.ItemsSource = Personnes;
+            DGmenus.ItemsSource = MenusAff;
+            DGevenements.ItemsSource = EvenementsAff;
+            dgpersonnes.ItemsSource = PersonnesAff;
         }
     }
 }

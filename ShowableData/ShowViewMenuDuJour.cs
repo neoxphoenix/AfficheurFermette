@@ -16,7 +16,7 @@ namespace ShowableData
         private string _dNom;
         #endregion
 
-        ShowViewMenuDuJour(C_ViewMenuDuJour OriViewMenuDuJour)
+        public ShowViewMenuDuJour(C_ViewMenuDuJour OriViewMenuDuJour)
         {
             ID = OriViewMenuDuJour.ID;
             Date = OriViewMenuDuJour.Date.ToShortDateString();

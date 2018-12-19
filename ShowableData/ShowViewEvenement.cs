@@ -5,7 +5,7 @@ using Projet_AFFICHEURFERMETTE.MDF.Classes;
 
 namespace ShowableData
 {
-    class ShowViewEvenement
+    public class ShowViewEvenement
     {
         #region Données membres
         private int _ID;
@@ -17,7 +17,7 @@ namespace ShowableData
         private string _Description;
         #endregion
 
-        ShowViewEvenement(C_ViewEvenement OriViewEvenement)
+        public ShowViewEvenement(C_ViewEvenement OriViewEvenement)
         {
             ID = OriViewEvenement.ID;
             Titre = OriViewEvenement.Titre;

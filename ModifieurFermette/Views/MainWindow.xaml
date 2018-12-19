@@ -34,10 +34,11 @@
      <!-- Datagrid événements -->
                         <DataGrid x:Name="DGevenements"
                         Margin="0 8 0 0"
-                        ItemsSource="{Binding Evenements}"
+                        ItemsSource="{Binding EvenementsAff}"
                         CanUserSortColumns="True"
                         CanUserAddRows="False"
-                        CanUserResizeColumns="False"
+                        CanUserDeleteRows="False"
+                        CanUserResizeColumns="False"          
                         AutoGenerateColumns="False"
                         materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                         materialDesign:DataGridAssist.ColumnHeaderPadding="8"
@@ -84,12 +85,12 @@
                                 <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding DateDebut}"
                                 Header="Début"
-                                MaxLength="10"
+                                MaxLength="22"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
                                 <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding DateFin}"
                                 Header="Fin"
-                                MaxLength="10"
+                                MaxLength="22"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
                             </DataGrid.Columns>
                         </DataGrid>
@@ -146,7 +147,7 @@
     <!-- Datagrid Personnes -->
                         <DataGrid x:Name="dgpersonnes"
                         Margin="0 8 0 0"
-                        ItemsSource="{Binding Personnes}"
+                        ItemsSource="{Binding PersonnesAff}"
                         CanUserSortColumns="True"
                         CanUserAddRows="False"
                         CanUserResizeColumns="False"
@@ -258,7 +259,7 @@
      <!-- Datagrid menus -->
                     <DataGrid x:Name="DGmenus"
                         Margin="0 8 0 0"
-                        ItemsSource="{Binding Menus}"
+                        ItemsSource="{Binding MenusAff}"
                         CanUserSortColumns="True"
                         CanUserAddRows="False"
                         CanUserResizeColumns="False"

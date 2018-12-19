@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShowableData
 {
-    class ShowPersonne
+    public class ShowPersonne
     {
         #region Données membres
         private int _ID;
@@ -16,7 +16,7 @@ namespace ShowableData
         private string _Role;
         #endregion
 
-        ShowPersonne(C_Personne OriPersonne)
+        public ShowPersonne(C_Personne OriPersonne)
         {
             ID = OriPersonne.ID;
             Nom = OriPersonne.Nom;
