@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShowableData
 {
-    public class ShowPersonne
+    public class ShowPersonne : ObservableData
     {
         #region Données membres
         private int _ID;
@@ -14,6 +14,7 @@ namespace ShowableData
         private string _DateNaissance;
         private string _Photo;
         private string _Role;
+        private bool _IsSelected;
         #endregion
 
         public ShowPersonne(C_Personne OriPersonne)
@@ -35,32 +36,81 @@ namespace ShowableData
         public int ID
         {
             get { return _ID; }
-            set { _ID = value; }
+            set {
+                if (this._ID != value)
+                {
+                    this._ID = value;
+                    OnPropertyChanged("ID");
+                }
+            }
         }
         public string Nom
         {
             get { return _Nom; }
-            set { _Nom = value; }
+            set {
+                if (this._Nom != value)
+                {
+                    this._Nom = value;
+                    OnPropertyChanged("Nom");
+                }
+            }
         }
         public string Prenom
         {
             get { return _Prenom; }
-            set { _Prenom = value; }
+            set {
+                if (this._Prenom != value)
+                {
+                    this._Prenom = value;
+                    OnPropertyChanged("Prenom");
+                }
+            }
         }
         public string DateNaissance
         {
             get { return _DateNaissance; }
-            set { _DateNaissance = value; }
+            set
+            {
+                if (this._DateNaissance != value)
+                {
+                    this._DateNaissance = value;
+                    OnPropertyChanged("DateNaissance");
+                }
+            }
         }
         public string Photo
         {
             get { return _Photo; }
-            set { _Photo = value; }
+            set {
+                if (this._Photo != value)
+                {
+                    this._Photo = value;
+                    OnPropertyChanged("Photo");
+                }
+            }
         }
         public string Role
         {
             get { return _Role; }
-            set { _Role = value; }
+            set {
+                if (this._Role != value)
+                {
+                    this._Role = value;
+                    OnPropertyChanged("Role");
+                }
+            }
+        }
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set
+            {
+                if (this._IsSelected != value)
+                {
+                    this._IsSelected = value;
+                    OnPropertyChanged("IsSelected");
+                }
+            }
         }
         #endregion
     }

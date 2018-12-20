@@ -5,7 +5,7 @@ using Projet_AFFICHEURFERMETTE.MDF.Classes;
 
 namespace ShowableData
 {
-    public class ShowViewEvenement
+    public class ShowViewEvenement : ObservableData
     {
         #region Données membres
         private int _ID;
@@ -15,6 +15,7 @@ namespace ShowableData
         private DateTime _DateDebut;
         private DateTime _DateFin;
         private string _Description;
+        private bool _IsSelected;
         #endregion
 
         public ShowViewEvenement(C_ViewEvenement OriViewEvenement)
@@ -63,37 +64,91 @@ namespace ShowableData
         public int ID
         {
             get { return _ID; }
-            set { _ID = value; }
+            set {
+                if (this._ID != value)
+                {
+                    this._ID = value;
+                    OnPropertyChanged("ID");
+                }
+            }
         }
         public string Titre
         {
             get { return _Titre; }
-            set { _Titre = value; }
+            set {
+                if (this._Titre != value)
+                {
+                    this._Titre = value;
+                    OnPropertyChanged("Titre");
+                }
+            }
         }
         public string Lieu
         {
             get { return _Lieu; }
-            set { _Lieu = value; }
+            set {
+                if (this._Lieu != value)
+                {
+                    this._Lieu = value;
+                    OnPropertyChanged("Lieu");
+                }
+            }
         }
         public string TypeEvenement
         {
             get { return _TypeEvenement; }
-            set { _TypeEvenement = value; }
+            set {
+                if (this._TypeEvenement != value)
+                {
+                    this._TypeEvenement = value;
+                    OnPropertyChanged("TypeEvenement");
+                }
+            }
         }
         public DateTime DateDebut
         {
             get { return _DateDebut; }
-            set { _DateDebut = value; }
+            set {
+                if (this._DateDebut != value)
+                {
+                    this._DateDebut = value;
+                    OnPropertyChanged("DateDebut");
+                }
+            }
         }
         public DateTime DateFin
         {
             get { return _DateFin; }
-            set { _DateFin = value; }
+            set {
+                if (this._DateFin != value)
+                {
+                    this._DateFin = value;
+                    OnPropertyChanged("DateFin");
+                }
+            }
         }
         public string Description
         {
             get { return _Description; }
-            set { _Description = value; }
+            set {
+                if (this._Description != value)
+                {
+                    this._Description = value;
+                    OnPropertyChanged("Description");
+                }
+            }
+        }
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set
+            {
+                if (this._IsSelected != value)
+                {
+                    this._IsSelected = value;
+                    OnPropertyChanged("IsSelected");
+                }
+            }
         }
         #endregion
     }

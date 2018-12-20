@@ -20,6 +20,7 @@ using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
+using System.ComponentModel;
 
 namespace ModifieurFermette
 {
@@ -35,6 +36,8 @@ namespace ModifieurFermette
         public List<C_ViewMenuDuJour> Menus;
         public List<C_ViewEvenement> Evenements;
         public List<C_Personne> Personnes;
+
+        private bool IsAllItemsEvenementsSelected, IsAllItemsPersonnesSelected, IsAllItemsMenuDuJourSelected;
 
         public MainWindow()
 		{

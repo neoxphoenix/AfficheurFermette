@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModifieurFermette"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="897"
+        Title="Tableau de bord" Height="600" Width="897"
 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -33,20 +33,27 @@
                     <StackPanel Grid.Column="0" Orientation="Vertical">
      <!-- Datagrid événements -->
                         <DataGrid x:Name="DGevenements"
-                        Margin="0 8 0 0"
-                        ItemsSource="{Binding EvenementsAff}"
-                        CanUserSortColumns="True"
-                        CanUserAddRows="False"
-                        CanUserDeleteRows="False"
-                        CanUserResizeColumns="False"    
-                        IsReadOnly="True"
-                        AutoGenerateColumns="False"
-                        materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                        materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            Margin="0 8 0 0"
+                            ItemsSource="{Binding EvenementsAff}"
+                            CanUserSortColumns="True"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserResizeColumns="False"    
+                            IsReadOnly="True"
+                            AutoGenerateColumns="False"
+                            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                            materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="IsSelected"
+                                    Value="{Binding IsSelected, Mode=TwoWay}" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridCheckBoxColumn
-                                Binding="{Binding IsSelected}"
+                                <DataGridCheckBoxColumn 
+                                Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto" IsReadOnly="False">
                                     <DataGridCheckBoxColumn.Header>
@@ -58,7 +65,7 @@
                                             <CheckBox
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                            IsChecked="{Binding IsAllItems3Selected}" />
+                                            IsChecked="{Binding IsAllItemsEvenementsSelected}" />
                                         </Border>
                                     </DataGridCheckBoxColumn.Header>
                                 </DataGridCheckBoxColumn>
@@ -95,7 +102,7 @@
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
                             </DataGrid.Columns>
                         </DataGrid>
-     <!-- Boutons Personnes -->
+     <!-- Boutons événements -->
                         <Grid HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -147,20 +154,27 @@
                     <StackPanel Grid.Column="2" Orientation="Vertical">
     <!-- Datagrid Personnes -->
                         <DataGrid x:Name="dgpersonnes"
-                        Margin="0 8 0 0"
-                        ItemsSource="{Binding PersonnesAff}"
-                        CanUserSortColumns="True"
-                        CanUserAddRows="False"
-                        CanUserDeleteRows="False"
-                        CanUserResizeColumns="False"
-                        IsReadOnly="True"
-                        AutoGenerateColumns="False"
-                        materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                        materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            Margin="0 8 0 0"
+                            ItemsSource="{Binding PersonnesAff}"
+                            CanUserSortColumns="True"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserResizeColumns="False"
+                            IsReadOnly="True"
+                            AutoGenerateColumns="False"
+                            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                            materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="IsSelected"
+                                Value="{Binding IsSelected, Mode=TwoWay}" />
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn
-                                Binding="{Binding IsSelected}"
+                                Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto" IsReadOnly="False">
                                     <DataGridCheckBoxColumn.Header>
@@ -172,7 +186,7 @@
                                             <CheckBox
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                            IsChecked="{Binding IsAllItems3Selected}" />
+                                            IsChecked="{Binding IsAllItemsPersonnesSelected}" />
                                         </Border>
                                     </DataGridCheckBoxColumn.Header>
                                 </DataGridCheckBoxColumn>
@@ -271,10 +285,18 @@
                         AutoGenerateColumns="False"
                         materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                         materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        SelectionMode="Extended">
+                        <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="IsSelected"
+                                Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </DataGrid.Resources>
                         <DataGrid.Columns>
-                            <DataGridCheckBoxColumn
-                                Binding="{Binding IsSelected}"
+                            <DataGridCheckBoxColumn x:Name="CBitemMenus"
+                                Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto"  IsReadOnly="False">
                                 <DataGridCheckBoxColumn.Header>
@@ -283,10 +305,10 @@
                                         Background="Transparent"
                                         Padding="6 0 6 0"
                                         HorizontalAlignment="Center">
-                                        <CheckBox
+                                        <CheckBox x:Name="CBallMenus"
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                            IsChecked="{Binding IsAllItems3Selected}" />
+                                            IsChecked="{Binding IsAllItemsMenuDuJourSelected}" />
                                     </Border>
                                 </DataGridCheckBoxColumn.Header>
                             </DataGridCheckBoxColumn>
