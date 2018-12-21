@@ -14,9 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 
-//using Projet_AFFICHEURFERMETTE.MDF.Classes;
-//using Projet_AFFICHEURFERMETTE.MDF.Acces;
-//using Projet_AFFICHEURFERMETTE.MDF.Gestion;
+using Projet_AFFICHEURFERMETTE.MDF.Classes;
+using Projet_AFFICHEURFERMETTE.MDF.Acces;
+using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 
 
 namespace AfficheurFermette
@@ -49,6 +49,7 @@ namespace AfficheurFermette
 				bool boucle = false;
 				do
 				{
+                    // TODO: Vérifier que le fichier est valide
 					if (MessageBox.Show("La base de donnée par défaut est introuvable.\nSouhaitez-vous indiquer un autre emplacement ?", "Base de données introuvable", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
 					{
 						dlgChargerDB.Filter = "Fichier de base de données Microsoft SQL|*.mdf|Tous fichiers|*.*";
@@ -71,6 +72,16 @@ namespace AfficheurFermette
 
 			if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
 			{
+                // tests
+                List<C_ViewMenuDuJour> menus = new G_ViewMenuDuJour(sChConn).Lire("");
+                C_ViewMenuDuJour menu = new G_ViewMenuDuJour(sChConn).Lire_ID(1);
+                menu = new G_ViewMenuDuJour(sChConn).Lire_Date(new DateTime(2018, 12, 12));
+
+                List<C_ViewEvenement> evenements = new G_ViewEvenement(sChConn).Lire("");
+                C_ViewEvenement evenement = new G_ViewEvenement(sChConn).Lire_ID(1);
+                evenements = new G_ViewEvenement(sChConn).Lire_DateDebut(new DateTime(2018, 12, 12));
+                evenements = new G_ViewEvenement(sChConn).Lire_DateFin(new DateTime(2018, 12, 13));
+                evenements = new G_ViewEvenement(sChConn).Lire_Date(new DateTime(2018, 12, 12));
 
 			}
 
