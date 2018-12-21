@@ -21,7 +21,8 @@ using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
 using System.ComponentModel;
-using System.Xml;
+using System.IO;
+using ModifieurFermette.Models;
 
 namespace ModifieurFermette
 {
@@ -30,7 +31,6 @@ namespace ModifieurFermette
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-        private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\picho\Nextcloud\Cours\Informatique\2e bac\POO\Q2\db\Location_DVD.mdf;Integrated Security=True";
         public ObservableCollection<ShowViewMenuDuJour> MenusAff;
         public ObservableCollection<ShowViewEvenement> EvenementsAff;
         public ObservableCollection<ShowPersonne> PersonnesAff;
@@ -40,31 +40,48 @@ namespace ModifieurFermette
 
         private bool IsAllItemsEvenementsSelected, IsAllItemsPersonnesSelected, IsAllItemsMenuDuJourSelected;
 
+        public ConfigClass config;
+
         public MainWindow()
 		{
 			InitializeComponent();
-            XmlWriter xmlWr = new XmlWriter.Create();
-            string[] stab = sChConn.Split('=');
+            // On vérifie si le fichier de config existe
+            if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"))
+                config = ConfigClass.DeserializeFromFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"); // Si oui, on le charge
+            else
+                config = new ConfigClass(); // sinon on créée une nouvelle config
+            // On récupère uniquement le chemin d'accès du fichier à partir du ConnectionString
+            string[] stab = config.sChConn.Split('=');
             string[] stab2 = stab[2].Split(';');
             OpenFileDialog dlgChargerDB = new OpenFileDialog();
-            if (!System.IO.File.Exists(stab2[0]))
+            // Si le fichier n'existe pas on propose à l'utilisateur d'indiquer l'emplacement de la base de données
+            if (!File.Exists(stab2[0]))
             {
                 bool boucle = false;
                 do
                 {
-                    // TODO: Vérifier que le fichier est valide
                     if (MessageBox.Show("La base de donnée par défaut est introuvable.\nSouhaitez-vous indiquer un autre emplacement ?", "Base de données introuvable", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                     {
                         dlgChargerDB.Filter = "Fichier de base de données Microsoft SQL|*.mdf|Tous fichiers|*.*";
                         if (dlgChargerDB.ShowDialog() == true)
                         {
-                            sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + dlgChargerDB.FileName + ";Integrated Security=True";
-                            boucle = false;
+                            if (File.Exists(dlgChargerDB.FileName) && System.IO.Path.GetExtension(dlgChargerDB.FileName) == ".mdf")
+                            {
+                                config.sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + dlgChargerDB.FileName + ";Integrated Security=True";
+                                boucle = false;
+                                // On sauvegarde la config
+                                config.SerializeToFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Ce fichier n'est pas valide !");
+                                boucle = true;
+                            }
                         }
                         else
                             boucle = true;
                     }
-                    else
+                    else // L'utilisateur refuse d'indiquer l'emplacement de la DB => On ferme le programme
                     {
                         boucle = false;
                         this.Close();
@@ -72,8 +89,10 @@ namespace ModifieurFermette
                 }
                 while (boucle);
             }
-            if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
+            // Le fichier existe
+            if (File.Exists(stab2[0]) || File.Exists(dlgChargerDB.FileName))
             {
+
                 ChargerDonnees();
             }
 		}
@@ -81,9 +100,9 @@ namespace ModifieurFermette
         private void ChargerDonnees()
         {
             // Extraction des données de la DB
-            Menus = new G_ViewMenuDuJour(sChConn).Lire("");
-            Evenements = new G_ViewEvenement(sChConn).Lire("");
-            Personnes = new G_Personne(sChConn).Lire("");
+            Menus = new G_ViewMenuDuJour(config.sChConn).Lire("");
+            Evenements = new G_ViewEvenement(config.sChConn).Lire("");
+            Personnes = new G_Personne(config.sChConn).Lire("");
 
             // Placement dans des Oservables
             MenusAff = new ObservableCollection<ShowViewMenuDuJour>();
