@@ -11,40 +11,47 @@
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                 <GradientStop Color="Black" Offset="1"/>
-                <GradientStop Color="#FFD0E2CE" Offset="0.887"/>
+                <GradientStop Color="#FFA5D46B" Offset="0.887"/>
             </LinearGradientBrush>
         </Grid.Background>
 
         <Grid.RowDefinitions>
             <!-- Défini les 3 lignes : en-tete, corps et partie footer pour les onglets -->
-            <RowDefinition Height="AUTO"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition  Height="*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="AUTO"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- ROW 0, EN-TETE -->
-        <Image Source="share.png" Margin="50 0 0 0" HorizontalAlignment="Left" Width="100" Grid.Row="0"/>
+        <Grid Grid.Row="0" Background="#FFE4DC2A">
+            <!-- ROW 0, EN-TETE -->
+            <Label Name="JourSemaine" Content="Lundi 6 mai 2018" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="48" FontFamily="Comic Sans MS" Margin="10 10 0 0" Background="#FFE4DC2A" Foreground="Black" Grid.Row="0">
+                <Label.Effect>
+                    <DropShadowEffect/>
+                </Label.Effect>
+            </Label>
+            <Label Name="Heure" Content="16:30" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="48" FontFamily="Comic Sans MS" Margin="10 0 0 0" Background="#FFE4DC2A" Foreground="#FF00010E" Grid.Row="0">
+                <Label.Effect>
+                    <DropShadowEffect/>
+                </Label.Effect>
+            </Label>
 
-        <Label Content="Anniversaire de " HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Tempus Sans ITC" FontSize="24" Foreground="#FF49476A" Grid.Column="1"/>
-        <Label Content="Tim Depreels" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 30 0 0" Background="{x:Null}" FontFamily="Tempus Sans ITC" FontSize="36" Foreground="#FF49476A" FontWeight="Bold" Grid.Column="1"/>
+            <Image Name="Logo_entete" Source="/AfficheurFermette;component/Resources/Images/share.png" Margin="10,10,0,136" HorizontalAlignment="Left" Width="100" Grid.Row="1"/>
 
-        <Image Source="cake.png"  Width="75" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 220 0" Grid.ColumnSpan="2"/>
+            <Label Content="Anniversaire de " HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="Tempus Sans ITC" FontSize="24" Foreground="#FF49476A" Grid.Column="1"/>
+            <Label Content="Tim Depreels" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 30 0 0" Background="{x:Null}" FontFamily="Tempus Sans ITC" FontSize="36" Foreground="#FF49476A" FontWeight="Bold" Grid.Column="1"/>
 
+            <Image Source="/AfficheurFermette;component/Resources/Images/cake.png"  Width="75" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 220 0" Grid.ColumnSpan="2"/>
+        </Grid>
         <!-- ROW 1,CORPS -->
-        <Label Content="Atelier du jour" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="48" FontFamily="Tempus Sans ITC" Foreground="#FF362929" FontWeight="Bold" Grid.Row="0"/>
-        <Label Content="Peinture aquarelle" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Grid.Row="1">
-            <Label.Foreground>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black" Offset="0"/>
-                    <GradientStop Color="#FF892F97" Offset="0.717"/>
-                </LinearGradientBrush>
-            </Label.Foreground>
-        </Label>
-        <Image Source="paint.png" Margin="0 0 150 0" HorizontalAlignment="Right" Width="150" Grid.Row="1"/>
+        <Label Name="OngletActif_Nom" Content="Atelier du jour" HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="48" FontFamily="Tempus Sans ITC" Foreground="#FF292B36" FontWeight="Bold" Grid.Row="0" Background="#FFE4DC2A"/>
+
+        <Label Name="CorpsTexte1" Content="Peinture aquarelle, local 212" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Grid.Row="1" Foreground="Black"/>
+
+        <Image Name="LogoCorps1" Source="/AfficheurFermette;component/Resources/Images/paint.png" Margin="0 0 150 0" HorizontalAlignment="Right" Width="150" Grid.Row="1"/>
 
         <!-- ROW 2, Ligne de séparation -->
-        <Image Source="lineseparation.png" VerticalAlignment="Bottom" Height="40" Grid.Row="2" Stretch="Fill"/>
+        <Image Source="/AfficheurFermette;component/Resources/Images/lineseparation.png" VerticalAlignment="Bottom" Height="30" Grid.Row="2" Stretch="Fill"/>
 
         <!-- ROW 3, Grid pour les onglets -->
         <Grid Grid.Row="3">
@@ -54,33 +61,39 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Image Source="repas.jpg" Stretch="Fill" Grid.Column="0"/>
+
+            <Image Name="ImgOnglet1"  Source="/AfficheurFermette;component/Resources/Images/OngletRepas.jpg" Stretch="Fill" Grid.Column="0" MouseDown="ImgOngletRepas_MouseDown"/>
+            <Canvas x:Name="CnvOnglet1" Grid.Column="0"/>
             <Label Content="Repas" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Background="#00000000" Foreground="#FF7A62E6" Grid.Column="0">
                 <Label.Effect>
                     <DropShadowEffect/>
                 </Label.Effect>
             </Label>
-            <Image Source="actu.jpg" Stretch="Fill" Grid.Column="1"/>
+
+            <Image Name="ImgOnglet2" Source="/AfficheurFermette;component/Resources/Images/OngletActu.jpg" Stretch="Fill" Grid.Column="1" MouseDown="ImgOngletActu_MouseDown"/>
+            <Canvas x:Name="CnvOnglet2" Grid.Column="1"/>
             <Label Content="Actualité" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Background="#00000000" Foreground="#FF7A62E6" Grid.Column="1">
                 <Label.Effect>
                     <DropShadowEffect/>
                 </Label.Effect>
             </Label>
-            <Image Source="{Binding Path=\Images\atelier.jpeg}"  Stretch="Fill" Grid.Column="2"/>
+
+            <Image Name="ImgOnglet3" Source="/AfficheurFermette;component/Resources/Images/OngletAtelier.jpeg" Stretch="Fill" Grid.Column="2" MouseDown="ImgOngletAtelier_MouseDown"/>
+            <Canvas x:Name="CnvOnglet3" Grid.Column="2"/>
             <Label Content="Ateliers" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Background="#00000000" Foreground="#FF7A62E6" Grid.Column="2">
                 <Label.Effect>
                     <DropShadowEffect/>
                 </Label.Effect>
             </Label>
-            <Image Source="educateur.jpg" Stretch="Fill" Grid.Column="3"/>
+
+            <Image Name="ImgOnglet4" Source="/AfficheurFermette;component/Resources/Images/OngletEduc.jpg" Stretch="Fill" Grid.Column="3" MouseDown="ImgOngletEduc_MouseDown"/>
+            <Canvas x:Name="CnvOnglet4" Grid.Column="3"/>
             <Label Content="Educateurs" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Background="#00000000" Foreground="#FF7A62E6" Grid.Column="3">
                 <Label.Effect>
                     <DropShadowEffect/>
                 </Label.Effect>
             </Label>
 
-
         </Grid>
-
     </Grid>
 </Window>
