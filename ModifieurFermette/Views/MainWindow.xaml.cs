@@ -22,7 +22,7 @@ using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
 using System.ComponentModel;
 using System.IO;
-using ModifieurFermette.Models;
+using ModifieurFermette.ViewModels;
 
 namespace ModifieurFermette
 {
@@ -31,27 +31,19 @@ namespace ModifieurFermette
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-        public ObservableCollection<ShowViewMenuDuJour> MenusAff;
-        public ObservableCollection<ShowViewEvenement> EvenementsAff;
-        public ObservableCollection<ShowPersonne> PersonnesAff;
-        public List<C_ViewMenuDuJour> Menus;
-        public List<C_ViewEvenement> Evenements;
-        public List<C_Personne> Personnes;
-
-        private bool IsAllItemsEvenementsSelected, IsAllItemsPersonnesSelected, IsAllItemsMenuDuJourSelected;
-
-        public ConfigClass config;
+        private MainWindowViewModel vm;
 
         public MainWindow()
 		{
 			InitializeComponent();
+            vm = new MainWindowViewModel();
             // On vérifie si le fichier de config existe
             if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"))
-                config = ConfigClass.DeserializeFromFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"); // Si oui, on le charge
+                vm.config = ConfigClass.DeserializeFromFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"); // Si oui, on le charge
             else
-                config = new ConfigClass(); // sinon on créée une nouvelle config
+                vm.config = new ConfigClass(); // sinon on créée une nouvelle config
             // On récupère uniquement le chemin d'accès du fichier à partir du ConnectionString
-            string[] stab = config.sChConn.Split('=');
+            string[] stab = vm.config.sChConn.Split('=');
             string[] stab2 = stab[2].Split(';');
             OpenFileDialog dlgChargerDB = new OpenFileDialog();
             // Si le fichier n'existe pas on propose à l'utilisateur d'indiquer l'emplacement de la base de données
@@ -67,10 +59,10 @@ namespace ModifieurFermette
                         {
                             if (File.Exists(dlgChargerDB.FileName) && System.IO.Path.GetExtension(dlgChargerDB.FileName) == ".mdf")
                             {
-                                config.sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + dlgChargerDB.FileName + ";Integrated Security=True";
+                                vm.config.sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + dlgChargerDB.FileName + ";Integrated Security=True";
                                 boucle = false;
                                 // On sauvegarde la config
-                                config.SerializeToFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml");
+                                vm.config.SerializeToFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml");
                             }
                             else
                             {
@@ -92,33 +84,11 @@ namespace ModifieurFermette
             // Le fichier existe
             if (File.Exists(stab2[0]) || File.Exists(dlgChargerDB.FileName))
             {
-
-                ChargerDonnees();
+                vm.ChargerDonnees();
+                DGevenements.ItemsSource = vm.EvenementsAff;
+                dgpersonnes.ItemsSource = vm.PersonnesAff;
+                DGmenus.ItemsSource = vm.MenusAff;
             }
 		}
-
-        private void ChargerDonnees()
-        {
-            // Extraction des données de la DB
-            Menus = new G_ViewMenuDuJour(config.sChConn).Lire("");
-            Evenements = new G_ViewEvenement(config.sChConn).Lire("");
-            Personnes = new G_Personne(config.sChConn).Lire("");
-
-            // Placement dans des Oservables
-            MenusAff = new ObservableCollection<ShowViewMenuDuJour>();
-            EvenementsAff = new ObservableCollection<ShowViewEvenement>();
-            PersonnesAff = new ObservableCollection<ShowPersonne>();
-            foreach (C_ViewMenuDuJour TmpMenu in Menus)
-            { MenusAff.Add(new ShowViewMenuDuJour(TmpMenu)); }
-            foreach (C_ViewEvenement TmpEvenement in Evenements)
-            { EvenementsAff.Add(new ShowViewEvenement(TmpEvenement)); }
-            foreach (C_Personne TmpPersonne in Personnes)
-            { PersonnesAff.Add(new ShowPersonne(TmpPersonne)); }
-
-            // Mise à jour des DataGrid
-            DGmenus.ItemsSource = MenusAff;
-            DGevenements.ItemsSource = EvenementsAff;
-            dgpersonnes.ItemsSource = PersonnesAff;
-        }
     }
 }
