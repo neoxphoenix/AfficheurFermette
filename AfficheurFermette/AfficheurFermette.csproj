@@ -106,37 +106,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="atelier.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="repas.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="actu.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="educateur.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="free-vector-birthday-icon_102051_Birthday_Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="share.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="balloon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="cake.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="paint.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="lineseparation.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
+    <Resource Include="Resources\Images\balloon.png" />
+    <Resource Include="Resources\Images\cake.png" />
+    <Resource Include="Resources\Images\free-vector-birthday-icon_102051_Birthday_Icon.png" />
+    <Resource Include="Resources\Images\lineseparation.png" />
+    <Resource Include="Resources\Images\OngletActu.jpg" />
+    <Resource Include="Resources\Images\OngletAtelier.jpeg" />
+    <Resource Include="Resources\Images\OngletEduc.jpg" />
+    <Resource Include="Resources\Images\OngletRepas.jpg" />
+    <Resource Include="Resources\Images\paint.png" />
+    <Resource Include="Resources\Images\share.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

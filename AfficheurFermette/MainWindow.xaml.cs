@@ -26,12 +26,23 @@ namespace AfficheurFermette
     /// </summary>
     public partial class MainWindow : Window
     {
-		private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=E:\Server\Nextcloud\Cours\Informatique\3e bac\Compléments progra(Pata)\PROJET AFFICHEUR\AfficheurFermette.mdf;Integrated Security=True;Connect Timeout=30";
-		public MainWindow()
+		private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.mdf;Integrated Security=True;Connect Timeout=30";
+
+        public string DisplayedImage
+        {
+            get { return @"pack://application:,,,/Images/test.png"; }
+        }
+
+        //ImageViewer1.Source = new BitmapImage(new Uri("Creek.jpg", UriKind.Relative));
+
+
+        public MainWindow()
         {
             InitializeComponent();
+
 			string[] stab = sChConn.Split('=');
 			string[] stab2 = stab[2].Split(';');
+
 			OpenFileDialog dlgChargerDB = new OpenFileDialog();
 			if (!System.IO.File.Exists(stab2[0]))
 			{
@@ -58,6 +69,7 @@ namespace AfficheurFermette
 				}
 				while (boucle);
 			}
+
 			if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
 			{
                 // tests
@@ -72,9 +84,22 @@ namespace AfficheurFermette
                 evenements = new G_ViewEvenement(sChConn).Lire_Date(new DateTime(2018, 12, 12));
 
 			}
-		}
 
-			private void Window_Loaded(object sender, RoutedEventArgs e)
+            //Initialisation des effets sur les onglets
+            /*
+            Rectangle EffetBordure = new Rectangle();
+            EffetBordure.Fill = Brushes.Black;
+            EffetBordure.Width = ImgOngletRepas.ActualWidth;
+            EffetBordure.Height = 10;
+            EffetBordure.StrokeThickness = 2;
+
+            CnvOnglet1.Children.Add(EffetBordure);
+            Canvas.SetLeft(EffetBordure, 0);
+            Canvas.SetTop(EffetBordure, 0);
+            */
+        }
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			this.WindowStyle = WindowStyle.None;
 			this.WindowState = WindowState.Maximized;
@@ -94,5 +119,49 @@ namespace AfficheurFermette
 					this.Close();
 			}
 		}
-	}
+
+        private void ImgOngletRepas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OngletActif_Nom.Content = "Repas du jour";
+
+            EffetOnglet(CnvOnglet1);
+        }
+
+        private void ImgOngletActu_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OngletActif_Nom.Content = "Actualités";
+            EffetOnglet(CnvOnglet2);
+        }
+
+        private void ImgOngletAtelier_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OngletActif_Nom.Content = "Ateliers";
+            EffetOnglet(CnvOnglet3);
+        }
+
+        private void ImgOngletEduc_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OngletActif_Nom.Content = "Educateurs présent aujourd'hui";
+            EffetOnglet(CnvOnglet4);
+        }
+
+        private void EffetOnglet(Canvas ChoixCnv)
+        {
+            CnvOnglet1.Children.Clear();
+            CnvOnglet2.Children.Clear();
+            CnvOnglet3.Children.Clear();
+            CnvOnglet4.Children.Clear();
+
+            Rectangle EffetBordure = new Rectangle();
+            EffetBordure.Fill = Brushes.Black;
+            EffetBordure.Width = ImgOnglet1.ActualWidth; //les onglets ont tous la même taille, donc OK
+            EffetBordure.Height = 10;
+            EffetBordure.StrokeThickness = 2;
+
+            ChoixCnv.Children.Add(EffetBordure);
+            Canvas.SetLeft(EffetBordure, 0);
+            Canvas.SetTop(EffetBordure, 0);
+        }
+
+    }
 }
