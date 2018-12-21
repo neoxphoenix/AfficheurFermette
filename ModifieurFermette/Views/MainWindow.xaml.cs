@@ -21,6 +21,7 @@ using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
 using System.ComponentModel;
+using System.Xml;
 
 namespace ModifieurFermette
 {
@@ -42,6 +43,7 @@ namespace ModifieurFermette
         public MainWindow()
 		{
 			InitializeComponent();
+            XmlWriter xmlWr = new XmlWriter.Create();
             string[] stab = sChConn.Split('=');
             string[] stab2 = stab[2].Split(';');
             OpenFileDialog dlgChargerDB = new OpenFileDialog();
