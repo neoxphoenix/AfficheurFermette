@@ -15,14 +15,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using ModifieurFermette.ViewModels;
 
+// dll
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
-using System.ComponentModel;
-using System.IO;
-using ModifieurFermette.ViewModels;
 
 namespace ModifieurFermette
 {
@@ -90,7 +91,8 @@ namespace ModifieurFermette
                 DGevenements.ItemsSource = vm.EvenementsAff;
                 dgpersonnes.ItemsSource = vm.PersonnesAff;
                 DGmenus.ItemsSource = vm.MenusAff;
+
             }
-		}
+        }
     }
 }
