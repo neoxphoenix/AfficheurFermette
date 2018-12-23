@@ -12,8 +12,9 @@ using ShowableData;
 
 namespace ModifieurFermette.ViewModels
 {
-    class MainWindowViewModel
+    class MainWindowViewModel : ObservableData
     {
+        #region Données membres
         public ObservableCollection<ShowViewMenuDuJour> MenusAff;
         public ObservableCollection<ShowViewEvenement> EvenementsAff;
         public ObservableCollection<ShowPersonne> PersonnesAff;
@@ -21,12 +22,14 @@ namespace ModifieurFermette.ViewModels
         public List<C_ViewEvenement> Evenements;
         public List<C_Personne> Personnes;
 
-        private bool IsAllItemsEvenementsSelected, IsAllItemsPersonnesSelected, IsAllItemsMenuDuJourSelected;
+        private bool _IsAllItemsEvenementsSelected, _IsAllItemsPersonnesSelected, _IsAllItemsMenuDuJourSelected;
 
         public ConfigClass config;
+        #endregion
 
         public MainWindowViewModel() { }
 
+        #region Méthodes
         public void ChargerDonnees()
         {
             // Extraction des données de la DB
@@ -39,11 +42,94 @@ namespace ModifieurFermette.ViewModels
             EvenementsAff = new ObservableCollection<ShowViewEvenement>();
             PersonnesAff = new ObservableCollection<ShowPersonne>();
             foreach (C_ViewMenuDuJour TmpMenu in Menus)
-            { MenusAff.Add(new ShowViewMenuDuJour(TmpMenu)); }
+            {
+                MenusAff.Add(new ShowViewMenuDuJour(TmpMenu));
+            }
             foreach (C_ViewEvenement TmpEvenement in Evenements)
-            { EvenementsAff.Add(new ShowViewEvenement(TmpEvenement)); }
+            {
+                EvenementsAff.Add(new ShowViewEvenement(TmpEvenement));
+            }
             foreach (C_Personne TmpPersonne in Personnes)
-            { PersonnesAff.Add(new ShowPersonne(TmpPersonne)); }
+            {
+                PersonnesAff.Add(new ShowPersonne(TmpPersonne));
+            }
         }
+
+        /// <summary>
+        /// (dé)sélectionne tous les éléments de la DG des menus du jour
+        /// </summary>
+        /// <param name="Check">Si vrai, sélectionne tous les éléments</param>
+        private void SelectAllShowViewMenuDuJour(bool Check)
+        {
+            foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
+            {
+                TmpMenu.IsSelected = Check;
+            }
+        }
+        /// <summary>
+        /// (dé)sélectionne tous les éléments de la DG des événements
+        /// </summary>
+        /// <param name="Check">Si vrai, sélectionne tous les éléments</param>
+        private void SelectAllShowViewEvenement(bool Check)
+        {
+            foreach (ShowViewEvenement TmpEvenement in EvenementsAff)
+            {
+                TmpEvenement.IsSelected = Check;
+            }
+        }
+        /// <summary>
+        /// (dé)sélectionne tous les éléments de la DG des personnes
+        /// </summary>
+        /// <param name="Check">Si vrai, sélectionne tous les éléments</param>
+        private void SelectAllShowPersonne(bool Check)
+        {
+            foreach (ShowPersonne TmpPersonne in PersonnesAff)
+            {
+                TmpPersonne.IsSelected = Check;
+            }
+        }
+        #endregion
+
+        #region Accesseurs
+        public bool IsAllItemsEvenementsSelected
+        {
+            get { return _IsAllItemsEvenementsSelected; }
+            set
+            {
+                if (this._IsAllItemsEvenementsSelected != value)
+                {
+                    this._IsAllItemsEvenementsSelected = value;
+                    SelectAllShowViewEvenement(value);
+                    OnPropertyChanged("IsAllItemsEvenementsSelected");
+                }
+            }
+        }
+        public bool IsAllItemsPersonnesSelected
+        {
+            get { return _IsAllItemsPersonnesSelected; }
+            set
+            {
+                if (this._IsAllItemsPersonnesSelected != value)
+                {
+                    this._IsAllItemsPersonnesSelected = value;
+                    SelectAllShowPersonne(value);
+                    OnPropertyChanged("IsAllItemsPersonnesSelected");
+                }
+            }
+        }
+        public bool IsAllItemsMenuDuJourSelected
+        {
+            get { return _IsAllItemsMenuDuJourSelected; }
+            set
+            {
+                if (this._IsAllItemsMenuDuJourSelected != value)
+                {
+                    this._IsAllItemsMenuDuJourSelected = value;
+                    SelectAllShowViewMenuDuJour(value);
+                    OnPropertyChanged("IsAllItemsMenuDuJourSelected");
+                }
+            }
+        }
+        #endregion
     }
 }

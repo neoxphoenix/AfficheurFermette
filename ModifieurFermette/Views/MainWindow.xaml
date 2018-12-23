@@ -308,7 +308,7 @@
                                         <CheckBox x:Name="CBallMenus"
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                            IsChecked="{Binding IsAllItemsMenuDuJourSelected}" />
+                                            IsChecked="{Binding IsAllItemsMenuDuJourSelected, Mode=TwoWay}" />
                                     </Border>
                                 </DataGridCheckBoxColumn.Header>
                             </DataGridCheckBoxColumn>

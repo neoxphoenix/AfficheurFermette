@@ -37,6 +37,7 @@ namespace ModifieurFermette
 		{
 			InitializeComponent();
             vm = new MainWindowViewModel();
+            this.DataContext = vm;
             // On vérifie si le fichier de config existe
             if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"))
                 vm.config = ConfigClass.DeserializeFromFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"); // Si oui, on le charge
@@ -85,6 +86,7 @@ namespace ModifieurFermette
             if (File.Exists(stab2[0]) || File.Exists(dlgChargerDB.FileName))
             {
                 vm.ChargerDonnees();
+                // liaison des données avec les DataGrid
                 DGevenements.ItemsSource = vm.EvenementsAff;
                 dgpersonnes.ItemsSource = vm.PersonnesAff;
                 DGmenus.ItemsSource = vm.MenusAff;
