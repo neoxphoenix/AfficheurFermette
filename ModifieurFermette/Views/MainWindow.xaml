@@ -16,6 +16,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
+        <materialDesign:DialogHost>
         <StackPanel>
             
 <!-- Expander 1 => Evenements et Personnes -->
@@ -389,6 +390,6 @@
 
             </Expander>
         </StackPanel>
-        
+        </materialDesign:DialogHost>
     </Grid>
 </Window>
