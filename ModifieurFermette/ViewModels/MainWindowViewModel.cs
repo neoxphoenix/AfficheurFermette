@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
-using ModifieurFermette.Models;
 
 // dll
 using Projet_AFFICHEURFERMETTE.MDF.Acces;

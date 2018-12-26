@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace ModifieurFermette.Models
+namespace ShowableData
 {
     /// <summary>
     /// Relayeur de commande, permet de créer de nouvelles commandes liées à des contrôles de l'UI
