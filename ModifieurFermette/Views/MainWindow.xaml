@@ -135,7 +135,8 @@
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="4">
+                            Grid.Column="4"
+                            Command="{Binding DeleteShowViewEvenementCmd}">
                                 Supprimer
                             </Button>
                             <Button
@@ -251,7 +252,8 @@
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="4">
+                            Grid.Column="4"
+                            Command="{Binding DeleteShowPersonneCmd}">
                                 Supprimer
                             </Button>
                             <Button
@@ -374,7 +376,7 @@
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
-                            Command="{Binding DeleteShowViewMenuDuJourItem}">
+                            Command="{Binding DeleteShowViewMenuDuJourCmd}">
                             Supprimer
                         </Button>
                         <Button

@@ -22,20 +22,27 @@ namespace ModifieurFermette.ViewModels
         public ObservableCollection<ShowViewMenuDuJour> MenusAff;
         public ObservableCollection<ShowViewEvenement> EvenementsAff;
         public ObservableCollection<ShowPersonne> PersonnesAff;
-        public object MenusAffLock = new object(); // Verrou utilisé pour les opérations cross-thread sur ma collection
+        // Verrous utilisés pour les opérations cross-thread sur nos collections
+        public object MenusAffLock = new object();
+        public object EvenementsAffLock = new object();
+        public object PersonnesAffLock = new object();
 
         private bool _IsAllItemsEvenementsSelected, _IsAllItemsPersonnesSelected, _IsAllItemsMenuDuJourSelected;
 
         public ConfigClass config;
 
         #region Commands
-        private ICommand _DeleteShowViewMenuDuJourItem;
+        private ICommand _DeleteShowViewMenuDuJourCmd;
+        private ICommand _DeleteShowViewEvenementCmd;
+        private ICommand _DeleteShowPersonneCmd;
         #endregion
         #endregion
 
         public MainWindowViewModel()
         {
-            DeleteShowViewMenuDuJourItem = new RelayCommand(Exec => ExecuteDeleteSelectedShowViewMenuDuJourItem(), CanExec => CanExecDeleteSelectedShowViewMenuDuJourItem());
+            DeleteShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDeleteShowViewMenuDuJour(), CanExec => CanExecDeleteShowViewMenuDuJour());
+            DeleteShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDeleteShowViewEvenement(), CanExec => CanExecDeleteShowViewEvenement());
+            DeleteShowPersonneCmd = new RelayCommand(Exec => ExecuteDeleteShowPersonne(), CanExec => CanExecDeleteShowPersonne());
         }
 
         #region Méthodes
@@ -65,8 +72,10 @@ namespace ModifieurFermette.ViewModels
 
             // Synchronisation de nos ObservableCollections pour opérations cross-thread
             BindingOperations.EnableCollectionSynchronization(MenusAff, MenusAffLock);
+            BindingOperations.EnableCollectionSynchronization(EvenementsAff, EvenementsAffLock);
+            BindingOperations.EnableCollectionSynchronization(PersonnesAff, PersonnesAffLock);
         }
-        #region Sélection DG
+            #region Sélection DG
         /// <summary>
         /// (dé)sélectionne tous les éléments de la DG des menus du jour
         /// </summary>
@@ -101,29 +110,50 @@ namespace ModifieurFermette.ViewModels
             }
         }
         #endregion
-        #region Commands
-        private async void ExecuteDeleteSelectedShowViewMenuDuJourItem()
+            #region Commands
+                #region ShowViewMenuDuJour
+                    #region Suppression
+        /// <summary>
+        /// Lance un dialog async pour confirmer la suppression
+        /// </summary>
+        private async void ExecuteDeleteShowViewMenuDuJour()
         {
             var ConfDialog = new Views.Dialogs.ConfirmDialog("Confirmer", "Confirmer la suppression ?");
 
-            await DialogHost.Show(ConfDialog, ConfDeleteDialogClosing);
+            await DialogHost.Show(ConfDialog, ConfDeleteShowViewMenuDuJourDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
 
         }
-
-        private async void ConfDeleteDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        /// <summary>
+        /// Vérifie qu'au moins un élément est sélectionné
+        /// </summary>
+        /// <returns>vrai si au moins un élément est sélectionné</returns>
+        private bool CanExecDeleteShowViewMenuDuJour()
         {
-            if ((bool)eventArgs.Parameter == false) return;
+            foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
+            {
+                if (TmpMenu.IsSelected)
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Evenement déclenché par la fermeture du dialog de suppression d'un menu du jour;
+        /// permet de vérifier la confirmation de l'utilisateur et de supprimer les éléments sélectionnés
+        /// </summary>
+        private async void ConfDeleteShowViewMenuDuJourDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
 
-            eventArgs.Cancel();
+            eventArgs.Cancel(); // On empêche la fermeture
 
-            //...now, lets update the "session" with some new content!
-            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog());
-            //note, you can also grab the session when the dialog opens via the DialogOpenedEventHandler
+            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
 
             Task RemovingItems = Task.Run(() => { // Lancement d'un thread pour la suppresion des éléments
                 lock (MenusAffLock) // Verouillage de notre ObservableCollection pour pouvoir la modifier
                 {
-                    // Suppression de l'élément
+                    // Suppression des éléments
+                    // Vu qu'on ne peut pas directement retirer les éléments sans perturber l'indexation de la liste,
+                    // on stocke les éléments à supprimer dans une seconde liste
                     List<ShowViewMenuDuJour> ItemsToRemove = new List<ShowViewMenuDuJour>();
                     foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
                     {
@@ -132,7 +162,7 @@ namespace ModifieurFermette.ViewModels
                     }
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
-                        MenusAff.RemoveAt(MenusAff.IndexOf(ItemsToRemove[i])); // Retiré localement
+                        MenusAff.Remove(ItemsToRemove[i]); // Retiré localement
                         new G_Menu(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (uniquement le menu, pas les plats)
                     }
                 }
@@ -142,20 +172,138 @@ namespace ModifieurFermette.ViewModels
             await RemovingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
+        #endregion
+        #endregion
+                #region ShowViewEvenement
+                    #region Suppression
+        /// <summary>
+        /// Lance un dialog async pour confirmer la suppression
+        /// </summary>
+        private async void ExecuteDeleteShowViewEvenement()
+        {
+            var ConfDialog = new Views.Dialogs.ConfirmDialog("Confirmer", "Confirmer la suppression ?");
 
+            await DialogHost.Show(ConfDialog, ConfDeleteShowViewEvenementDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
+
+        }
         /// <summary>
         /// Vérifie qu'au moins un élément est sélectionné
         /// </summary>
         /// <returns>vrai si au moins un élément est sélectionné</returns>
-        private bool CanExecDeleteSelectedShowViewMenuDuJourItem()
+        private bool CanExecDeleteShowViewEvenement()
         {
-            foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
+            foreach (ShowViewEvenement TmpEvenement in EvenementsAff)
             {
-                if (TmpMenu.IsSelected)
+                if (TmpEvenement.IsSelected)
                     return true;
             }
             return false;
         }
+        /// <summary>
+        /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
+        /// permet de vérifier la confirmation de l'utilisateur et de supprimer les éléments sélectionnés
+        /// </summary>
+        private async void ConfDeleteShowViewEvenementDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+
+            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task RemovingItems = Task.Run(() => { // Lancement d'un thread pour la suppresion des éléments
+                lock (EvenementsAffLock) // Verouillage de notre ObservableCollection pour pouvoir la modifier
+                {
+                    // Suppression des éléments
+                    // Vu qu'on ne peut pas directement retirer les éléments sans perturber l'indexation de la liste,
+                    // on stocke les éléments à supprimer dans une seconde liste
+                    List<ShowViewEvenement> ItemsToRemove = new List<ShowViewEvenement>();
+                    foreach (ShowViewEvenement TmpEvenement in EvenementsAff)
+                    {
+                        if (TmpEvenement.IsSelected)
+                            ItemsToRemove.Add(TmpEvenement);
+                    }
+                    for (int i = 0; i < ItemsToRemove.Count; i++)
+                    {
+                        EvenementsAff.Remove(ItemsToRemove[i]); // Retiré localement
+                        new G_Evenement(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (uniquement l'événement)
+                        // TODO : suppression des PersonnesConcernees
+                        // TODO : suppression des classements
+                    }
+                }
+            });
+
+            // Fermeture du Dialog
+            await RemovingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
+        #endregion
+        #region ShowPersonne
+        #region Suppression
+        /// <summary>
+        /// Lance un dialog async pour confirmer la suppression
+        /// </summary>
+        private async void ExecuteDeleteShowPersonne()
+        {
+            var ConfDialog = new Views.Dialogs.ConfirmDialog("Confirmer", "Confirmer la suppression ?");
+
+            await DialogHost.Show(ConfDialog, ConfDeleteShowPersonneDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
+
+        }
+        /// <summary>
+        /// Vérifie qu'au moins un élément est sélectionné
+        /// </summary>
+        /// <returns>vrai si au moins un élément est sélectionné</returns>
+        private bool CanExecDeleteShowPersonne()
+        {
+            foreach (ShowPersonne TmpPersonne in PersonnesAff)
+            {
+                if (TmpPersonne.IsSelected)
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
+        /// permet de vérifier la confirmation de l'utilisateur et de supprimer les éléments sélectionnés
+        /// </summary>
+        private async void ConfDeleteShowPersonneDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+
+            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task RemovingItems = Task.Run(() => { // Lancement d'un thread pour la suppresion des éléments
+                lock (PersonnesAffLock) // Verouillage de notre ObservableCollection pour pouvoir la modifier
+                {
+                    // Suppression des éléments
+                    // Vu qu'on ne peut pas directement retirer les éléments sans perturber l'indexation de la liste,
+                    // on stocke les éléments à supprimer dans une seconde liste
+                    List<ShowPersonne> ItemsToRemove = new List<ShowPersonne>();
+                    foreach (ShowPersonne TmpPersonne in PersonnesAff)
+                    {
+                        if (TmpPersonne.IsSelected)
+                            ItemsToRemove.Add(TmpPersonne);
+                    }
+                    for (int i = 0; i < ItemsToRemove.Count; i++)
+                    {
+                        PersonnesAff.Remove(ItemsToRemove[i]); // Retiré localement
+                        new G_Personne(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (uniquement l'événement)
+                        // TODO : suppression des PersonnesConcernees
+                        // TODO : suppression des classements
+                    }
+                }
+            });
+
+            // Fermeture du Dialog
+            await RemovingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
+        #endregion
         #endregion
         #endregion
 
@@ -200,17 +348,41 @@ namespace ModifieurFermette.ViewModels
             }
         }
         #region Commands
-        public ICommand DeleteShowViewMenuDuJourItem
+        #region Suppression
+        public ICommand DeleteShowViewMenuDuJourCmd
         {
             get
             {
-                return _DeleteShowViewMenuDuJourItem;
+                return _DeleteShowViewMenuDuJourCmd;
             }
             set
             {
-                _DeleteShowViewMenuDuJourItem = value;
+                _DeleteShowViewMenuDuJourCmd = value;
             }
         }
+        public ICommand DeleteShowViewEvenementCmd
+        {
+            get
+            {
+                return _DeleteShowViewEvenementCmd;
+            }
+            set
+            {
+                _DeleteShowViewEvenementCmd = value;
+            }
+        }
+        public ICommand DeleteShowPersonneCmd
+        {
+            get
+            {
+                return _DeleteShowPersonneCmd;
+            }
+            set
+            {
+                _DeleteShowPersonneCmd = value;
+            }
+        }
+        #endregion
         #endregion
         #endregion
     }
