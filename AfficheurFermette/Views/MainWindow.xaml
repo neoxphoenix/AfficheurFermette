@@ -1,0 +1,184 @@
+﻿<Window x:Class="AfficheurFermette.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AfficheurFermette"
+        mc:Ignorable="d"
+        Title="Ecran Fermette" Height="650" Width="1000" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded" KeyDown="Window_KeyDown"
+
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <!-- RESSOURCES (seront des binding faisait référence vers la base de données, un peu plus tard -->
+    <Window.Resources>
+        <ImageBrush x:Key="imgRepas" ImageSource="/AfficheurFermette;component/Resources/Images/OngletRepas.jpg" />
+        <ImageBrush x:Key="imgActu" ImageSource="/AfficheurFermette;component/Resources/Images/OngletActu.jpg" />
+        <ImageBrush x:Key="imgAtelier" ImageSource="/AfficheurFermette;component/Resources/Images/OngletAtelier.jpeg" />
+        <ImageBrush x:Key="imgEduc" ImageSource="/AfficheurFermette;component/Resources/Images/OngletEduc.jpg" />
+        <BitmapImage x:Key="imgMenu1" UriSource="/AfficheurFermette;component/Resources/Images/menu1.png" />
+    </Window.Resources>
+
+    <!-- GRID START -->
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                <GradientStop Color="Black" Offset="1"/>
+                <GradientStop Color="#FFD0E2BA" Offset="0.887"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <!-- Défini les 3 lignes : en-tete, corps et partie footer pour les onglets -->
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="#FFE4DC2A">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- ROW 0, EN-TETE -->
+            <StackPanel Orientation="Vertical" Grid.Column="0">
+                <Label Content="Nous sommes le" Foreground="#FF49476A" FontFamily="Tempus Sans ITC" FontWeight="Bold" FontSize="25" Margin="10 10 10 0"></Label>
+                <TextBlock Text="{Binding dateAjd}" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="48" Grid.Row="0" Foreground="#FF49476A" FontFamily="Tempus Sans ITC" FontWeight="Bold" Margin="50 5 5 5" />
+            </StackPanel>
+
+            <Label Grid.Row="0" Grid.Column="1" Name="OngletActif_Nom" Content="{Binding ongletActuelDesc, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="48" FontFamily="Tempus Sans ITC" Foreground="#FF292B36" FontWeight="Bold"  Background="#FFE4DC2A"/>
+
+            <!--<Image Name="Logo_entete" Source="/AfficheurFermette;component/Resources/Images/share.png" Margin="10,10,0,136" HorizontalAlignment="Left" Width="100" Grid.Row="1"/>-->
+            <Image Grid.Column="2" Source="/AfficheurFermette;component/Resources/Images/cake.png"  Width="75" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20 0 0 0"/>
+            <Label Grid.Column="2" Content="Anniversaire de " HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Tempus Sans ITC" FontSize="24" Foreground="#FF49476A" Margin="10 10 0 0"/>
+            <TextBlock Grid.Column="2" Text="{Binding aSonAnnifAjd}" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontFamily="Tempus Sans ITC" FontSize="36" Foreground="#FF49476A" FontWeight="Bold"/>
+            
+            <TextBox Name="tbTest" HorizontalAlignment="Left" Height="24" Margin="0,2,0,0" TextWrapping="Wrap" Text="{Binding test}" VerticalAlignment="Top" Width="318" Grid.Column="1"/>
+            <Button Content="Test" HorizontalAlignment="Left" Margin="340,2,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Click="Button_Click"/>
+
+        </Grid>
+
+        <!-- ROW 1, CORPS -->
+        <Grid Grid.Row="1" Background="#FFE4DC2A">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- TAB CONTROL-->
+            <TabControl Grid.Row="1" Name="TabControl_Corps" SelectedIndex="{Binding Path=OngletChoisi, Mode=TwoWay}">
+                <!-- ONGLET 0-->
+                <TabItem Header="Repas">
+                    <!-- Visibility="Collapsed" -->
+                    <Grid Background="#FFD0E2BA">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="4*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- COLONNE ENTREE-->
+                        <StackPanel Orientation="Vertical" Grid.Column="0" Background="#03a9f4">
+                            <Label Name="TitreEntree" Content="Entrée" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"/>
+                        </StackPanel>
+                            <Label Grid.Row="1" Name="Entree" Content="{Binding repasEntreeDuJour}" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="Black" Margin="10"/>
+                        <Image Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="{StaticResource imgMenu1}" Width="200" Margin="10"></Image>
+                        <!-- COLONNE PLAT-->
+                        <StackPanel Orientation="Vertical" Grid.Column="1" Background="#03a9f4">
+                            <Label Name="TitrePlat" Content="Plat" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"/>
+                        </StackPanel>
+                            <Label Name="Plat" Content="{Binding repasPlatDuJour}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="Black" Margin="10"/>
+
+                        <!-- COLONNE DESSERT-->
+                        <StackPanel Orientation="Vertical" Grid.Column="2" Background="#03a9f4">
+                            <Label Name="TitreDessert" Content="Dessert" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"/>
+                        </StackPanel>
+                            <Label Name="Dessert" Content="{Binding repasDessertDuJour}" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="Black" Margin="10"/>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Actu">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ListBox Margin="10 10 10 10" Name="lbEvent" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="AUTO" Height="AUTO" FontSize="20" FontFamily="Tempus Sans ITC" Foreground="#FF49476A">
+                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
+                            <ListBoxItem Content="Evenement 2 blablalbla"></ListBoxItem>
+                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
+                            <ListBoxItem Content="Evenement 2 blablalbla"></ListBoxItem>
+                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
+                            <ListBoxItem Content="Evenement 2 blablalbla"></ListBoxItem>
+                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
+                        </ListBox>
+                        <!--<TextBlock Name="CorpsTexte1" Text="Line1 &#x0a;2Peinture aquarelle, local 212" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="Black"/>-->
+                        <Image Grid.Column="1" Name="LogoCorps1" Source="/AfficheurFermette;component/Resources/Images/paint.png" HorizontalAlignment="Right" Width="150"/>
+                    </Grid>
+
+                </TabItem>
+
+                <TabItem Header="Ateliers">
+                    <Grid Background="#FFE5E5E5">
+                        <Label>Test</Label>
+                    </Grid>
+
+                </TabItem>
+
+                <TabItem Header="Educateurs" Visibility="Collapsed">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+            </TabControl>
+            <!-- FIN DU TAB CONTROL-->
+        </Grid>
+
+        <!-- ROW 2, Ligne de séparation -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- BOUTONS ONGLETS-->
+            <Button Name="btnOnglet1" Grid.Column="0" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="AUTO" VerticalAlignment="Top" FontFamily="MV Boli" FontSize="20" Background="#FF03A9F4" Foreground="White" FontWeight="Normal" Command="{Binding ChangeTabByClick}" CommandParameter="0">REPAS</Button>
+            <Canvas Grid.Column="0" x:Name="CnvOnglet1"/>
+            <Button Name="btnOnglet2" Grid.Column="1" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="AUTO" VerticalAlignment="Top" FontFamily="MV Boli" FontSize="20" Background="#FF03A9F4" Foreground="White" FontWeight="Normal" Command="{Binding ChangeTabByClick}" CommandParameter="1">ACTUALITÈS</Button>
+            <Canvas Grid.Column="1" x:Name="CnvOnglet2"/>
+            <Button Name="btnOnglet3" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="AUTO" VerticalAlignment="Top" FontFamily="MV Boli" FontSize="20" Background="#FF03A9F4" Foreground="White" FontWeight="Normal" Command="{Binding ChangeTabByClick}" CommandParameter="2">ATELIERS</Button>
+            <Canvas Grid.Column="2" x:Name="CnvOnglet3"/>
+            <Button Name="btnOnglet4" Grid.Column="3" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="AUTO" VerticalAlignment="Top" FontFamily="MV Boli" FontSize="20" Background="#FF03A9F4" Foreground="White" FontWeight="Normal" Command="{Binding ChangeTabByClick}" CommandParameter="3">EDUCATEURS</Button>
+            <Canvas Grid.Column="3" x:Name="CnvOnglet4"/>
+        </Grid>
+
+        <!-- ROW 3, Grid pour les onglets -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="24*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="31*"/>
+                <ColumnDefinition Width="31*"/>
+                <ColumnDefinition Width="31*"/>
+            </Grid.ColumnDefinitions>
+            <!-- BOUTONS IMAGE ONGLETS -->
+            <Button Name="ImgOnglet1" Grid.Column="0" Width="AUTO" Height="AUTO" Background="{StaticResource imgRepas}" Grid.ColumnSpan="2" Command="{Binding ChangeTabByClick}" CommandParameter="0"/>
+            <Button Name="ImgOnglet2" Grid.Column="2" Width="AUTO" Height="AUTO" Background="{StaticResource imgActu}" Command="{Binding ChangeTabByClick}" CommandParameter="1"/>
+            <Button Name="ImgOnglet3" Grid.Column="3" Width="AUTO" Height="AUTO" Background="{StaticResource imgAtelier}" Command="{Binding ChangeTabByClick}" CommandParameter="2"/>
+            <Button Name="ImgOnglet4" Grid.Column="4" Width="AUTO" Height="AUTO" Background="{StaticResource imgEduc}" Command="{Binding ChangeTabByClick}" CommandParameter="3"/>
+
+        </Grid>
+
+    </Grid>
+</Window>
