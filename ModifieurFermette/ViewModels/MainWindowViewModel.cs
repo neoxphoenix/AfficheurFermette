@@ -32,9 +32,14 @@ namespace ModifieurFermette.ViewModels
         public ConfigClass config;
 
         #region Commands
+        #region Suppression
         private ICommand _DeleteShowViewMenuDuJourCmd;
         private ICommand _DeleteShowViewEvenementCmd;
         private ICommand _DeleteShowPersonneCmd;
+        #endregion
+        #region Ajout
+        private ICommand _AddShowViewMenuDuJourCmd;
+        #endregion
         #endregion
         #endregion
 
@@ -43,6 +48,8 @@ namespace ModifieurFermette.ViewModels
             DeleteShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDeleteShowViewMenuDuJour(), CanExec => CanExecDeleteShowViewMenuDuJour());
             DeleteShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDeleteShowViewEvenement(), CanExec => CanExecDeleteShowViewEvenement());
             DeleteShowPersonneCmd = new RelayCommand(Exec => ExecuteDeleteShowPersonne(), CanExec => CanExecDeleteShowPersonne());
+
+            AddShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteAddShowViewMenuDuJour(), CanExec => true);
         }
 
         #region Méthodes
@@ -173,9 +180,39 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                    #region Ajout
+        private async void ExecuteAddShowViewMenuDuJour()
+        {
+            var Dialog = new Views.Dialogs.AddMenuDuJourDialog(config.sChConn);
+
+            await DialogHost.Show(Dialog, AddShowViewMenuDuJourDialogClosing);
+        }
+        private async void AddShowViewMenuDuJourDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            Views.Dialogs.AddMenuDuJourDialog dg = (Views.Dialogs.AddMenuDuJourDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
+            {
+                DateTime date = dg.vm.Date.Add(dg.vm.Time.TimeOfDay); // On récupère séparément la date et l'heure dans le dialog, on les recombine donc ici
+                lock (MenusAffLock) // Verrouillage de l'ObservableCollection pour modif
+                {
+                    int ID = new G_Menu(config.sChConn).Ajouter(date, dg.vm.SelectedPotage.ID, dg.vm.SelectedPlat.ID, dg.vm.SelectedDessert.ID); // Insertion dans la DB
+                    MenusAff.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, date, dg.vm.SelectedPotage.nom, dg.vm.SelectedPlat.nom, dg.vm.SelectedDessert.nom))); // Insertion de la liste affichée
+                }
+            });
+
+            // Fermeture du Dialog
+            await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
         #endregion
-                #region ShowViewEvenement
-                    #region Suppression
+        #endregion
+        #region ShowViewEvenement
+        #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -239,8 +276,8 @@ namespace ModifieurFermette.ViewModels
         }
         #endregion
         #endregion
-        #region ShowPersonne
-        #region Suppression
+                #region ShowPersonne
+                    #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -308,6 +345,7 @@ namespace ModifieurFermette.ViewModels
         #endregion
 
         #region Accesseurs
+        #region Sélection DG
         public bool IsAllItemsEvenementsSelected
         {
             get { return _IsAllItemsEvenementsSelected; }
@@ -347,8 +385,9 @@ namespace ModifieurFermette.ViewModels
                 }
             }
         }
+        #endregion
         #region Commands
-        #region Suppression
+            #region Suppression
         public ICommand DeleteShowViewMenuDuJourCmd
         {
             get
@@ -380,6 +419,19 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _DeleteShowPersonneCmd = value;
+            }
+        }
+        #endregion
+        #region Ajout
+        public ICommand AddShowViewMenuDuJourCmd
+        {
+            get
+            {
+                return _AddShowViewMenuDuJourCmd;
+            }
+            set
+            {
+                _AddShowViewMenuDuJourCmd = value;
             }
         }
         #endregion

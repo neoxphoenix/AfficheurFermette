@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="ModifieurFermette.Views.Dialogs.AddMenuDuJourDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModifieurFermette.Views.Dialogs"
+             mc:Ignorable="d"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <StackPanel Orientation="Vertical" Margin="5">
+        <TextBlock FontWeight="ExtraBold" TextDecorations="underline">Ajouter un menu du jour</TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <DatePicker
+                materialDesign:HintAssist.Hint="Date"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                SelectedDate="{Binding Date}"
+                />
+            <materialDesign:TimePicker
+                materialDesign:HintAssist.Hint="Heure"
+                Is24Hours="True"
+                SelectedTime="{Binding Time}"
+                />
+        </StackPanel>
+        <ComboBox
+          materialDesign:HintAssist.Hint="Potage"
+          MinWidth="72"
+          Margin="16 0 0 0"
+          ItemsSource="{Binding Potages}"
+          SelectedItem="{Binding SelectedPotage}"
+          DisplayMemberPath="nom"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <ComboBox
+          materialDesign:HintAssist.Hint="Plat"
+          MinWidth="72"
+          Margin="16 0 0 0"
+          ItemsSource="{Binding Plats}"
+          SelectedItem="{Binding SelectedPlat}"
+          DisplayMemberPath="nom"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <ComboBox
+          materialDesign:HintAssist.Hint="Dessert"
+          MinWidth="72"
+          Margin="16 0 0 0"
+          ItemsSource="{Binding Desserts}"
+          SelectedItem="{Binding SelectedDessert}"
+          DisplayMemberPath="nom"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}" Grid.Column="0">
+                <Button.CommandParameter>
+                    <system:Boolean>True</system:Boolean>
+                </Button.CommandParameter>
+                OK
+            </Button>
+            <Button IsCancel="True" Margin="8 0 0 0" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}" Grid.Column="1">
+                <Button.CommandParameter>
+                    <system:Boolean>False</system:Boolean>
+                </Button.CommandParameter>
+                ANNULER
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
