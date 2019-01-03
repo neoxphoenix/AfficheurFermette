@@ -355,7 +355,7 @@ namespace ModifieurFermette.ViewModels
                 {
                     this._IsAllItemsEvenementsSelected = value;
                     SelectAllShowViewEvenement(value);
-                    OnPropertyChanged("IsAllItemsEvenementsSelected");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -368,7 +368,7 @@ namespace ModifieurFermette.ViewModels
                 {
                     this._IsAllItemsPersonnesSelected = value;
                     SelectAllShowPersonne(value);
-                    OnPropertyChanged("IsAllItemsPersonnesSelected");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -381,7 +381,7 @@ namespace ModifieurFermette.ViewModels
                 {
                     this._IsAllItemsMenuDuJourSelected = value;
                     SelectAllShowViewMenuDuJour(value);
-                    OnPropertyChanged("IsAllItemsMenuDuJourSelected");
+                    OnPropertyChanged();
                 }
             }
         }

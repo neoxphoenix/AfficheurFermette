@@ -15,7 +15,6 @@
 <!-- Command binding afin de pouvoir personnaliser la RoutedCommand de fermeture du dialog -->
     <UserControl.CommandBindings>
         <CommandBinding Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                                    Executed="CommandBinding_Executed"
                                     CanExecute="CommandBinding_CanExecute" />
     </UserControl.CommandBindings>
     <StackPanel Orientation="Vertical" Margin="5">
