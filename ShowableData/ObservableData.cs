@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ShowableData
@@ -12,11 +13,9 @@ namespace ShowableData
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string PropertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName]string PropertyName = null)
         {
-            PropertyChangedEventHandler Handler = PropertyChanged;
-            if (Handler != null)
-                Handler(this, new PropertyChangedEventArgs(PropertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
     }
 }
