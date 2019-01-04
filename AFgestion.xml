@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AFgestion</name>
+    </assembly>
+    <members>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_Classement">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_Evenement">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_LieuEvenement">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_Menu">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_Personne">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_PersonneConcernees">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_PhotoEvenement">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_Plat">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_TitreEvenement">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.Lire(System.String)">
+            <summary>
+            Récupère tous les événements
+            </summary>
+            <param name="Index">Trie selon l'index entré</param>
+            <returns>événements complets</returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.Lire_ID(System.Int32)">
+            <summary>
+            Récupère un événement par son ID
+            </summary>
+            <param name="ID">ID de l'événement à récupérer</param>
+            <returns>événement complet</returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.Lire_DateDebut(System.DateTime)">
+            <summary>
+            Récupère la liste des événements commençant à la date précisée
+            </summary>
+            <param name="DateDebut">Date de début de l'événement</param>
+            <returns>Tous les événements commençant à la date précisée</returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.Lire_DateFin(System.DateTime)">
+            <summary>
+            Récupère la liste des événements se terminant à la date précisée
+            </summary>
+            <param name="DateFin">Date de fin de l'événement</param>
+            <returns></returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.Lire_Date(System.DateTime)">
+            <summary>
+            Récupère la liste des événements se déroulants à la date donnée (=> qui ont leur date de début et date de fin qui encercle la date donnée)
+            </summary>
+            <param name="Date"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.LirePhotosEvenement(System.Int32)">
+            <summary>
+            Récupère les photos liées à un événement
+            </summary>
+            <param name="ID">ID de l'événement</param>
+            <returns>Liste des photos</returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.LirePersonnesEvenement(System.Int32)">
+            <summary>
+            Récupère les personnes participant à un événement
+            </summary>
+            <param name="ID">ID de l'événement</param>
+            <returns>Participants</returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewEvenement.LireClassementEvenement(System.Int32)">
+            <summary>
+            Récupère les personnes participant à une compétition, ainsi que leur position dans ladite compétition
+            </summary>
+            <param name="ID">ID de l'événement</param>
+            <returns>Participants et leurs positions</returns>
+        </member>
+        <member name="T:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewMenuDuJour">
+            <summary>
+            Couche intermédiaire de gestion (Business Layer)
+            </summary>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewMenuDuJour.Lire(System.String)">
+            <summary>
+            Récupère tous les menus
+            </summary>
+            <param name="Index">Index de tri</param>
+            <returns></returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewMenuDuJour.Lire_ID(System.Int32)">
+            <summary>
+            Récupère un menu par son ID
+            </summary>
+            <param name="ID">ID du menu</param>
+            <returns></returns>
+        </member>
+        <member name="M:Projet_AFFICHEURFERMETTE.MDF.Gestion.G_ViewMenuDuJour.Lire_Date(System.DateTime)">
+            <summary>
+            Récupère le menu de la date précisée
+            </summary>
+            <param name="Date">Date</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
