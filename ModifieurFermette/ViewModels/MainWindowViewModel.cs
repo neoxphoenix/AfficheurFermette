@@ -116,10 +116,49 @@ namespace ModifieurFermette.ViewModels
                 TmpPersonne.IsSelected = Check;
             }
         }
+        /// <summary>
+        /// Vérifie qu'au moins un Menu du jour est sélectionné
+        /// </summary>
+        /// <returns>vrai si au moins un élément est sélectionné</returns>
+        private bool IsAtLeastOneShowViewMenuDuJourSelected()
+        {
+            foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
+            {
+                if (TmpMenu.IsSelected)
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Vérifie qu'au moins un Evenement est sélectionné
+        /// </summary>
+        /// <returns>vrai si au moins un élément est sélectionné</returns>
+        private bool IsAtLeastOneShowViewEvenementSelected()
+        {
+            foreach (ShowViewEvenement TmpEvenement in EvenementsAff)
+            {
+                if (TmpEvenement.IsSelected)
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Vérifie qu'au moins une personne est sélectionnée
+        /// </summary>
+        /// <returns>vrai si au moins un élément est sélectionné</returns>
+        private bool IsAtLeastOneShowPersonneSelected()
+        {
+            foreach (ShowPersonne TmpPersonne in PersonnesAff)
+            {
+                if (TmpPersonne.IsSelected)
+                    return true;
+            }
+            return false;
+        }
         #endregion
-            #region Commands
-                #region ShowViewMenuDuJour
-                    #region Suppression
+        #region Commands
+            #region ShowViewMenuDuJour
+                #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -130,18 +169,9 @@ namespace ModifieurFermette.ViewModels
             await DialogHost.Show(ConfDialog, ConfDeleteShowViewMenuDuJourDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
 
         }
-        /// <summary>
-        /// Vérifie qu'au moins un élément est sélectionné
-        /// </summary>
-        /// <returns>vrai si au moins un élément est sélectionné</returns>
         private bool CanExecDeleteShowViewMenuDuJour()
         {
-            foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
-            {
-                if (TmpMenu.IsSelected)
-                    return true;
-            }
-            return false;
+            return IsAtLeastOneShowViewMenuDuJourSelected();
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un menu du jour;
@@ -180,7 +210,7 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
-                    #region Ajout
+                #region Ajout
         private async void ExecuteAddShowViewMenuDuJour()
         {
             var Dialog = new Views.Dialogs.AddMenuDuJourDialog(config.sChConn);
@@ -211,8 +241,8 @@ namespace ModifieurFermette.ViewModels
         }
         #endregion
         #endregion
-        #region ShowViewEvenement
-        #region Suppression
+            #region ShowViewEvenement
+                #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -223,18 +253,9 @@ namespace ModifieurFermette.ViewModels
             await DialogHost.Show(ConfDialog, ConfDeleteShowViewEvenementDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
 
         }
-        /// <summary>
-        /// Vérifie qu'au moins un élément est sélectionné
-        /// </summary>
-        /// <returns>vrai si au moins un élément est sélectionné</returns>
         private bool CanExecDeleteShowViewEvenement()
         {
-            foreach (ShowViewEvenement TmpEvenement in EvenementsAff)
-            {
-                if (TmpEvenement.IsSelected)
-                    return true;
-            }
-            return false;
+            return IsAtLeastOneShowViewEvenementSelected();
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
@@ -288,18 +309,9 @@ namespace ModifieurFermette.ViewModels
             await DialogHost.Show(ConfDialog, ConfDeleteShowPersonneDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
 
         }
-        /// <summary>
-        /// Vérifie qu'au moins un élément est sélectionné
-        /// </summary>
-        /// <returns>vrai si au moins un élément est sélectionné</returns>
         private bool CanExecDeleteShowPersonne()
         {
-            foreach (ShowPersonne TmpPersonne in PersonnesAff)
-            {
-                if (TmpPersonne.IsSelected)
-                    return true;
-            }
-            return false;
+            return IsAtLeastOneShowPersonneSelected();
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
@@ -351,7 +363,7 @@ namespace ModifieurFermette.ViewModels
             get { return _IsAllItemsEvenementsSelected; }
             set
             {
-                if (this._IsAllItemsEvenementsSelected != value)
+                if (this._IsAllItemsEvenementsSelected != value) // On (dé)sélectionne tous les éléments de la DG selon la valeur de la checkbox du header
                 {
                     this._IsAllItemsEvenementsSelected = value;
                     SelectAllShowViewEvenement(value);

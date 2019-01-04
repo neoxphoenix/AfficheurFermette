@@ -14,8 +14,20 @@ namespace ShowableData
         private string _DateNaissance;
         private string _Photo;
         private string _Role;
+        private int _Position;
         private bool _IsSelected;
         #endregion
+
+        public ShowPersonne(C_PersonnePos OriPersonne)
+        {
+            ID = OriPersonne.ID;
+            Nom = OriPersonne.Nom;
+            Prenom = OriPersonne.Prenom;
+            DateNaissance = OriPersonne.DateNaissance.ToShortDateString();
+            Photo = OriPersonne.Photo;
+            Role = OriPersonne.Role ? "éducateur" : "bénéficiaire";
+            Position = OriPersonne.Position;
+        }
 
         public ShowPersonne(C_Personne OriPersonne)
         {
@@ -30,6 +42,11 @@ namespace ShowableData
         public C_Personne GetOriginal()
         {
             return new C_Personne(ID, Nom, Prenom, DateTime.Parse(DateNaissance), Photo, Role == "éducateur" ? true : false);
+        }
+
+        public C_PersonnePos GetOriginalPos()
+        {
+            return new C_PersonnePos(ID, Nom, Prenom, DateTime.Parse(DateNaissance), Photo, Role == "éducateur" ? true : false, Position);
         }
 
         #region Accesseurs
@@ -109,6 +126,19 @@ namespace ShowableData
                 {
                     this._IsSelected = value;
                     OnPropertyChanged("IsSelected");
+                }
+            }
+        }
+
+        public int Position
+        {
+            get { return _Position; }
+            set
+            {
+                if (this._Position != value)
+                {
+                    this._Position = value;
+                    OnPropertyChanged("Position");
                 }
             }
         }

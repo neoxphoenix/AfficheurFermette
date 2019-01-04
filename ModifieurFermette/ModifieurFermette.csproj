@@ -41,7 +41,8 @@
     <Reference Include="AFclasses">
       <HintPath>..\AFclasses.dll</HintPath>
     </Reference>
-    <Reference Include="AFgestion">
+    <Reference Include="AFgestion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\AFgestion.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
