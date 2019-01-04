@@ -177,22 +177,26 @@ namespace AfficheurFermette
         }
         #endregion
 
+        private string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
+
+        private string _test;
+        public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
+
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string DateAjd = DateTime.Now.ToString("dd/MM");
-            string aSonAnnifAjd = "";
-            string separateur = "";
-            int i = 0;
-            List<C_Personne> AnniversaireDuJour2 = new G_Personne(vm.config.sChConn).Lire("");
-            foreach (C_Personne aSonAnnif in AnniversaireDuJour2)
+            List<C_ViewEvenement> Evenements = new G_ViewEvenement(vm.config.sChConn).Lire(""); //Lire_DateDebut(DateTime.Now)
+            int nbreEventAvenir = 0;
+            foreach (C_ViewEvenement TmpEvent in Evenements)
             {
-                string _annif = aSonAnnif.DateNaissance.ToString().Substring(0, 5);
-                if (i > 0) separateur = " et "; //rajoute un séparateur si + d'une personne on leur annif
-                if (string.Compare(_annif, DateAjd) == 0) aSonAnnifAjd += separateur + aSonAnnif.Nom + " " + aSonAnnif.Prenom; //détecte si quelqu'un à son annif
-                i++;
-                tbTest.Text = aSonAnnifAjd;
+                if (DateTime.Compare(TmpEvent.DateDebut, DateTime.Now) > 0)
+                {
+                    ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
+                }
             }
-            
+
+            //tbTest.Text += ProchainEvenements[0].Titre;
+            //tbTest.Text += ProchainEvenements[1].Titre;
         }
     }
 }

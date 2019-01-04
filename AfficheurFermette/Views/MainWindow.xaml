@@ -23,6 +23,7 @@
         <ImageBrush x:Key="imgAtelier" ImageSource="/AfficheurFermette;component/Resources/Images/OngletAtelier.jpeg" />
         <ImageBrush x:Key="imgEduc" ImageSource="/AfficheurFermette;component/Resources/Images/OngletEduc.jpg" />
         <BitmapImage x:Key="imgMenu1" UriSource="/AfficheurFermette;component/Resources/Images/menu1.png" />
+        <BitmapImage x:Key="imgEvent1" UriSource="/AfficheurFermette;component/Resources/Images/event1.png"/>
     </Window.Resources>
 
     <!-- GRID START -->
@@ -42,7 +43,7 @@
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="#FFE4DC2A">
+        <Grid Grid.Row="0" Background="#FFD0E2BA">        <!--#FFE4DC2A       Yellow old color-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="1.5*"/>
@@ -54,7 +55,7 @@
                 <TextBlock Text="{Binding dateAjd}" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="48" Grid.Row="0" Foreground="#FF49476A" FontFamily="Tempus Sans ITC" FontWeight="Bold" Margin="50 5 5 5" />
             </StackPanel>
 
-            <Label Grid.Row="0" Grid.Column="1" Name="OngletActif_Nom" Content="{Binding ongletActuelDesc, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="48" FontFamily="Tempus Sans ITC" Foreground="#FF292B36" FontWeight="Bold"  Background="#FFE4DC2A"/>
+            <Label Grid.Row="0" Grid.Column="1" Name="OngletActif_Nom" Content="{Binding ongletActuelDesc, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Bottom"  FontSize="48" FontFamily="MV Boli" Foreground="#FF3F5C9B" FontWeight="Bold" />
 
             <!--<Image Name="Logo_entete" Source="/AfficheurFermette;component/Resources/Images/share.png" Margin="10,10,0,136" HorizontalAlignment="Left" Width="100" Grid.Row="1"/>-->
             <Image Grid.Column="2" Source="/AfficheurFermette;component/Resources/Images/cake.png"  Width="75" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20 0 0 0"/>
@@ -67,17 +68,17 @@
         </Grid>
 
         <!-- ROW 1, CORPS -->
-        <Grid Grid.Row="1" Background="#FFE4DC2A">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- TAB CONTROL-->
-            <TabControl Grid.Row="1" Name="TabControl_Corps" SelectedIndex="{Binding Path=OngletChoisi, Mode=TwoWay}">
+            <TabControl Grid.Row="1" Name="TabControl_Corps" SelectedIndex="{Binding Path=OngletChoisi, Mode=TwoWay}" Background="#FFE5E5E5">
                 <!-- ONGLET 0-->
                 <TabItem Header="Repas">
                     <!-- Visibility="Collapsed" -->
-                    <Grid Background="#FFD0E2BA">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -109,34 +110,78 @@
                 </TabItem>
 
                 <TabItem Header="Actu">
-                    <Grid Background="#FFE5E5E5">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox Margin="10 10 10 10" Name="lbEvent" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="AUTO" Height="AUTO" FontSize="20" FontFamily="Tempus Sans ITC" Foreground="#FF49476A">
-                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
-                            <ListBoxItem Content="Evenement 2 blablalbla"></ListBoxItem>
-                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
-                            <ListBoxItem Content="Evenement 2 blablalbla"></ListBoxItem>
-                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
-                            <ListBoxItem Content="Evenement 2 blablalbla"></ListBoxItem>
-                            <ListBoxItem Content="Evenement 1 blablalbla"></ListBoxItem>
-                        </ListBox>
-                        <!--<TextBlock Name="CorpsTexte1" Text="Line1 &#x0a;2Peinture aquarelle, local 212" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="Black"/>-->
-                        <Image Grid.Column="1" Name="LogoCorps1" Source="/AfficheurFermette;component/Resources/Images/paint.png" HorizontalAlignment="Right" Width="150"/>
-                    </Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="AUTO"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- 1er Evenement -->
+                        <materialDesign:Card Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Margin="20 5 20 5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="AUTO" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="{Binding prochainEvent1[0]}" HorizontalAlignment="Center" FontFamily="MV Boli" FontSize="20"></TextBlock>
+                                <Image Grid.Row="1" Source="{StaticResource imgEvent1}" Stretch="Uniform" />
+                                <StackPanel Grid.Row="2" Margin="10">
+                                    <TextBlock FontSize="25" FontWeight="Bold"> Puzzle</TextBlock>
+                                    <TextBlock FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center"> A great way to keep fit and forget about the constant grind of IT.</TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:Card>
 
+                        <!--<TextBlock Name="CorpsTexte1" Text="Line1 &#x0a;2Peinture aquarelle, local 212" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontFamily="Tempus Sans ITC" FontWeight="Bold" Foreground="Black"/>-->
+                        
+                        <!-- 2eme Evenement -->
+                        <materialDesign:Card Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" Margin="20 5 20 5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="AUTO" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontFamily="MV Boli" FontSize="20">Le 21 janvier 2019</TextBlock>
+                                <Image  Grid.Row="1" Source="/AfficheurFermette;component/Resources/Images/paint.png" Stretch="Uniform" />
+                                <StackPanel Grid.Row="2" Margin="10">
+                                    <TextBlock FontSize="25" FontWeight="Bold"> Painting</TextBlock>
+                                    <TextBlock FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center"> A great way to keep fit and forget about the constant grind of IT.</TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:Card>
+                        <!-- 3eme Evenement -->
+                        <materialDesign:Card Grid.Column="2" Grid.Row="1" VerticalAlignment="Stretch" Margin="20 5 20 5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="AUTO" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontFamily="MV Boli" FontSize="20">Le 21 janvier 2019</TextBlock>
+                                <Image  Grid.Row="1" Source="{StaticResource imgEvent1}" Stretch="Uniform" />
+                                <StackPanel Grid.Row="2" Margin="10">
+                                    <TextBlock FontSize="25" FontWeight="Bold"> Cycling </TextBlock>
+                                    <TextBlock FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center"> A great way to keep fit and forget about the constant grind of IT.                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Grid>
                 </TabItem>
 
                 <TabItem Header="Ateliers">
                     <Grid Background="#FFE5E5E5">
                         <Label>Test</Label>
                     </Grid>
-
                 </TabItem>
 
-                <TabItem Header="Educateurs" Visibility="Collapsed">
+                <TabItem Header="Educateurs">
                     <Grid Background="#FFE5E5E5"/>
                 </TabItem>
             </TabControl>

@@ -10,27 +10,32 @@ using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using System.ComponentModel;
+using System.Collections.ObjectModel; //pour ObservableData
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ShowableData; //afin d'hériter de ObservableData
 
 namespace AfficheurFermette.ViewModels
 {
-    class MainWindowViewModel : INotifyPropertyChanged
+    class MainWindowViewModel : ObservableData, INotifyPropertyChanged
     {
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         /// ATTRIBUTS
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         public ConfigClass config;
 
+        private ICommand _ChangeTabByClick;
         private int _OngletChoisi = 0;
         private string _ongletActuelDesc = "Repas du jour"; //Chaine de texte (description) de l'onglet actuel
         private string _repasEntreeDuJour, _repasPlatDuJour, _repasDessertDuJour;
-        private string _test;
         private string _dateAjd; //stocke la date du jour
         private string _aSonAnnifAjd = "";
+        private string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
 
-        private ICommand _ChangeTabByClick;
+        private string _test;
+        public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
+
+        
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         /// CONSTRUCTEUR
@@ -60,7 +65,6 @@ namespace AfficheurFermette.ViewModels
                         case 3: ongletActuelDesc = "Educateurs présent aujourd'hui"; break;
                         default: ongletActuelDesc = "Repas du jour"; break;
                     }
-
                     OnPropertyChanged(); //Signal le changement
                 }
             }
@@ -155,7 +159,17 @@ namespace AfficheurFermette.ViewModels
                     _aSonAnnifAjd = value;
                 OnPropertyChanged();
            }
-    }
+        }
+
+        public string[] prochainEvent1
+        {
+            get { return _prochainEvent1; }
+            set {
+                if (_prochainEvent1 != value)
+                    _prochainEvent1 = value;
+                OnPropertyChanged();
+            }
+        }
 
         //CanChange
         private bool ICmd_CanChangeTabByClick(object o)
@@ -177,8 +191,8 @@ namespace AfficheurFermette.ViewModels
         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //EVENT HANDLER qui signal un changement d'état
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public new event PropertyChangedEventHandler PropertyChanged;
+        private new void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -188,18 +202,22 @@ namespace AfficheurFermette.ViewModels
         {
             GetMenuDuJour();
             CheckAnnifToday();
+            GenerationDesEvenementsExistant();
         }
 
         //Menu du jour
         public void GetMenuDuJour()
         {
-            List<C_ViewMenuDuJour> ListeDesMenus = new G_ViewMenuDuJour(config.sChConn).Lire("");
-            C_ViewMenuDuJour MenuDuJour = ListeDesMenus.Find(x => x.Date.ToString(("dd/MM/yy")) == dateAjd);
-            if (MenuDuJour != null)
+            C_ViewMenuDuJour MenuDuJour = new G_ViewMenuDuJour(config.sChConn).Lire_Date(DateTime.Now);
+            if (MenuDuJour.eNom != null)
             {
                 repasEntreeDuJour = MenuDuJour.eNom.ToString();
                 repasPlatDuJour = MenuDuJour.pNom.ToString();
                 repasDessertDuJour = MenuDuJour.dNom.ToString();
+            }
+            else
+            {
+                repasPlatDuJour = "Aucune donnée en ce jour";
             }
         }
         //Check Anniversaire du jour
@@ -220,7 +238,6 @@ namespace AfficheurFermette.ViewModels
                     TmpaSonAnnifAjd += separateur + aSonAnnif.Nom + " " + aSonAnnif.Prenom; //détecte si quelqu'un à son annif
                     i++;
                 }
-                    
             }
             aSonAnnifAjd = TmpaSonAnnifAjd;
         }
@@ -228,7 +245,28 @@ namespace AfficheurFermette.ViewModels
         public void GenerationDesEvenementsExistant()
         {
             List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("");
+            int nbreEvent = 0;
+            foreach (C_ViewEvenement TmpEvent in Evenements)
+            {
+                if (DateTime.Compare(TmpEvent.DateDebut,DateTime.Now) > 0)
+                {
+                    ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
+                    nbreEvent++;
+                }
+            }
+            //for (int i=0;i<=nbreEvent;i++)
+            //{
+            //    _prochainEvent1 = new string[] { ProchainEvenements[i].Titre, ProchainEvenements[i].Lieu };
+            //}
 
+        }
+
+        public string[] Food
+        {
+            get
+            {
+                return new string[] { "liver", "spam", "cake", "garlic" };
+            }
         }
     }
 
