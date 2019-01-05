@@ -170,6 +170,26 @@ namespace AfficheurFermette.ViewModels
                 OnPropertyChanged();
             }
         }
+        public string[] prochainEvent2
+        {
+            get { return _prochainEvent2; }
+            set
+            {
+                if (_prochainEvent2 != value)
+                    _prochainEvent2 = value;
+                OnPropertyChanged();
+            }
+        }
+        public string[] prochainEvent3
+        {
+            get { return _prochainEvent3; }
+            set
+            {
+                if (_prochainEvent3 != value)
+                    _prochainEvent3 = value;
+                OnPropertyChanged();
+            }
+        }
 
         //CanChange
         private bool ICmd_CanChangeTabByClick(object o)
@@ -244,29 +264,36 @@ namespace AfficheurFermette.ViewModels
 
         public void GenerationDesEvenementsExistant()
         {
-            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("");
-            int nbreEvent = 0;
+            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire_DateNextEvents(DateTime.Now);
+            int nbreEventsFound = Evenements.Count(); //nombre d'Events récupéré
+            int nbreEventsWeWant = 3; //nombre d'Events que l'on veux afficher
             foreach (C_ViewEvenement TmpEvent in Evenements)
             {
-                if (DateTime.Compare(TmpEvent.DateDebut,DateTime.Now) > 0)
+                ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
+                if ((ProchainEvenements.Count() >= nbreEventsWeWant) || (nbreEventsFound <= 0))
+                    break;
+            }
+            if (nbreEventsFound > 0)
+            {
+                prochainEvent1 = ConstruitStringEvents(0);
+                //tbTest.Text += _prochainEvent1[3];
+                if (nbreEventsFound > 1)
                 {
-                    ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
-                    nbreEvent++;
+                    prochainEvent2 = ConstruitStringEvents(1);
+                    if (nbreEventsFound > 2)
+                        prochainEvent3 = ConstruitStringEvents(2);
                 }
             }
-            //for (int i=0;i<=nbreEvent;i++)
-            //{
-            //    _prochainEvent1 = new string[] { ProchainEvenements[i].Titre, ProchainEvenements[i].Lieu };
-            //}
-
         }
-
-        public string[] Food
+        public string[] ConstruitStringEvents(int num)
         {
-            get
-            {
-                return new string[] { "liver", "spam", "cake", "garlic" };
-            }
+            return new string[] {
+                ProchainEvenements[num].ID.ToString(),
+                ProchainEvenements[num].DateDebut.ToString(),
+                ProchainEvenements[num].Titre,
+                ProchainEvenements[num].Lieu,
+                ProchainEvenements[num].Description
+            };
         }
     }
 

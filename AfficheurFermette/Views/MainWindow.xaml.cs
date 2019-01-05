@@ -177,26 +177,42 @@ namespace AfficheurFermette
         }
         #endregion
 
-        private string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
-
-        private string _test;
+        public string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
         public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
 
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void Button_Click(object sender, RoutedEventArgs e)
         {
-            List<C_ViewEvenement> Evenements = new G_ViewEvenement(vm.config.sChConn).Lire(""); //Lire_DateDebut(DateTime.Now)
-            int nbreEventAvenir = 0;
+            List<C_ViewEvenement> Evenements = new G_ViewEvenement(vm.config.sChConn).Lire_DateNextEvents(DateTime.Now);
+            int nbreEventsFound = Evenements.Count(); //nombre d'Events récupéré
+            int nbreEventsWeWant = 3; //nombre d'Events que l'on veux afficher
             foreach (C_ViewEvenement TmpEvent in Evenements)
             {
-                if (DateTime.Compare(TmpEvent.DateDebut, DateTime.Now) > 0)
+                ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
+                if ( (ProchainEvenements.Count() >= nbreEventsWeWant) || (nbreEventsFound <= 0))
+                    break;
+            }
+            if (nbreEventsFound > 0)
+            {
+                _prochainEvent1 = ConstruitStringEvents( 0);
+                //tbTest.Text += _prochainEvent1[3];
+                if (nbreEventsFound > 1)
                 {
-                    ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
+                    _prochainEvent2 = ConstruitStringEvents(1);
+                    if (nbreEventsFound > 2)
+                        _prochainEvent3 = ConstruitStringEvents(2);
                 }
             }
-
-            //tbTest.Text += ProchainEvenements[0].Titre;
-            //tbTest.Text += ProchainEvenements[1].Titre;
+        }
+        public string[] ConstruitStringEvents(int num)
+        {
+            return new string[] {
+                ProchainEvenements[num].ID.ToString(),
+                ProchainEvenements[num].DateDebut.ToString(),
+                ProchainEvenements[num].Titre,
+                ProchainEvenements[num].Lieu,
+                ProchainEvenements[num].Description
+            };
         }
     }
 }
