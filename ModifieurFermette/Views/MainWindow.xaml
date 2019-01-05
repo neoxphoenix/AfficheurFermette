@@ -24,18 +24,28 @@
                       Background="{DynamicResource PrimaryHueDarkBrush}" 
                       Foreground="White">
                     <MenuItem Header="App">
-                        <MenuItem Header="Ouvrir l'afficheur"></MenuItem>
-                        <MenuItem Header="Fermer l'application"></MenuItem>
+                        <MenuItem Header="Ouvrir l'afficheur">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="OpenInNew" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Fermer l'application">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="ExitToApp"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
                     <MenuItem Header="Ajouter">
                         <MenuItem Header="Evenement">
                             <MenuItem Header="Nouvel événement"></MenuItem>
+                            <MenuItem Header="Nouveau titre"></MenuItem>
+                            <MenuItem Header="Nouveau lieu"></MenuItem>
                         </MenuItem>
                         <MenuItem Header="Personne">
                             <MenuItem Header="Nouvelle personne"></MenuItem>
                         </MenuItem>
                         <MenuItem Header="Menu">
-                            <MenuItem Header="Nouveau menu"></MenuItem>
+                            <MenuItem Header="Nouveau menu" Command="{Binding AddShowViewMenuDuJourCmd}"></MenuItem>
                             <MenuItem Header="Nouveau plat"></MenuItem>
                         </MenuItem>
                     </MenuItem>
