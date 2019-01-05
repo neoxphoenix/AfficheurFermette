@@ -38,6 +38,8 @@
                     <MenuItem Header="Ajouter">
                         <MenuItem Header="Evenement">
                             <MenuItem Header="Nouvel événement"></MenuItem>
+                            <MenuItem Header="Nouveau titre"></MenuItem>
+                            <MenuItem Header="Nouveau lieu"></MenuItem>
                         </MenuItem>
                         <MenuItem Header="Personne">
                             <MenuItem Header="Nouvelle personne"></MenuItem>
