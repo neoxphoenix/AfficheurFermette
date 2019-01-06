@@ -15,8 +15,15 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <materialDesign:DialogHost>
-        <StackPanel>
+    <!-- On s'assure que le DialogHost a une auteur définie qui prend toute la pace sur l'écran en bindant sa hauteur à celle de la fenêtre -->
+    <materialDesign:DialogHost Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
+        <Grid Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <!-- Menu de navigation -->
             <!-- TODO : Ajouter les commandes nécessaires aux items -->
             <Menu IsMainMenu="True"  Grid.Row="0"
@@ -59,7 +66,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <!-- Datagrid événements -->
-                    <DataGrid x:Name="DGevenements"
+                    <DataGrid x:Name="DGevenements" MaxHeight="300"
                             Margin="0 8 0 0" Grid.Row="0"
                             ItemsSource="{Binding EvenementsAff}"
                             CanUserSortColumns="True"
@@ -187,7 +194,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <!-- Datagrid Personnes -->
-                    <DataGrid x:Name="dgpersonnes"
+                    <DataGrid x:Name="dgpersonnes" MaxHeight="300"
                             Margin="0 8 0 0" Grid.Row="0"
                             ItemsSource="{Binding PersonnesAff}"
                             CanUserSortColumns="True"
@@ -303,13 +310,16 @@
             <!-- Expander 3 => menus-->
             <Expander x:Name="ExpMenus" Grid.Row="3"
                       HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
                       Header="Menus">
                 <!-- Menus -->
-                <StackPanel Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
                     <!-- Datagrid menus -->
-                    <DataGrid x:Name="DGmenus"
-                             Margin="0 8 0 0"
+                    <DataGrid x:Name="DGmenus" MaxHeight="300"
+                             Margin="0 8 0 0" Grid.Row="0"
                              ScrollViewer.CanContentScroll="True" 
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              ItemsSource="{Binding MenusAff}"
@@ -377,7 +387,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <!-- Boutons menus -->
-                    <Grid HorizontalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch" Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -422,8 +432,8 @@
                             Détails
                         </Button>
                     </Grid>
-                </StackPanel>
+                </Grid>
             </Expander>
-        </StackPanel>
+        </Grid>
     </materialDesign:DialogHost>
 </Window>
