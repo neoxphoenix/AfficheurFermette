@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
-using MaterialDesignThemes.Wpf;
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
@@ -13,6 +12,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel; //pour ObservableData
 using System.Runtime.CompilerServices;
 using System.Windows;
+using MaterialDesignThemes.Wpf;
 using ShowableData; //afin d'hériter de ObservableData
 
 namespace AfficheurFermette.ViewModels
@@ -25,6 +25,8 @@ namespace AfficheurFermette.ViewModels
         public ConfigClass config;
 
         private ICommand _ChangeTabByClick;
+        private ICommand _ShowPhotosEvent;
+
         private int _OngletChoisi = 0;
         private string _ongletActuelDesc = "Repas du jour"; //Chaine de texte (description) de l'onglet actuel
         private string _repasEntreeDuJour, _repasPlatDuJour, _repasDessertDuJour;
@@ -35,14 +37,16 @@ namespace AfficheurFermette.ViewModels
         private string _test;
         public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
 
-        
+        public ObservableCollection<ShowViewEvenement> EvenementsAff { get; set; }
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// CONSTRUCTEUR
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
-        public MainWindowViewModel()
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// CONSTRUCTEUR
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    public MainWindowViewModel()
         {
             ChangeTabByClick = new RelayCommand(ICmd_ExecChangeTabByClick, ICmd_CanChangeTabByClick);
+            Cmd_ShowPhotosEvent = new RelayCommand(ICmd_ExecShowPhotosEventClick, ICmd_CanShowPhotosEventClick);
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +96,17 @@ namespace AfficheurFermette.ViewModels
             {
                 if (_ChangeTabByClick != value)
                     _ChangeTabByClick = value;
+            }
+        }
+
+        //RelayCmd lors du clic sur un onglet
+        public ICommand Cmd_ShowPhotosEvent
+        {
+            get { return _ShowPhotosEvent; }
+            set
+            {
+                if (_ShowPhotosEvent != value)
+                    _ShowPhotosEvent = value;
             }
         }
 
@@ -160,6 +175,16 @@ namespace AfficheurFermette.ViewModels
                 OnPropertyChanged();
            }
         }
+        public Visibility AfficherAnniversaire
+        {
+            get
+            {
+                if (aSonAnnifAjd.Length < 2)
+                    return Visibility.Hidden;
+                else
+                    return Visibility.Visible;
+            }
+        }
 
         public string[] prochainEvent1
         {
@@ -202,6 +227,19 @@ namespace AfficheurFermette.ViewModels
         {
             OngletChoisi = Convert.ToInt32(param); //récupère l'argument et le converti en int
         }
+
+        //Show
+        private bool ICmd_CanShowPhotosEventClick(object o)
+        {
+            return true;
+        }
+        //Exec
+        private async void ICmd_ExecShowPhotosEventClick(object param)
+        {
+            var Dialog = new Views.Dialogs.ShowPicturesEvent();
+            await DialogHost.Show(Dialog);
+        }
+
         #endregion
 
 
@@ -223,6 +261,14 @@ namespace AfficheurFermette.ViewModels
             GetMenuDuJour();
             CheckAnnifToday();
             GenerationDesEvenementsExistant();
+
+            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("");
+
+            EvenementsAff = new ObservableCollection<ShowViewEvenement>();
+            foreach (C_ViewEvenement TmpEvenement in Evenements)
+            {
+                EvenementsAff.Add(new ShowViewEvenement(TmpEvenement));
+            }
         }
 
         //Menu du jour
@@ -243,7 +289,6 @@ namespace AfficheurFermette.ViewModels
         //Check Anniversaire du jour
         public void CheckAnnifToday()
         {
-            string DateAjd = DateTime.Now.ToString("dd/MM");
             string TmpaSonAnnifAjd = "";
             string separateur = "";
             int i = 0;
@@ -253,7 +298,7 @@ namespace AfficheurFermette.ViewModels
                 string _annif = aSonAnnif.DateNaissance.ToString().Substring(0, 5);
                 if (i > 0)
                     separateur = " et "; //rajoute un séparateur si + d'une personne on leur annif
-                if (string.Compare(_annif, DateAjd) == 0)
+                if (string.Compare(_annif, DateTime.Now.ToString("dd/MM")) == 0)
                 {
                     TmpaSonAnnifAjd += separateur + aSonAnnif.Nom + " " + aSonAnnif.Prenom; //détecte si quelqu'un à son annif
                     i++;

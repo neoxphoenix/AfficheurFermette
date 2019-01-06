@@ -185,17 +185,18 @@ namespace AfficheurFermette
         {
             List<C_ViewEvenement> Evenements = new G_ViewEvenement(vm.config.sChConn).Lire_DateNextEvents(DateTime.Now);
             int nbreEventsFound = Evenements.Count(); //nombre d'Events récupéré
+
             int nbreEventsWeWant = 3; //nombre d'Events que l'on veux afficher
             foreach (C_ViewEvenement TmpEvent in Evenements)
             {
                 ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
-                if ( (ProchainEvenements.Count() >= nbreEventsWeWant) || (nbreEventsFound <= 0))
+                if ((ProchainEvenements.Count() >= nbreEventsWeWant) || (nbreEventsFound <= 0))
                     break;
             }
             if (nbreEventsFound > 0)
             {
-                _prochainEvent1 = ConstruitStringEvents( 0);
-                //tbTest.Text += _prochainEvent1[3];
+                _prochainEvent1 = ConstruitStringEvents(0);
+                tbTest.Text += _prochainEvent1[3];
                 if (nbreEventsFound > 1)
                 {
                     _prochainEvent2 = ConstruitStringEvents(1);

@@ -75,6 +75,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\Dialogs\ShowPicturesEventViewModel.cs" />
+    <Compile Include="Views\Dialogs\ShowPicturesEvent.xaml.cs">
+      <DependentUpon>ShowPicturesEvent.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,6 +92,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Dialogs\ShowPicturesEvent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -117,14 +125,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\balloon.png" />
     <Resource Include="Resources\Images\cake.png" />
-    <Resource Include="Resources\Images\free-vector-birthday-icon_102051_Birthday_Icon.png" />
-    <Resource Include="Resources\Images\lineseparation.png" />
     <Resource Include="Resources\Images\OngletActu.jpg" />
     <Resource Include="Resources\Images\OngletAtelier.jpeg" />
     <Resource Include="Resources\Images\OngletEduc.jpg" />
-    <Resource Include="Resources\Images\OngletRepas.jpg" />
     <Resource Include="Resources\Images\paint.png" />
     <Resource Include="Resources\Images\share.png" />
   </ItemGroup>
@@ -145,6 +149,25 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\menu3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletRepas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\jogging.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\natation.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletActu2.jpg" />
+    <Resource Include="Resources\Images\OngletEducateur2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletRepas3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletAtelier3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
