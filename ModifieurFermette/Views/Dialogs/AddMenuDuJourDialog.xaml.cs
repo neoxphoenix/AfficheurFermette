@@ -31,27 +31,5 @@ namespace ModifieurFermette.Views.Dialogs
             InitializeComponent();
             this.DataContext = vm;
         }
-
-        /// <summary>
-        /// Evenement lié à la RoutedCommand du bouton de confirmation de notre dialog
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (vm.SelectedPotage == null || vm.SelectedPlat == null || vm.SelectedDessert == null || vm.Time == null)
-                e.CanExecute = false;
-            else
-                e.CanExecute = true;
-        }
-        /// <summary>
-        /// NE fait rien après que la commande soit exécutée, mais nécessaire à la création du binding
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-
-        }
     }
 }

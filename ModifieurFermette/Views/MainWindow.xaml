@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModifieurFermette"
         mc:Ignorable="d"
-        Title="Tableau de bord" Height="600" Width="897"
+        Title="Tableau de bord" Height="600" Width="800" MinHeight="400" MinWidth="600"
 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -15,57 +15,52 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <materialDesign:DialogHost>
-            <StackPanel>
-                <!-- Menu de navigation -->
-                <!-- TODO : Ajouter les commandes nécessaires aux items -->
-                <Menu IsMainMenu="True" 
+    <materialDesign:DialogHost>
+        <StackPanel>
+            <!-- Menu de navigation -->
+            <!-- TODO : Ajouter les commandes nécessaires aux items -->
+            <Menu IsMainMenu="True"  Grid.Row="0"
                       Background="{DynamicResource PrimaryHueDarkBrush}" 
                       Foreground="White">
-                    <MenuItem Header="App">
-                        <MenuItem Header="Ouvrir l'afficheur">
-                            <MenuItem.Icon>
-                                <materialDesign:PackIcon Kind="OpenInNew" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Fermer l'application">
-                            <MenuItem.Icon>
-                                <materialDesign:PackIcon Kind="ExitToApp"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
+                <MenuItem Header="App">
+                    <MenuItem Header="Ouvrir l'afficheur">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="OpenInNew" />
+                        </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Ajouter">
-                        <MenuItem Header="Evenement">
-                            <MenuItem Header="Nouvel événement"></MenuItem>
-                            <MenuItem Header="Nouveau titre"></MenuItem>
-                            <MenuItem Header="Nouveau lieu"></MenuItem>
-                        </MenuItem>
-                        <MenuItem Header="Personne">
-                            <MenuItem Header="Nouvelle personne"></MenuItem>
-                        </MenuItem>
-                        <MenuItem Header="Menu">
-                            <MenuItem Header="Nouveau menu" Command="{Binding AddShowViewMenuDuJourCmd}"></MenuItem>
-                            <MenuItem Header="Nouveau plat"></MenuItem>
-                        </MenuItem>
+                    <MenuItem Header="Fermer l'application">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="ExitToApp"/>
+                        </MenuItem.Icon>
                     </MenuItem>
-                </Menu>
-                <!-- Expander 1 => Evenements et Personnes -->
-                <Expander
-    HorizontalAlignment="Stretch"
-    Header="Evenements et participants" IsExpanded="True">
-                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <!-- Grille de 2 colonnes pour les deux DataGrid-->
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <!-- Evenements -->
-                        <StackPanel Grid.Column="0" Orientation="Vertical">
-                            <!-- Datagrid événements -->
-                            <DataGrid x:Name="DGevenements"
-                            Margin="0 8 0 0"
+                </MenuItem>
+                <MenuItem Header="Ajouter">
+                    <MenuItem Header="Evenement">
+                        <MenuItem Header="Nouvel événement"></MenuItem>
+                        <MenuItem Header="Nouveau titre"></MenuItem>
+                        <MenuItem Header="Nouveau lieu"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Personne">
+                        <MenuItem Header="Nouvelle personne"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Menu">
+                        <MenuItem Header="Nouveau menu" Command="{Binding AddShowViewMenuDuJourCmd}"></MenuItem>
+                        <MenuItem Header="Nouveau plat"></MenuItem>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <!-- Expander 1 => Evenements et Personnes -->
+            <Expander Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        Header="Evenements" IsExpanded="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <!-- Datagrid événements -->
+                    <DataGrid x:Name="DGevenements"
+                            Margin="0 8 0 0" Grid.Row="0"
                             ItemsSource="{Binding EvenementsAff}"
                             CanUserSortColumns="True"
                             CanUserAddRows="False"
@@ -76,119 +71,124 @@
                             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                             materialDesign:DataGridAssist.ColumnHeaderPadding="8"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
-                                <DataGrid.Resources>
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="IsSelected"
+                        <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="IsSelected"
                                     Value="{Binding IsSelected, Mode=TwoWay}" />
-                                    </Style>
-                                </DataGrid.Resources>
-                                <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn 
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn 
                                 Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto" IsReadOnly="False">
-                                        <DataGridCheckBoxColumn.Header>
-                                            <!--padding to allow hit test to pass thru for sorting -->
-                                            <Border
+                                <DataGridCheckBoxColumn.Header>
+                                    <!--padding to allow hit test to pass thru for sorting -->
+                                    <Border
                                         Background="Transparent"
                                         Padding="6 0 6 0"
                                         HorizontalAlignment="Center">
-                                                <CheckBox
+                                        <CheckBox
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
                                             IsChecked="{Binding IsAllItemsEvenementsSelected}" />
-                                            </Border>
-                                        </DataGridCheckBoxColumn.Header>
-                                    </DataGridCheckBoxColumn>
-                                    <DataGridTextColumn
+                                    </Border>
+                                </DataGridCheckBoxColumn.Header>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn
                                 Binding="{Binding ID}"
                                 Header="ID"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" Width="Auto"/>
-                                    <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding Titre}"
                                 Header="Titre"
                                 MaxLength="50"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                                    <!-- set a max length to get an indicator in the editor -->
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <!-- set a max length to get an indicator in the editor -->
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding Lieu}"
                                 Header="Lieu"
                                 MaxLength="100"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding TypeEvenement}"
                                 Header="Type"
                                 MaxLength="15"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding DateDebut}"
                                 Header="Début"
                                 MaxLength="22"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding DateFin}"
                                 Header="Fin"
                                 MaxLength="22"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <!-- Boutons événements -->
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Button
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- Boutons événements -->
+                    <Grid HorizontalAlignment="Stretch" Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0">
-                                    Ajouter
-                                </Button>
-                                <Button
+                            Ajouter
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="2">
-                                    Modifier
-                                </Button>
-                                <Button
+                            Modifier
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowViewEvenementCmd}">
-                                    Supprimer
-                                </Button>
-                                <Button
+                            Supprimer
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="6">
-                                    Détails
-                                </Button>
-                            </Grid>
-                        </StackPanel>
+                            Détails
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Expander>
 
-                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-                        <!-- Permet de redéfinir la taille des deux autre colonnes -->
-
-                        <!-- Personnes -->
-                        <StackPanel Grid.Column="2" Orientation="Vertical">
-                            <!-- Datagrid Personnes -->
-                            <DataGrid x:Name="dgpersonnes"
-                            Margin="0 8 0 0"
+            <!-- Expander 2 => Personnes-->
+            <Expander Grid.Row="2"
+                        HorizontalAlignment="Stretch"
+                        Header="Personnes" IsExpanded="False">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <!-- Datagrid Personnes -->
+                    <DataGrid x:Name="dgpersonnes"
+                            Margin="0 8 0 0" Grid.Row="0"
                             ItemsSource="{Binding PersonnesAff}"
                             CanUserSortColumns="True"
                             CanUserAddRows="False"
@@ -199,232 +199,231 @@
                             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                             materialDesign:DataGridAssist.ColumnHeaderPadding="8"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
-                                <DataGrid.Resources>
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="IsSelected"
+                        <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="IsSelected"
                                 Value="{Binding IsSelected, Mode=TwoWay}" />
-                                    </Style>
-                                </DataGrid.Resources>
-                                <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn
                                 Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto" IsReadOnly="False">
-                                        <DataGridCheckBoxColumn.Header>
-                                            <!--padding to allow hit test to pass thru for sorting -->
-                                            <Border
+                                <DataGridCheckBoxColumn.Header>
+                                    <!--padding to allow hit test to pass thru for sorting -->
+                                    <Border
                                         Background="Transparent"
                                         Padding="6 0 6 0"
                                         HorizontalAlignment="Center">
-                                                <CheckBox
+                                        <CheckBox
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
                                             IsChecked="{Binding IsAllItemsPersonnesSelected}" />
-                                            </Border>
-                                        </DataGridCheckBoxColumn.Header>
-                                    </DataGridCheckBoxColumn>
-                                    <DataGridTextColumn
+                                    </Border>
+                                </DataGridCheckBoxColumn.Header>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn
                                 Binding="{Binding ID}"
                                 Header="ID"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" Width="Auto"/>
-                                    <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding Nom}"
                                 Header="Nom"
                                 MaxLength="50"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                                    <!-- set a max length to get an indicator in the editor -->
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <!-- set a max length to get an indicator in the editor -->
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding Prenom}"
                                 Header="Prénom"
                                 MaxLength="50"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding DateNaissance}"
                                 Header="Naissance"
                                 MaxLength="10"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
-                                    <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding Role}"
                                 Header="Rôle"
                                 MaxLength="12"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <!-- Boutons Personnes -->
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Button
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- Boutons Personnes -->
+                    <Grid HorizontalAlignment="Stretch" Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0">
-                                    Ajouter
-                                </Button>
-                                <Button
+                            Ajouter
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="2">
-                                    Modifier
-                                </Button>
-                                <Button
+                            Modifier
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowPersonneCmd}">
-                                    Supprimer
-                                </Button>
-                                <Button
+                            Supprimer
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="6">
-                                    Détails
-                                </Button>
-                            </Grid>
-
-                        </StackPanel>
+                            Détails
+                        </Button>
                     </Grid>
-                </Expander>
+                </Grid>
+            </Expander>
 
-                <!-- Expander 2 => menus-->
-                <Expander
-            HorizontalAlignment="Stretch"
-            Header="Menus cantine">
-                    <!-- Menus -->
-                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <!-- Datagrid menus -->
-                        <DataGrid x:Name="DGmenus"
-                        Margin="0 8 0 0"
-                        ItemsSource="{Binding MenusAff}"
-                        CanUserSortColumns="True"
-                        CanUserAddRows="False"
-                        CanUserDeleteRows="False"
-                        CanUserResizeColumns="False"
-                        IsReadOnly="True"
-                        AutoGenerateColumns="False"
-                        materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                        materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                        SelectionMode="Extended">
-                            <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="IsSelected"
+            <!-- Expander 3 => menus-->
+            <Expander x:Name="ExpMenus" Grid.Row="3"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Header="Menus">
+                <!-- Menus -->
+                <StackPanel Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UIElement}}">
+                    <!-- Datagrid menus -->
+                    <DataGrid x:Name="DGmenus"
+                             Margin="0 8 0 0"
+                             ScrollViewer.CanContentScroll="True" 
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ItemsSource="{Binding MenusAff}"
+                             CanUserSortColumns="True"
+                             CanUserAddRows="False"
+                             CanUserDeleteRows="False"
+                             CanUserResizeColumns="False"
+                             IsReadOnly="True"
+                             AutoGenerateColumns="False"
+                             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                             materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                             SelectionMode="Extended">
+                        <!-- Permet de lier la sélection de la checkbox avec celle de la ligne de la DataGrid -->
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="IsSelected"
                                 Value="{Binding IsSelected, Mode=TwoWay}" />
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.Columns>
-                                <DataGridCheckBoxColumn x:Name="CBitemMenus"
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn x:Name="CBitemMenus"
                                 Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}" Width="Auto"  IsReadOnly="False">
-                                    <DataGridCheckBoxColumn.Header>
-                                        <!--padding to allow hit test to pass thru for sorting -->
-                                        <Border
+                                <DataGridCheckBoxColumn.Header>
+                                    <!--padding to allow hit test to pass thru for sorting -->
+                                    <Border
                                         Background="Transparent"
                                         Padding="6 0 6 0"
                                         HorizontalAlignment="Center">
-                                            <CheckBox x:Name="CBallMenus"
+                                        <CheckBox x:Name="CBallMenus"
                                             HorizontalAlignment="Center"
                                             DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
                                             IsChecked="{Binding IsAllItemsMenuDuJourSelected, Mode=TwoWay}" />
-                                        </Border>
-                                    </DataGridCheckBoxColumn.Header>
-                                </DataGridCheckBoxColumn>
-                                <DataGridTextColumn
+                                    </Border>
+                                </DataGridCheckBoxColumn.Header>
+                            </DataGridCheckBoxColumn>
+                            <DataGridTextColumn
                                 Binding="{Binding ID}"
                                 Header="ID"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" Width="Auto"/>
-                                <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
-                                <materialDesign:MaterialDataGridTextColumn
+                            <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding Date}"
                                 Header="Date"
                                 MaxLength="10"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="Auto"/>
-                                <!-- set a max length to get an indicator in the editor -->
-                                <materialDesign:MaterialDataGridTextColumn
+                            <!-- set a max length to get an indicator in the editor -->
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding eNom}"
                                 Header="Potage"
                                 MaxLength="50"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                                <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding pNom}"
                                 Header="Plat principal"
                                 MaxLength="15"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                                <materialDesign:MaterialDataGridTextColumn
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding dNom}"
                                 Header="Dessert"
                                 MaxLength="10"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <!-- Boutons menus -->
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Button
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- Boutons menus -->
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowViewMenuDuJourCmd}">
-                                Ajouter
-                            </Button>
-                            <Button
+                            Ajouter
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="2">
-                                Modifier
-                            </Button>
-                            <Button
+                            Modifier
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowViewMenuDuJourCmd}">
-                                Supprimer
-                            </Button>
-                            <Button
+                            Supprimer
+                        </Button>
+                        <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="6">
-                                Détails
-                            </Button>
-                        </Grid>
-                    </StackPanel>
-
-                </Expander>
-            </StackPanel>
-        </materialDesign:DialogHost>
-    </Grid>
+                            Détails
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </materialDesign:DialogHost>
 </Window>

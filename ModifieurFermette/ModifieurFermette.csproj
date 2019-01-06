@@ -75,10 +75,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ViewModels\Dialogs\AddPersonneDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Dialogs\AddMenuDuJourDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,9 +96,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\AddPersonneDialog.xaml.cs">
-      <DependentUpon>AddPersonneDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\AddMenuDuJourDialog.xaml.cs">
       <DependentUpon>AddMenuDuJourDialog.xaml</DependentUpon>
@@ -150,7 +143,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Models\Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
