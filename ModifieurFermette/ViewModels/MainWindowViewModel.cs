@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
+using System.IO;
+
+using ModifieurFermette.Views.Dialogs;
 
 // dll
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
@@ -39,6 +42,7 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #region Ajout
         private ICommand _AddShowViewMenuDuJourCmd;
+        private ICommand _AddShowPersonneCmd;
         #endregion
         #endregion
         #endregion
@@ -50,6 +54,7 @@ namespace ModifieurFermette.ViewModels
             DeleteShowPersonneCmd = new RelayCommand(Exec => ExecuteDeleteShowPersonne(), CanExec => CanExecDeleteShowPersonne());
 
             AddShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteAddShowViewMenuDuJour(), CanExec => true);
+            AddShowPersonneCmd = new RelayCommand(Exec => ExecuteAddShowPersonne(), CanExec => true);
         }
 
         #region Méthodes
@@ -213,7 +218,7 @@ namespace ModifieurFermette.ViewModels
                 #region Ajout
         private async void ExecuteAddShowViewMenuDuJour()
         {
-            var Dialog = new Views.Dialogs.AddMenuDuJourDialog(config.sChConn);
+            var Dialog = new AddMenuDuJourDialog(config.sChConn);
 
             await DialogHost.Show(Dialog, AddShowViewMenuDuJourDialogClosing);
         }
@@ -222,8 +227,8 @@ namespace ModifieurFermette.ViewModels
             if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
 
             eventArgs.Cancel(); // On empêche la fermeture
-            Views.Dialogs.AddMenuDuJourDialog dg = (Views.Dialogs.AddMenuDuJourDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
-            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+            AddMenuDuJourDialog dg = (AddMenuDuJourDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
 
             Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
             {
@@ -352,6 +357,41 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                    #region Ajout
+        private async void ExecuteAddShowPersonne()
+        {
+            var Dialog = new Views.Dialogs.AddPersonneDialog();
+            await DialogHost.Show(Dialog, AddShowPersonneDialogClosing);
+        }
+        private async void AddShowPersonneDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddPersonneDialog dg = (AddPersonneDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
+            {
+                // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
+                string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
+                Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
+                path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
+
+                lock (PersonnesAffLock)
+                {
+                    int ID = new G_Personne(config.sChConn).Ajouter(dg.vm.Nom, dg.vm.Prenom, dg.vm.Date, path, dg.vm.SelectedRole);
+                    PersonnesAff.Add(new ShowPersonne(new C_Personne(ID, dg.vm.Nom, dg.vm.Prenom, dg.vm.Date, path, dg.vm.SelectedRole)));
+                }
+            });
+
+            // Fermeture du Dialog
+            await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
         #endregion
         #endregion
         #endregion
@@ -434,7 +474,7 @@ namespace ModifieurFermette.ViewModels
             }
         }
         #endregion
-        #region Ajout
+            #region Ajout
         public ICommand AddShowViewMenuDuJourCmd
         {
             get
@@ -444,6 +484,17 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _AddShowViewMenuDuJourCmd = value;
+            }
+        }
+        public ICommand AddShowPersonneCmd
+        {
+            get
+            {
+                return _AddShowPersonneCmd;
+            }
+            set
+            {
+                _AddShowPersonneCmd = value;
             }
         }
         #endregion

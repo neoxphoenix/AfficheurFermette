@@ -275,7 +275,8 @@
                             Width="100"
                             ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="0">
+                            Grid.Column="0"
+                            Command="{Binding AddShowPersonneCmd}">
                             Ajouter
                         </Button>
                         <Button

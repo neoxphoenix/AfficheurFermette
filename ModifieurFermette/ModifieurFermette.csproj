@@ -79,6 +79,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\AddPersonneDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ConfirmDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -95,10 +99,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\GeneralComboBoxItem.cs" />
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\AddPersonneDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\AddMenuDuJourDialog.xaml.cs">
       <DependentUpon>AddMenuDuJourDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AddPersonneDialog.xaml.cs">
+      <DependentUpon>AddPersonneDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
