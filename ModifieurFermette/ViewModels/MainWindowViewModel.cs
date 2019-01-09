@@ -43,6 +43,7 @@ namespace ModifieurFermette.ViewModels
         #region Ajout
         private ICommand _AddShowViewMenuDuJourCmd;
         private ICommand _AddShowPersonneCmd;
+        private ICommand _AddShowViewEvenementCmd;
         #endregion
         #endregion
         #endregion
@@ -55,6 +56,7 @@ namespace ModifieurFermette.ViewModels
 
             AddShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteAddShowViewMenuDuJour(), CanExec => true);
             AddShowPersonneCmd = new RelayCommand(Exec => ExecuteAddShowPersonne(), CanExec => true);
+            AddShowViewEvenementCmd = new RelayCommand(Exec => ExecuteAddShowViewEvenement(), CanExec => true);
         }
 
         #region Méthodes
@@ -301,9 +303,45 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                #region Ajout
+        private async void ExecuteAddShowViewEvenement()
+        {
+            var Dialog = new AddEvenementDialog(config.sChConn);
+            await DialogHost.Show(Dialog, AddShowViewEvenementDialogClosing);
+        }
+        private async void AddShowViewEvenementDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddEvenementDialog dg = (AddEvenementDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
+            {
+                DateTime DateDebut = dg.vm.DateDebut.Add(dg.vm.TimeDebut.TimeOfDay);
+                DateTime DateFin = dg.vm.DateFin.Add(dg.vm.TimeFin.TimeOfDay);
+
+                // On vérifie les ID, si ils sont à 0 c'est que les items n'existent pas encore dans la DB => création
+                if (dg.vm.SelectedTitre.ID == 0)
+                    dg.vm.SelectedTitre.ID = new G_TitreEvenement(config.sChConn).Ajouter(dg.vm.SelectedTitre.Titre);
+                if (dg.vm.SelectedLieu.ID == 0)
+                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu);
+                lock (EvenementsAffLock) // Verrouillage de l'ObservableCollection pour modif
+                {
+                    int ID = new G_Evenement(config.sChConn).Ajouter(DateDebut, DateFin, dg.vm.Description, dg.vm.SelectedTypeEvenement, dg.vm.SelectedTitre.ID, dg.vm.SelectedLieu.ID);
+                    EvenementsAff.Add(new ShowViewEvenement(new C_ViewEvenement(ID, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description)));
+                }
+            });
+
+            // Fermeture du Dialog
+            await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
         #endregion
-                #region ShowPersonne
-                    #region Suppression
+        #endregion
+        #region ShowPersonne
+        #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -360,7 +398,7 @@ namespace ModifieurFermette.ViewModels
                     #region Ajout
         private async void ExecuteAddShowPersonne()
         {
-            var Dialog = new Views.Dialogs.AddPersonneDialog();
+            var Dialog = new AddPersonneDialog();
             await DialogHost.Show(Dialog, AddShowPersonneDialogClosing);
         }
         private async void AddShowPersonneDialogClosing(object sender, DialogClosingEventArgs eventArgs)
@@ -495,6 +533,17 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _AddShowPersonneCmd = value;
+            }
+        }
+        public ICommand AddShowViewEvenementCmd
+        {
+            get
+            {
+                return _AddShowViewEvenementCmd;
+            }
+            set
+            {
+                _AddShowViewEvenementCmd = value;
             }
         }
         #endregion

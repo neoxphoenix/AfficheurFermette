@@ -1,0 +1,122 @@
+﻿<UserControl x:Class="ModifieurFermette.Views.Dialogs.AddEvenementDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModifieurFermette.Views.Dialogs"
+             mc:Ignorable="d" 
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <StackPanel Orientation="Vertical" Margin="5">
+        <TextBlock FontWeight="ExtraBold" TextDecorations="underline" HorizontalAlignment="Center">Ajouter un événement</TextBlock>
+
+        <!-- ComboBox éditables en utilisant une variante de la solution trouvée ici -> https://stackoverflow.com/questions/3373239/wpf-editable-combobox -->
+        <ComboBox
+          materialDesign:HintAssist.Hint="Titre"
+          MinWidth="300" Margin="0,5,0,5"
+          HorizontalAlignment="Center"
+          ItemsSource="{Binding Titres}"
+          SelectedItem="{Binding SelectedTitre}"
+          DisplayMemberPath="Titre"
+          IsEditable="True"
+          Text="{Binding NewTitre, UpdateSourceTrigger=LostFocus}"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <ComboBox
+          materialDesign:HintAssist.Hint="Lieu"
+          MinWidth="300" Margin="0,5,0,5"
+          HorizontalAlignment="Center"
+          ItemsSource="{Binding Lieus}"
+          SelectedItem="{Binding SelectedLieu}"
+          DisplayMemberPath="Lieu"
+          IsEditable="True"
+          Text="{Binding NewLieu, UpdateSourceTrigger=LostFocus}"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <!-- DateTime début -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" MinWidth="300" Margin="0,5,0,5">
+            <DatePicker
+        materialDesign:HintAssist.Hint="Date début"
+        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+        SelectedDate="{Binding DateDebut}" Width="150" 
+        />
+            <materialDesign:TimePicker
+        materialDesign:HintAssist.Hint="Heure début"
+        Is24Hours="True"
+        SelectedTime="{Binding TimeDebut}" Width="150"
+        />
+        </StackPanel>
+        <!-- DateTime fin -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" MinWidth="300" Margin="0,5,0,5">
+           <DatePicker
+       materialDesign:HintAssist.Hint="Date fin"
+       Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+       SelectedDate="{Binding DateFin}" Width="150"
+       />
+           <materialDesign:TimePicker
+       materialDesign:HintAssist.Hint="Heure fin"
+       Is24Hours="True"
+       SelectedTime="{Binding TimeFin}" Width="150"
+       />
+       </StackPanel>
+        <ComboBox materialDesign:HintAssist.Hint="Type d'événement"
+                  SelectedValuePath="Tag"
+                  SelectedValue="{Binding SelectedTypeEvenement}"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  HorizontalAlignment="Center" MinWidth="300" Margin="0,5,0,5">
+            <ComboBoxItem Content="Divers" IsSelected="True">
+                <ComboBoxItem.Tag>
+                    <system:Int32>0</system:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem Content="Atelier">
+                <ComboBoxItem.Tag>
+                    <system:Int32>1</system:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+            <ComboBoxItem Content="Compétition">
+                <ComboBoxItem.Tag>
+                    <system:Int32>2</system:Int32>
+                </ComboBoxItem.Tag>
+            </ComboBoxItem>
+        </ComboBox>
+        <TextBox
+            Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+            HorizontalAlignment="Center"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            MaxHeight="350" MinWidth="400"
+            Margin="0,15,0,5"
+            materialDesign:HintAssist.Hint="Description"/>
+
+        <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
+            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                    IsEnabled="{Binding Validated}">
+                <Button.CommandParameter>
+                    <system:Boolean>True</system:Boolean>
+                </Button.CommandParameter>
+                OK
+            </Button>
+            <Button IsCancel="True" Margin="8 0 0 0" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:Boolean>False</system:Boolean>
+                </Button.CommandParameter>
+                ANNULER
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

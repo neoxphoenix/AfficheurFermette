@@ -36,8 +36,10 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private void ExecuteSelectPic()
         {
-            OpenFileDialog PicDlg = new OpenFileDialog();
-            PicDlg.Filter = "Photo (*.PNG;*.JPG;*.jpeg)|*.PNG;*.JPG;*.jpeg";
+            OpenFileDialog PicDlg = new OpenFileDialog
+            {
+                Filter = "Photo (*.PNG;*.JPG;*.jpeg)|*.PNG;*.JPG;*.jpeg"
+            };
             if (PicDlg.ShowDialog() == true)
             {
                 PicFullPath = PicDlg.FileName;

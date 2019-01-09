@@ -1,0 +1,219 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Projet_AFFICHEURFERMETTE.MDF.Classes;
+using Projet_AFFICHEURFERMETTE.MDF.Gestion;
+using ShowableData;
+
+namespace ModifieurFermette.ViewModels.Dialogs
+{
+    public class AddEvenementDialogViewModel : ObservableData
+    {
+        /* ===== Affichage ===== */
+        private ObservableCollection<C_TitreEvenement> _Titres;
+        private ObservableCollection<C_LieuEvenement> _Lieus;
+
+        /* ===== Données entrées par l'user ===== */
+        private C_TitreEvenement _SelectedTitre;
+        private C_LieuEvenement _SelectedLieu;
+        private DateTime _DateDebut;
+        private DateTime _TimeDebut;
+        private DateTime _DateFin;
+        private DateTime _TimeFin;
+        private int _SelectedTypeEvenement;
+        private string _Description;
+
+        /* ===== Validation ===== */
+        private bool _Validated;
+
+        public AddEvenementDialogViewModel(string sChConn)
+        {
+            Titres = new ObservableCollection<C_TitreEvenement>();
+            new G_TitreEvenement(sChConn).Lire("").ForEach(item => Titres.Add(item));
+            Lieus = new ObservableCollection<C_LieuEvenement>();
+            new G_LieuEvenement(sChConn).Lire("").ForEach(item => Lieus.Add(item));
+
+            DateDebut = DateFin = DateTime.Now.Date;
+            TimeDebut = DateTime.Now;
+            TimeFin = DateTime.Now.AddHours(1);
+        }
+
+        private void IsAllItemsValid()
+        {
+            if (SelectedTitre == null || SelectedLieu == null)
+                Validated = false;
+            else
+                Validated = true;
+        }
+
+        public ObservableCollection<C_TitreEvenement> Titres
+        {
+            get { return _Titres; }
+            set
+            {
+                if (this._Titres != value)
+                {
+                    this._Titres = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<C_LieuEvenement> Lieus
+        {
+            get { return _Lieus; }
+            set
+            {
+                if (this._Lieus != value)
+                {
+                    this._Lieus = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public C_TitreEvenement SelectedTitre
+        {
+            get { return _SelectedTitre; }
+            set
+            {
+                if (this._SelectedTitre != value)
+                {
+                    this._SelectedTitre = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public C_LieuEvenement SelectedLieu
+        {
+            get { return _SelectedLieu; }
+            set
+            {
+                if (this._SelectedLieu != value)
+                {
+                    this._SelectedLieu = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public DateTime DateDebut
+        {
+            get { return _DateDebut; }
+            set
+            {
+                if (this._DateDebut != value)
+                {
+                    this._DateDebut = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public DateTime TimeDebut
+        {
+            get { return _TimeDebut; }
+            set
+            {
+                if (this._TimeDebut != value)
+                {
+                    this._TimeDebut = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public DateTime DateFin
+        {
+            get { return _DateFin; }
+            set
+            {
+                if (this._DateFin != value)
+                {
+                    this._DateFin = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public DateTime TimeFin
+        {
+            get { return _TimeFin; }
+            set
+            {
+                if (this._TimeFin != value)
+                {
+                    this._TimeFin = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public int SelectedTypeEvenement
+        {
+            get { return _SelectedTypeEvenement; }
+            set
+            {
+                if (this._SelectedTypeEvenement != value)
+                {
+                    this._SelectedTypeEvenement = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public string Description
+        {
+            get { return _Description; }
+            set
+            {
+                if (this._Description != value)
+                {
+                    this._Description = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public bool Validated
+        {
+            get { return _Validated; }
+            set
+            {
+                if (this._Validated != value)
+                {
+                    this._Validated = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // Utilisés en cas d'ajout dans les combobox
+        // On sait qu'un nouvel item devra être ajouté à la DB grâce à son ID de 0
+        public string NewTitre
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Titres.Add(new C_TitreEvenement(0, value));
+                    SelectedTitre = Titres.Last();
+                }
+            }
+        }
+        public string NewLieu
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Lieus.Add(new C_LieuEvenement(0, value));
+                    SelectedLieu = Lieus.Last();
+                }
+            }
+        }
+    }
+}
