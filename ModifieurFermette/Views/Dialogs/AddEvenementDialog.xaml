@@ -70,6 +70,7 @@
        SelectedTime="{Binding TimeFin}" Width="150"
        />
        </StackPanel>
+        <TextBlock Visibility="{Binding DateError}" Foreground="Red" HorizontalAlignment="Center">La date de début doit être inférieure à la date de fin</TextBlock>
         <ComboBox materialDesign:HintAssist.Hint="Type d'événement"
                   SelectedValuePath="Tag"
                   SelectedValue="{Binding SelectedTypeEvenement}"

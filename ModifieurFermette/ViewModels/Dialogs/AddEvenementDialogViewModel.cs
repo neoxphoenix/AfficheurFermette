@@ -29,6 +29,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         /* ===== Validation ===== */
         private bool _Validated;
+        private string _DateError;
 
         public AddEvenementDialogViewModel(string sChConn)
         {
@@ -40,14 +41,29 @@ namespace ModifieurFermette.ViewModels.Dialogs
             DateDebut = DateFin = DateTime.Now.Date;
             TimeDebut = DateTime.Now;
             TimeFin = DateTime.Now.AddHours(1);
+
+            DateError = "Collapsed";
         }
 
         private void IsAllItemsValid()
         {
-            if (SelectedTitre == null || SelectedLieu == null)
+            if (SelectedTitre == null || SelectedLieu == null || !IsDateDebutBeforeDateFin())
                 Validated = false;
             else
                 Validated = true;
+        }
+        private bool IsDateDebutBeforeDateFin()
+        {
+            DateTime Debut = DateDebut.Add(TimeDebut.TimeOfDay);
+            DateTime Fin = DateFin.Add(TimeFin.TimeOfDay);
+
+            if (Debut < Fin)
+            {
+                DateError = "Collapsed";
+                return true;
+            }
+            DateError = "Visible";
+            return false;
         }
 
         public ObservableCollection<C_TitreEvenement> Titres
@@ -186,6 +202,18 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 if (this._Validated != value)
                 {
                     this._Validated = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string DateError
+        {
+            get { return _DateError; }
+            set
+            {
+                if (this._DateError != value)
+                {
+                    this._DateError = value;
                     OnPropertyChanged();
                 }
             }
