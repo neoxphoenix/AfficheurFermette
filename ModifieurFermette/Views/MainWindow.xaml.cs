@@ -39,7 +39,7 @@ namespace ModifieurFermette
         {
             if (ExisteInstance())
             {
-                MessageBox.Show("Veuillez n'ouvrir qu'une seule instance du programme à la fois SVP !");
+                MessageBox.Show("Une instance du modifieur ou de l'afficheur est déjà ouverte ! Veuillez fermer cette instance avant de relancer ce programme...");
                 this.Close();
             }
             InitializeComponent();
@@ -103,13 +103,14 @@ namespace ModifieurFermette
             }
         }
 
+        // Vérifie si une instance d'un des deux programmes n'existe pas déjà
         static bool ExisteInstance()
         {
             Process actu = Process.GetCurrentProcess();
             Process[] acti = Process.GetProcesses();
             foreach (Process p in acti)
                 if (p.Id != actu.Id)
-                    if (actu.ProcessName == p.ProcessName)
+                    if (p.ProcessName == "AfficheurFermette" || p.ProcessName == "ModifieurFermette")
                         return true;
             return false;
         }

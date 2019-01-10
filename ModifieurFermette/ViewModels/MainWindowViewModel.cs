@@ -68,7 +68,7 @@ namespace ModifieurFermette.ViewModels
         }
 
         #region Méthodes
-        public void ExecuteOpenAff() // Démarre l'afficheur (si trouvable
+        public void ExecuteOpenAff() // Démarre l'afficheur (si trouvable)
         {
             if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.exe"))
             {
