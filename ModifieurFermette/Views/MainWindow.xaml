@@ -30,12 +30,12 @@
                       Background="{DynamicResource PrimaryHueDarkBrush}" 
                       Foreground="White">
                 <MenuItem Header="App">
-                    <MenuItem Header="Ouvrir l'afficheur">
+                    <MenuItem Header="Ouvrir l'afficheur" Command="{Binding OpenAffCmd}">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="OpenInNew" />
+                            <materialDesign:PackIcon Kind="OpenInNew"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Fermer l'application">
+                    <MenuItem Header="Fermer l'application" Command="{Binding CloseAppCmd}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ExitToApp"/>
                         </MenuItem.Icon>

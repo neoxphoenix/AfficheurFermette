@@ -173,5 +173,41 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 }
             }
         }
+
+        // Utilisés en cas d'ajout dans les combobox
+        // On sait qu'un nouvel item devra être ajouté à la DB grâce à son ID de 0
+        public string NewPotage
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Potages.Add(new C_Plat(0, value, 1));
+                    SelectedPotage = Potages.Last();
+                }
+            }
+        }
+        public string NewPlat
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Plats.Add(new C_Plat(0, value, 2));
+                    SelectedPlat = Plats.Last();
+                }
+            }
+        }
+        public string NewDessert
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Desserts.Add(new C_Plat(0, value,3));
+                    SelectedDessert = Desserts.Last();
+                }
+            }
+        }
     }
 }

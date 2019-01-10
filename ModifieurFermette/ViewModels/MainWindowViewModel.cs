@@ -16,6 +16,7 @@ using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
+using System.Diagnostics;
 
 namespace ModifieurFermette.ViewModels
 {
@@ -35,6 +36,10 @@ namespace ModifieurFermette.ViewModels
         public ConfigClass config;
 
         #region Commands
+        #region App
+        private ICommand _OpenAffCmd;
+        private ICommand _CloseAppCmd;
+        #endregion
         #region Suppression
         private ICommand _DeleteShowViewMenuDuJourCmd;
         private ICommand _DeleteShowViewEvenementCmd;
@@ -50,6 +55,9 @@ namespace ModifieurFermette.ViewModels
 
         public MainWindowViewModel()
         {
+            OpenAffCmd = new RelayCommand(Exec => ExecuteOpenAff());
+            CloseAppCmd = new RelayCommand(Exec => CloseAction()); // Fermeture du programme
+
             DeleteShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDeleteShowViewMenuDuJour(), CanExec => CanExecDeleteShowViewMenuDuJour());
             DeleteShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDeleteShowViewEvenement(), CanExec => CanExecDeleteShowViewEvenement());
             DeleteShowPersonneCmd = new RelayCommand(Exec => ExecuteDeleteShowPersonne(), CanExec => CanExecDeleteShowPersonne());
@@ -60,6 +68,17 @@ namespace ModifieurFermette.ViewModels
         }
 
         #region Méthodes
+        public void ExecuteOpenAff() // Démarre l'afficheur (si trouvable
+        {
+            if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.exe"))
+            {
+                Process p = new Process { StartInfo = new ProcessStartInfo("AfficheurFermette") };
+                p.Start();
+                CloseAction(); // Indispensable de fermer ce programme après avoir lancé l'afficheur vu qu'au sinon le mdf est indisponible vu que deux app essaient de s'y connecter en même temps
+            }
+            else
+                System.Windows.MessageBox.Show("l'exécutable de l'afficheur est introuvable ! Veuillez le replacer dans le même dossier que ce programme...");
+        }
         public void ChargerDonnees()
         {
             // Extraction des données de la DB
@@ -235,6 +254,14 @@ namespace ModifieurFermette.ViewModels
             Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
             {
                 DateTime date = dg.vm.Date.Add(dg.vm.Time.TimeOfDay); // On récupère séparément la date et l'heure dans le dialog, on les recombine donc ici
+
+                // On vérifie si les ID sont à 0, auquel cas cela signifie que l'item doit être ajouté à la DB
+                if (dg.vm.SelectedPotage.ID == 0)
+                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type);
+                if (dg.vm.SelectedPlat.ID == 0)
+                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type);
+                if (dg.vm.SelectedDessert.ID == 0)
+                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type);
                 lock (MenusAffLock) // Verrouillage de l'ObservableCollection pour modif
                 {
                     int ID = new G_Menu(config.sChConn).Ajouter(date, dg.vm.SelectedPotage.ID, dg.vm.SelectedPlat.ID, dg.vm.SelectedDessert.ID); // Insertion dans la DB
@@ -435,6 +462,7 @@ namespace ModifieurFermette.ViewModels
         #endregion
 
         #region Accesseurs
+        public Action CloseAction { get; set; } // Permet de fermer la fenêtre depuis le ViewModel; solution de -> http://jkshay.com/closing-a-wpf-window-using-mvvm-and-minimal-code-behind/
         #region Sélection DG
         public bool IsAllItemsEvenementsSelected
         {
@@ -477,6 +505,30 @@ namespace ModifieurFermette.ViewModels
         }
         #endregion
         #region Commands
+            #region App
+        public ICommand OpenAffCmd
+        {
+            get
+            {
+                return _OpenAffCmd;
+            }
+            set
+            {
+                _OpenAffCmd = value;
+            }
+        }
+        public ICommand CloseAppCmd
+        {
+            get
+            {
+                return _CloseAppCmd;
+            }
+            set
+            {
+                _CloseAppCmd = value;
+            }
+        }
+        #endregion
             #region Suppression
         public ICommand DeleteShowViewMenuDuJourCmd
         {

@@ -29,20 +29,22 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         /* ===== Validation ===== */
         private bool _Validated;
-        private string _DateError;
+        private string _DateError; // Permet de définir la visibilité du message d'erreur; on alterne entre "Collapsed" (idem que caché mais ne prend pas de place) et "Visible"
 
         public AddEvenementDialogViewModel(string sChConn)
         {
+            // Chargement des données de la DB
             Titres = new ObservableCollection<C_TitreEvenement>();
             new G_TitreEvenement(sChConn).Lire("").ForEach(item => Titres.Add(item));
             Lieus = new ObservableCollection<C_LieuEvenement>();
             new G_LieuEvenement(sChConn).Lire("").ForEach(item => Lieus.Add(item));
 
+            // On met les dates à maintenant et maintenant + 1h pour la date de fin
             DateDebut = DateFin = DateTime.Now.Date;
             TimeDebut = DateTime.Now;
             TimeFin = DateTime.Now.AddHours(1);
 
-            DateError = "Collapsed";
+            DateError = "Collapsed"; // On cache le message d'erreur
         }
 
         private void IsAllItemsValid()
