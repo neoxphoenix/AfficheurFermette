@@ -47,7 +47,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private void IsAllItemsValid()
         {
-            if (SelectedTitre == null || SelectedLieu == null || !IsDateDebutBeforeDateFin())
+            if (!IsDateDebutBeforeDateFin() || SelectedTitre == null || SelectedLieu == null)
                 Validated = false;
             else
                 Validated = true;

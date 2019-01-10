@@ -17,7 +17,7 @@
           MinWidth="300" Margin="0,5,0,5"
           HorizontalAlignment="Center"
           ItemsSource="{Binding Titres}"
-          SelectedItem="{Binding SelectedTitre}"
+          SelectedItem="{Binding SelectedTitre, UpdateSourceTrigger=PropertyChanged}"
           DisplayMemberPath="Titre"
           IsEditable="True"
           Text="{Binding NewTitre, UpdateSourceTrigger=LostFocus}"
@@ -32,7 +32,7 @@
           materialDesign:HintAssist.Hint="Lieu"
           MinWidth="300" Margin="0,5,0,5"
           HorizontalAlignment="Center"
-          ItemsSource="{Binding Lieus}"
+          ItemsSource="{Binding Lieus, UpdateSourceTrigger=PropertyChanged}"
           SelectedItem="{Binding SelectedLieu}"
           DisplayMemberPath="Lieu"
           IsEditable="True"
@@ -49,12 +49,12 @@
             <DatePicker
         materialDesign:HintAssist.Hint="Date début"
         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-        SelectedDate="{Binding DateDebut}" Width="150" 
+        SelectedDate="{Binding DateDebut, UpdateSourceTrigger=PropertyChanged}" Width="150" 
         />
             <materialDesign:TimePicker
         materialDesign:HintAssist.Hint="Heure début"
         Is24Hours="True"
-        SelectedTime="{Binding TimeDebut}" Width="150"
+        SelectedTime="{Binding TimeDebut, UpdateSourceTrigger=PropertyChanged}" Width="150"
         />
         </StackPanel>
         <!-- DateTime fin -->
@@ -62,15 +62,15 @@
            <DatePicker
        materialDesign:HintAssist.Hint="Date fin"
        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-       SelectedDate="{Binding DateFin}" Width="150"
+       SelectedDate="{Binding DateFin, UpdateSourceTrigger=PropertyChanged}" Width="150"
        />
            <materialDesign:TimePicker
        materialDesign:HintAssist.Hint="Heure fin"
        Is24Hours="True"
-       SelectedTime="{Binding TimeFin}" Width="150"
+       SelectedTime="{Binding TimeFin, UpdateSourceTrigger=PropertyChanged}" Width="150"
        />
        </StackPanel>
-        <TextBlock Visibility="{Binding DateError}" Foreground="Red" HorizontalAlignment="Center">La date de début doit être inférieure à la date de fin</TextBlock>
+        <TextBlock Visibility="{Binding DateError, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" HorizontalAlignment="Center">La date de début doit être inférieure à la date de fin</TextBlock>
         <ComboBox materialDesign:HintAssist.Hint="Type d'événement"
                   SelectedValuePath="Tag"
                   SelectedValue="{Binding SelectedTypeEvenement}"
