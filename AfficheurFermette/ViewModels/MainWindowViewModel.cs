@@ -14,6 +14,11 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using MaterialDesignThemes.Wpf;
 using ShowableData; //afin d'hériter de ObservableData
+using System.Globalization;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace AfficheurFermette.ViewModels
 {
@@ -31,22 +36,24 @@ namespace AfficheurFermette.ViewModels
         private string _ongletActuelDesc = "Repas du jour"; //Chaine de texte (description) de l'onglet actuel
         private string _repasEntreeDuJour, _repasPlatDuJour, _repasDessertDuJour;
         private string _dateAjd; //stocke la date du jour
-        private string _aSonAnnifAjd = "";
+        private string _aSonAnnifAjd1 = "", _aSonAnnifAjd2 = "", _aSonAnnifAjd3 = "";
         private string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
 
-        private string _test;
         public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
-
+        public List<C_Personne> ASonAnnifAjd = new List<C_Personne>();
         public ObservableCollection<ShowViewEvenement> EvenementsAff { get; set; }
 
+        CultureInfo myCI = new CultureInfo("fr-FR"); //pour obtenir les infos en FR (date, mois, etc..)
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// CONSTRUCTEUR
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    public MainWindowViewModel()
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// CONSTRUCTEUR
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        public MainWindowViewModel()
         {
             ChangeTabByClick = new RelayCommand(ICmd_ExecChangeTabByClick, ICmd_CanChangeTabByClick);
-            Cmd_ShowPhotosEvent = new RelayCommand(ICmd_ExecShowPhotosEventClick, ICmd_CanShowPhotosEventClick);
+            //Cmd_ShowPhotosEvent = new RelayCommand(ICmd_ExecShowPhotosEventClick, ICmd_CanShowPhotosEventClick);
+            Cmd_ShowPhotosEvent = new RelayCommand(Exec => ICmd_ExecShowPhotosEventClick(), CanExec => true);
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,11 +70,11 @@ namespace AfficheurFermette.ViewModels
                     _OngletChoisi = value;
                     switch(_OngletChoisi)
                     {
-                        case 0: ongletActuelDesc = "Repas du jour"; break;
-                        case 1: ongletActuelDesc = "Actualités"; break;
-                        case 2: ongletActuelDesc = "Ateliers"; break;
-                        case 3: ongletActuelDesc = "Educateurs présent aujourd'hui"; break;
-                        default: ongletActuelDesc = "Repas du jour"; break;
+                        case 0: ongletActuelDesc = "REPAS DU JOUR"; break;
+                        case 1: ongletActuelDesc = "ACTUALITÉS"; break;
+                        case 2: ongletActuelDesc = "ANNIVERSAIRE"; break;
+                        case 3: ongletActuelDesc = "MÉTÉO"; break;
+                        default: ongletActuelDesc = "REPAS DU JOUR"; break;
                     }
                     OnPropertyChanged(); //Signal le changement
                 }
@@ -110,19 +117,6 @@ namespace AfficheurFermette.ViewModels
             }
         }
 
-        public string test
-        {
-            get
-            {
-                return _test;
-            }
-            set
-            {
-                _test = value;
-            }
-        }
-
-
         public string repasEntreeDuJour
         {
             get { return _repasEntreeDuJour; }
@@ -156,35 +150,144 @@ namespace AfficheurFermette.ViewModels
         }
         public string dateAjd
         {
-            get { return DateTime.Now.ToString("dd/MM/yy"); }
+            get { return myCI.DateTimeFormat.GetDayName(DateTime.Now.DayOfWeek).ToUpper() + " " + DateTime.Now.ToString("dd") + " " + myCI.DateTimeFormat.GetMonthName(DateTime.Now.Month).ToUpper() + " " + DateTime.Now.ToString("yyyy"); } //DateTime.Now.ToString("dd/MM/yy");
             set
             {
                 _dateAjd = DateTime.Now.ToString("dd/MM/yy");
                 OnPropertyChanged();
             }
         }
-        
-        //retourne un string contenant les personnes ayant leur anniversaire ajd
-        public string aSonAnnifAjd
+        public string urlMeteo
         {
-           get { return _aSonAnnifAjd; }
+            get { return "https://www.prevision-meteo.ch/services/html/liege/horizontal?bg=ffffff&txtcol=000000&tmpmin=000000&tmpmax=378ADF"; }
+        }
+
+        //retourne un string contenant les personnes ayant leur anniversaire ajd
+        public string aSonAnnifAjd1
+        {
+           get { return _aSonAnnifAjd1; }
            set
            {
-                if (_aSonAnnifAjd != value)
-                    _aSonAnnifAjd = value;
+                if (_aSonAnnifAjd1 != value)
+                    _aSonAnnifAjd1 = value;
                 OnPropertyChanged();
            }
         }
-        public Visibility AfficherAnniversaire
+
+        public string aSonAnnifAjd2
+        {
+            get { return _aSonAnnifAjd2; }
+            set
+            {
+                if (_aSonAnnifAjd2 != value)
+                    _aSonAnnifAjd2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string aSonAnnifAjd3
+        {
+            get { return _aSonAnnifAjd3; }
+            set
+            {
+                if (_aSonAnnifAjd3 != value)
+                    _aSonAnnifAjd3 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BitmapImage _ImgSrcASonAnnifAjd1;
+        public BitmapImage ImgSrcASonAnnifAjd1
+        {
+            get { return _ImgSrcASonAnnifAjd1; }
+            set {
+                _ImgSrcASonAnnifAjd1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BitmapImage _ImgSrcASonAnnifAjd2;
+        public BitmapImage ImgSrcASonAnnifAjd2
+        {
+            get { return _ImgSrcASonAnnifAjd2; }
+            set
+            {
+                _ImgSrcASonAnnifAjd2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BitmapImage _ImgSrcASonAnnifAjd3;
+        public BitmapImage ImgSrcASonAnnifAjd3
+        {
+            get { return _ImgSrcASonAnnifAjd3; }
+            set
+            {
+                _ImgSrcASonAnnifAjd3 = value;
+                OnPropertyChanged();
+            }
+        }
+        private Visibility _AfficherAnniversaire1;
+        public Visibility AfficherAnniversaire1
         {
             get
             {
-                if (aSonAnnifAjd.Length < 2)
-                    return Visibility.Hidden;
-                else
-                    return Visibility.Visible;
+                return _AfficherAnniversaire1;
+            }
+            set
+            {
+                _AfficherAnniversaire1 = value;
+                OnPropertyChanged();
             }
         }
+
+        private Visibility _AfficherAnniversaire2;
+        public Visibility AfficherAnniversaire2
+        {
+            get
+            {
+                return _AfficherAnniversaire2;
+            }
+            set
+            {
+                _AfficherAnniversaire2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _AfficherAnniversaire3;
+        public Visibility AfficherAnniversaire3
+        {
+            get
+            {
+                return _AfficherAnniversaire3;
+            }
+            set
+            {
+                _AfficherAnniversaire3 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _AfficherTextAnniv2;
+        public Visibility AfficherTextAnniv2
+        {
+            get
+            {
+                return _AfficherTextAnniv2;
+            }
+            set
+            {
+                _AfficherTextAnniv2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string AffichageHeure
+        {
+            get { return DateTime.Now.ToString("HH:mm"); }
+        }
+
 
         public string[] prochainEvent1
         {
@@ -216,6 +319,17 @@ namespace AfficheurFermette.ViewModels
             }
         }
 
+        private int _SelectedArticle;
+        public int SelectedArticle
+        {
+            get { return _SelectedArticle; }
+            set
+            {
+                _SelectedArticle = value;
+                OnPropertyChanged();
+            }
+        }
+
         //CanChange
         private bool ICmd_CanChangeTabByClick(object o)
         {
@@ -234,12 +348,11 @@ namespace AfficheurFermette.ViewModels
             return true;
         }
         //Exec
-        private async void ICmd_ExecShowPhotosEventClick(object param)
+        private async void ICmd_ExecShowPhotosEventClick()
         {
             var Dialog = new Views.Dialogs.ShowPicturesEvent();
             await DialogHost.Show(Dialog);
         }
-
         #endregion
 
 
@@ -289,23 +402,88 @@ namespace AfficheurFermette.ViewModels
         //Check Anniversaire du jour
         public void CheckAnnifToday()
         {
-            string TmpaSonAnnifAjd = "";
-            string separateur = "";
-            int i = 0;
-            List<C_Personne> AnniversaireDuJour2 = new G_Personne(config.sChConn).Lire("");
-            foreach (C_Personne aSonAnnif in AnniversaireDuJour2)
+            int NbreAnnifAjd = 0;
+            List<C_Personne> PersonnesList = new G_Personne(config.sChConn).Lire("");
+            ASonAnnifAjd.Clear();
+            foreach (C_Personne Beneficiaire in PersonnesList)
             {
-                string _annif = aSonAnnif.DateNaissance.ToString().Substring(0, 5);
-                if (i > 0)
-                    separateur = " et "; //rajoute un séparateur si + d'une personne on leur annif
+                string _annif = Beneficiaire.DateNaissance.ToString().Substring(0, 5);
+
                 if (string.Compare(_annif, DateTime.Now.ToString("dd/MM")) == 0)
                 {
-                    TmpaSonAnnifAjd += separateur + aSonAnnif.Nom + " " + aSonAnnif.Prenom; //détecte si quelqu'un à son annif
-                    i++;
+                    ASonAnnifAjd.Add(Beneficiaire);
+                    NbreAnnifAjd++;
                 }
+                if (NbreAnnifAjd == 2) break; //sort de la boucle si on en a 2
             }
-            aSonAnnifAjd = TmpaSonAnnifAjd;
+            if (NbreAnnifAjd == 1)
+            {
+                AfficherAnniversaire1 = Visibility.Hidden;
+                AfficherAnniversaire2 = Visibility.Visible;
+                AfficherAnniversaire3 = Visibility.Hidden;
+                AfficherTextAnniv2 = Visibility.Visible;
+
+                aSonAnnifAjd2 = ASonAnnifAjd[0].Nom + " " + ASonAnnifAjd[0].Prenom;
+
+                if (File.Exists(ASonAnnifAjd[0].Photo))
+                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(ASonAnnifAjd[0].Photo));
+                else
+                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\unknown.png"));
+            }
+            else if (NbreAnnifAjd == 2)
+            {
+                AfficherAnniversaire1 = Visibility.Visible;
+                AfficherAnniversaire2 = Visibility.Visible;
+                AfficherAnniversaire3 = Visibility.Visible;
+                AfficherTextAnniv2 = Visibility.Hidden;
+
+                aSonAnnifAjd1 = ASonAnnifAjd[0].Nom + " " + ASonAnnifAjd[0].Prenom;
+                if (File.Exists(ASonAnnifAjd[0].Photo))
+                    ImgSrcASonAnnifAjd1 = new BitmapImage(new Uri(ASonAnnifAjd[0].Photo));
+                else
+                    ImgSrcASonAnnifAjd1 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\unknown.png"));
+
+                aSonAnnifAjd2 = "";
+                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\joyeuxanniversaire2.jpg"));
+
+                aSonAnnifAjd3 = ASonAnnifAjd[1].Nom + " " + ASonAnnifAjd[1].Prenom;
+                if (File.Exists(ASonAnnifAjd[1].Photo))
+                    ImgSrcASonAnnifAjd3 = new BitmapImage(new Uri(ASonAnnifAjd[1].Photo));
+                else
+                    ImgSrcASonAnnifAjd3 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\unknown.png"));
+            }
+            else
+            {
+                AfficherAnniversaire1 = Visibility.Hidden;
+                AfficherAnniversaire2 = Visibility.Visible;
+                AfficherAnniversaire3 = Visibility.Hidden;
+                AfficherTextAnniv2 = Visibility.Hidden;
+
+                aSonAnnifAjd2 = "";
+                ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\nobirthdaytoday.jpg"));
+            }
+
         }
+
+        //public void CheckAnnifToday()
+        //{
+        //    string TmpaSonAnnifAjd = "";
+        //    string separateur = "";
+        //    int i = 0;
+        //    List<C_Personne> AnniversaireDuJour = new G_Personne(config.sChConn).Lire("");
+        //    foreach (C_Personne aSonAnnif in AnniversaireDuJour)
+        //    {
+        //        string _annif = aSonAnnif.DateNaissance.ToString().Substring(0, 5);
+        //        if (i > 0)
+        //            separateur = " et "; //rajoute un séparateur si + d'une personne on leur annif
+        //        if (string.Compare(_annif, DateTime.Now.ToString("dd/MM")) == 0)
+        //        {
+        //            TmpaSonAnnifAjd += separateur + aSonAnnif.Nom + " " + aSonAnnif.Prenom; //détecte si quelqu'un à son annif
+        //            i++;
+        //        }
+        //    }
+        //    aSonAnnifAjd = TmpaSonAnnifAjd;
+        //}
 
         public void GenerationDesEvenementsExistant()
         {

@@ -26,9 +26,6 @@ namespace AfficheurFermette.Views.Dialogs
             InitializeComponent();
             //vm = new ConfirmDialogViewModel();
             //this.DataContext = vm;
-
-
-
         }
     }
 

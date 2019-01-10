@@ -126,9 +126,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\cake.png" />
-    <Resource Include="Resources\Images\OngletActu.jpg" />
-    <Resource Include="Resources\Images\OngletAtelier.jpeg" />
-    <Resource Include="Resources\Images\OngletEduc.jpg" />
     <Resource Include="Resources\Images\paint.png" />
     <Resource Include="Resources\Images\share.png" />
   </ItemGroup>
@@ -145,13 +142,7 @@
     <Resource Include="Resources\Images\event1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\menu2.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\menu3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\OngletRepas.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\jogging.jpg" />
@@ -161,13 +152,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\OngletActu2.jpg" />
-    <Resource Include="Resources\Images\OngletEducateur2.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\OngletRepas3.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\OngletAtelier3.jpg" />
+    <Resource Include="Resources\Images\OngletMeteo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletAnnversaire.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -53,6 +53,8 @@ namespace AfficheurFermette
             string[] stab2 = stab[2].Split(';');
             OpenFileDialog dlgChargerDB = new OpenFileDialog();
 
+            BrowserMeteo.Navigate("https://www.prevision-meteo.ch/services/html/la-reid/horizontal?bg=ffffff&txtcol=000000&tmpmin=000000&tmpmax=378ADF");
+
             // Si le fichier n'existe pas on propose à l'utilisateur d'indiquer l'emplacement de la base de données
             if (!File.Exists(stab2[0]))
             {
@@ -93,27 +95,7 @@ namespace AfficheurFermette
             if (File.Exists(stab2[0]) || File.Exists(dlgChargerDB.FileName))
             {
                 vm.ChargerDonneesDaily();
-                // liaison des données avec les DataGrid
-                //DGevenements.ItemsSource = vm.EvenementsAff;
-                //dgpersonnes.ItemsSource = vm.PersonnesAff;
-                //DGmenus.ItemsSource = vm.MenusAff;
-
             }
-
-            //if (System.IO.File.Exists(stab2[0]) || System.IO.File.Exists(dlgChargerDB.FileName))
-            //{
-            //             // tests
-            //             List<C_ViewMenuDuJour> menus = new G_ViewMenuDuJour(sChConn).Lire("");
-            //             C_ViewMenuDuJour menu = new G_ViewMenuDuJour(sChConn).Lire_ID(1);
-            //             menu = new G_ViewMenuDuJour(sChConn).Lire_Date(new DateTime(2018, 12, 12));
-
-            //             List<C_ViewEvenement> evenements = new G_ViewEvenement(sChConn).Lire("");
-            //             C_ViewEvenement evenement = new G_ViewEvenement(sChConn).Lire_ID(1);
-            //             evenements = new G_ViewEvenement(sChConn).Lire_DateDebut(new DateTime(2018, 12, 12));
-            //             evenements = new G_ViewEvenement(sChConn).Lire_DateFin(new DateTime(2018, 12, 13));
-            //             evenements = new G_ViewEvenement(sChConn).Lire_Date(new DateTime(2018, 12, 12));
-
-            //}
         }
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -180,6 +162,25 @@ namespace AfficheurFermette
         public string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
         public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
 
+        #region DESACTIVER LE BROWSER APRES CHARGEMENT DES DONNEES METEO
+        bool BrowserIsLoaded = false;
+        private void BrowserMeteo_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            BrowserIsLoaded = true;
+        }
+
+        private void BrowserMeteo_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            if (BrowserIsLoaded)
+                e.Cancel = true;
+        }
+
+        private void BrowserMeteo_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (BrowserIsLoaded)
+                e.Handled = true;
+        }
+        #endregion
 
         public void Button_Click(object sender, RoutedEventArgs e)
         {
