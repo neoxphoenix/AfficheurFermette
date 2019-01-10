@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AFacces">
       <HintPath>..\AFacces.dll</HintPath>
@@ -44,6 +47,12 @@
     </Reference>
     <Reference Include="AFgestion">
       <HintPath>..\AFgestion.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.0.0.14576, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.1.1\lib\net45\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.0.1205, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.2.5.0.1205\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -66,7 +75,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="ViewModels\Dialogs\ShowPicturesEventViewModel.cs" />
+    <Compile Include="Views\Dialogs\ShowPicturesEvent.xaml.cs">
+      <DependentUpon>ShowPicturesEvent.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -74,10 +87,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Dialogs\ShowPicturesEvent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -97,6 +115,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -106,16 +125,49 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\balloon.png" />
     <Resource Include="Resources\Images\cake.png" />
-    <Resource Include="Resources\Images\free-vector-birthday-icon_102051_Birthday_Icon.png" />
-    <Resource Include="Resources\Images\lineseparation.png" />
     <Resource Include="Resources\Images\OngletActu.jpg" />
     <Resource Include="Resources\Images\OngletAtelier.jpeg" />
     <Resource Include="Resources\Images\OngletEduc.jpg" />
-    <Resource Include="Resources\Images\OngletRepas.jpg" />
     <Resource Include="Resources\Images\paint.png" />
     <Resource Include="Resources\Images\share.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShowableData\ShowableData.csproj">
+      <Project>{b94a7f89-eefd-4e49-bf8c-152f8872d016}</Project>
+      <Name>ShowableData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\event1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\menu2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\menu3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletRepas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\jogging.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\natation.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletActu2.jpg" />
+    <Resource Include="Resources\Images\OngletEducateur2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletRepas3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\OngletAtelier3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
