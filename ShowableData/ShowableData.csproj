@@ -4,6 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>E:\Server\Nextcloud\Cours\Informatique\3e bac\Compléments progra (Pata)\PROGRAMMES\AfficheurFermette\Release\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="AFacces">
       <HintPath>..\AFacces.dll</HintPath>

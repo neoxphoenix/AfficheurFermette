@@ -13,15 +13,19 @@ namespace ModifieurFermette.ViewModels.Dialogs
 {
     public class AddMenuDuJourDialogViewModel : ObservableData
     {
+        /* ===== Affichage ===== */
         private ObservableCollection<C_Plat> _Potages;
         private ObservableCollection<C_Plat> _Plats;
         private ObservableCollection<C_Plat> _Desserts;
 
+        /* ===== Données entrées par l'user ===== */
         private C_Plat _SelectedPotage;
         private C_Plat _SelectedPlat;
         private C_Plat _SelectedDessert;
         private DateTime _Date;
         private DateTime _Time;
+        /* ===== Validation ===== */
+        private bool _Validated;
 
         public AddMenuDuJourDialogViewModel(string sChConn)
         {
@@ -45,6 +49,14 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 }
             }
             Date = DateTime.Today;
+        }
+
+        private void IsAllItemsValid()
+        {
+            if (SelectedPotage == null || SelectedPlat == null || SelectedDessert == null || Time == null)
+                Validated = false;
+            else
+                Validated = true;
         }
 
         public ObservableCollection<C_Plat> Potages
@@ -93,6 +105,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 {
                     this._SelectedPotage = value;
                     OnPropertyChanged("SelectedPotage");
+                    IsAllItemsValid();
                 }
             }
         }
@@ -105,6 +118,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 {
                     this._SelectedPlat = value;
                     OnPropertyChanged("SelectedPlat");
+                    IsAllItemsValid();
                 }
             }
         }
@@ -117,6 +131,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 {
                     this._SelectedDessert = value;
                     OnPropertyChanged("SelectedDessert");
+                    IsAllItemsValid();
                 }
             }
         }
@@ -129,6 +144,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 {
                     this._Date = value;
                     OnPropertyChanged("Date");
+                    IsAllItemsValid();
                 }
             }
         }
@@ -141,6 +157,55 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 {
                     this._Time = value;
                     OnPropertyChanged("Time");
+                    IsAllItemsValid();
+                }
+            }
+        }
+        public bool Validated
+        {
+            get { return _Validated; }
+            set
+            {
+                if (this._Validated != value)
+                {
+                    this._Validated = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // Utilisés en cas d'ajout dans les combobox
+        // On sait qu'un nouvel item devra être ajouté à la DB grâce à son ID de 0
+        public string NewPotage
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Potages.Add(new C_Plat(0, value, 1));
+                    SelectedPotage = Potages.Last();
+                }
+            }
+        }
+        public string NewPlat
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Plats.Add(new C_Plat(0, value, 2));
+                    SelectedPlat = Plats.Last();
+                }
+            }
+        }
+        public string NewDessert
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Desserts.Add(new C_Plat(0, value,3));
+                    SelectedDessert = Desserts.Last();
                 }
             }
         }

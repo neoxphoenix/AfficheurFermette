@@ -13,16 +13,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ModifieurFermette.ViewModels.Dialogs
+namespace ModifieurFermette.Views.Dialogs
 {
     /// <summary>
-    /// Interaction logic for AddPersonneDialog.xaml
+    /// Interaction logic for AddEvenementDialog.xaml
     /// </summary>
-    public partial class AddPersonneDialog : UserControl
+    public partial class AddEvenementDialog : UserControl
     {
-        public AddPersonneDialog()
+        public ViewModels.Dialogs.AddEvenementDialogViewModel vm;
+        public AddEvenementDialog(string sChConn)
         {
+            vm = new ViewModels.Dialogs.AddEvenementDialogViewModel(sChConn);
             InitializeComponent();
+            this.DataContext = vm;
         }
     }
 }

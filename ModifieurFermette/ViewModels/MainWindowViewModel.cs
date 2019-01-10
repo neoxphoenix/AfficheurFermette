@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
+using System.IO;
+
+using ModifieurFermette.Views.Dialogs;
 
 // dll
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
 using ShowableData;
+using System.Diagnostics;
 
 namespace ModifieurFermette.ViewModels
 {
@@ -32,6 +36,10 @@ namespace ModifieurFermette.ViewModels
         public ConfigClass config;
 
         #region Commands
+        #region App
+        private ICommand _OpenAffCmd;
+        private ICommand _CloseAppCmd;
+        #endregion
         #region Suppression
         private ICommand _DeleteShowViewMenuDuJourCmd;
         private ICommand _DeleteShowViewEvenementCmd;
@@ -39,20 +47,38 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #region Ajout
         private ICommand _AddShowViewMenuDuJourCmd;
+        private ICommand _AddShowPersonneCmd;
+        private ICommand _AddShowViewEvenementCmd;
         #endregion
         #endregion
         #endregion
 
         public MainWindowViewModel()
         {
+            OpenAffCmd = new RelayCommand(Exec => ExecuteOpenAff());
+            CloseAppCmd = new RelayCommand(Exec => CloseAction()); // Fermeture du programme
+
             DeleteShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDeleteShowViewMenuDuJour(), CanExec => CanExecDeleteShowViewMenuDuJour());
             DeleteShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDeleteShowViewEvenement(), CanExec => CanExecDeleteShowViewEvenement());
             DeleteShowPersonneCmd = new RelayCommand(Exec => ExecuteDeleteShowPersonne(), CanExec => CanExecDeleteShowPersonne());
 
             AddShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteAddShowViewMenuDuJour(), CanExec => true);
+            AddShowPersonneCmd = new RelayCommand(Exec => ExecuteAddShowPersonne(), CanExec => true);
+            AddShowViewEvenementCmd = new RelayCommand(Exec => ExecuteAddShowViewEvenement(), CanExec => true);
         }
 
         #region Méthodes
+        public void ExecuteOpenAff() // Démarre l'afficheur (si trouvable)
+        {
+            if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.exe"))
+            {
+                Process p = new Process { StartInfo = new ProcessStartInfo("AfficheurFermette") };
+                p.Start();
+                CloseAction(); // Indispensable de fermer ce programme après avoir lancé l'afficheur vu qu'au sinon le mdf est indisponible vu que deux app essaient de s'y connecter en même temps
+            }
+            else
+                System.Windows.MessageBox.Show("l'exécutable de l'afficheur est introuvable ! Veuillez le replacer dans le même dossier que ce programme...");
+        }
         public void ChargerDonnees()
         {
             // Extraction des données de la DB
@@ -213,7 +239,7 @@ namespace ModifieurFermette.ViewModels
                 #region Ajout
         private async void ExecuteAddShowViewMenuDuJour()
         {
-            var Dialog = new Views.Dialogs.AddMenuDuJourDialog(config.sChConn);
+            var Dialog = new AddMenuDuJourDialog(config.sChConn);
 
             await DialogHost.Show(Dialog, AddShowViewMenuDuJourDialogClosing);
         }
@@ -222,12 +248,20 @@ namespace ModifieurFermette.ViewModels
             if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
 
             eventArgs.Cancel(); // On empêche la fermeture
-            Views.Dialogs.AddMenuDuJourDialog dg = (Views.Dialogs.AddMenuDuJourDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
-            eventArgs.Session.UpdateContent(new Views.Dialogs.ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+            AddMenuDuJourDialog dg = (AddMenuDuJourDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
 
             Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
             {
                 DateTime date = dg.vm.Date.Add(dg.vm.Time.TimeOfDay); // On récupère séparément la date et l'heure dans le dialog, on les recombine donc ici
+
+                // On vérifie si les ID sont à 0, auquel cas cela signifie que l'item doit être ajouté à la DB
+                if (dg.vm.SelectedPotage.ID == 0)
+                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type);
+                if (dg.vm.SelectedPlat.ID == 0)
+                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type);
+                if (dg.vm.SelectedDessert.ID == 0)
+                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type);
                 lock (MenusAffLock) // Verrouillage de l'ObservableCollection pour modif
                 {
                     int ID = new G_Menu(config.sChConn).Ajouter(date, dg.vm.SelectedPotage.ID, dg.vm.SelectedPlat.ID, dg.vm.SelectedDessert.ID); // Insertion dans la DB
@@ -296,9 +330,45 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                #region Ajout
+        private async void ExecuteAddShowViewEvenement()
+        {
+            var Dialog = new AddEvenementDialog(config.sChConn);
+            await DialogHost.Show(Dialog, AddShowViewEvenementDialogClosing);
+        }
+        private async void AddShowViewEvenementDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddEvenementDialog dg = (AddEvenementDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
+            {
+                DateTime DateDebut = dg.vm.DateDebut.Add(dg.vm.TimeDebut.TimeOfDay);
+                DateTime DateFin = dg.vm.DateFin.Add(dg.vm.TimeFin.TimeOfDay);
+
+                // On vérifie les ID, si ils sont à 0 c'est que les items n'existent pas encore dans la DB => création
+                if (dg.vm.SelectedTitre.ID == 0)
+                    dg.vm.SelectedTitre.ID = new G_TitreEvenement(config.sChConn).Ajouter(dg.vm.SelectedTitre.Titre);
+                if (dg.vm.SelectedLieu.ID == 0)
+                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu);
+                lock (EvenementsAffLock) // Verrouillage de l'ObservableCollection pour modif
+                {
+                    int ID = new G_Evenement(config.sChConn).Ajouter(DateDebut, DateFin, dg.vm.Description, dg.vm.SelectedTypeEvenement, dg.vm.SelectedTitre.ID, dg.vm.SelectedLieu.ID);
+                    EvenementsAff.Add(new ShowViewEvenement(new C_ViewEvenement(ID, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description)));
+                }
+            });
+
+            // Fermeture du Dialog
+            await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
         #endregion
-                #region ShowPersonne
-                    #region Suppression
+        #endregion
+        #region ShowPersonne
+        #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -352,11 +422,47 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                    #region Ajout
+        private async void ExecuteAddShowPersonne()
+        {
+            var Dialog = new AddPersonneDialog();
+            await DialogHost.Show(Dialog, AddShowPersonneDialogClosing);
+        }
+        private async void AddShowPersonneDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddPersonneDialog dg = (AddPersonneDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
+            {
+                // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
+                string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
+                Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
+                path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
+
+                lock (PersonnesAffLock)
+                {
+                    int ID = new G_Personne(config.sChConn).Ajouter(dg.vm.Nom, dg.vm.Prenom, dg.vm.Date, path, dg.vm.SelectedRole);
+                    PersonnesAff.Add(new ShowPersonne(new C_Personne(ID, dg.vm.Nom, dg.vm.Prenom, dg.vm.Date, path, dg.vm.SelectedRole)));
+                }
+            });
+
+            // Fermeture du Dialog
+            await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
         #endregion
         #endregion
         #endregion
 
         #region Accesseurs
+        public Action CloseAction { get; set; } // Permet de fermer la fenêtre depuis le ViewModel; solution de -> http://jkshay.com/closing-a-wpf-window-using-mvvm-and-minimal-code-behind/
         #region Sélection DG
         public bool IsAllItemsEvenementsSelected
         {
@@ -399,6 +505,30 @@ namespace ModifieurFermette.ViewModels
         }
         #endregion
         #region Commands
+            #region App
+        public ICommand OpenAffCmd
+        {
+            get
+            {
+                return _OpenAffCmd;
+            }
+            set
+            {
+                _OpenAffCmd = value;
+            }
+        }
+        public ICommand CloseAppCmd
+        {
+            get
+            {
+                return _CloseAppCmd;
+            }
+            set
+            {
+                _CloseAppCmd = value;
+            }
+        }
+        #endregion
             #region Suppression
         public ICommand DeleteShowViewMenuDuJourCmd
         {
@@ -434,7 +564,7 @@ namespace ModifieurFermette.ViewModels
             }
         }
         #endregion
-        #region Ajout
+            #region Ajout
         public ICommand AddShowViewMenuDuJourCmd
         {
             get
@@ -444,6 +574,28 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _AddShowViewMenuDuJourCmd = value;
+            }
+        }
+        public ICommand AddShowPersonneCmd
+        {
+            get
+            {
+                return _AddShowPersonneCmd;
+            }
+            set
+            {
+                _AddShowPersonneCmd = value;
+            }
+        }
+        public ICommand AddShowViewEvenementCmd
+        {
+            get
+            {
+                return _AddShowViewEvenementCmd;
+            }
+            set
+            {
+                _AddShowViewEvenementCmd = value;
             }
         }
         #endregion

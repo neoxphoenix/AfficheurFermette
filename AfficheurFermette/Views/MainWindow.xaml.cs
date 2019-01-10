@@ -18,8 +18,8 @@ using System.IO;
 using Projet_AFFICHEURFERMETTE.MDF.Classes;
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
 using Projet_AFFICHEURFERMETTE.MDF.Gestion;
-using ShowableData; 
-
+using ShowableData;
+using System.Diagnostics;
 
 namespace AfficheurFermette
 {
@@ -30,6 +30,7 @@ namespace AfficheurFermette
 
     public partial class MainWindow : Window
     {
+
         //Attributs
 		private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.mdf;Integrated Security=True;Connect Timeout=30";
         private MainWindowViewModel vm;
@@ -37,6 +38,11 @@ namespace AfficheurFermette
         //Constructeur
         public MainWindow()
         {
+            if (ExisteInstance())
+            {
+                MessageBox.Show("Une instance du modifieur ou de l'afficheur est déjà ouverte ! Veuillez fermer cette instance avant de relancer ce programme...");
+                this.Close();
+            }
             InitializeComponent();
 
             vm = new MainWindowViewModel();
@@ -106,12 +112,22 @@ namespace AfficheurFermette
 
 		private void Window_KeyDown(object sender, KeyEventArgs e)
 		{
-			//if (e.Key == Key.Return)
-			//{
-			//	// On veut modifier les données => Lancement d'un nouvelle fenêtre
-			//	MessageBox.Show("Test");
-			//}
-			if (e.Key == Key.Escape)
+			if (e.Key == Key.Return)
+			{
+                if (MessageBox.Show("Êtes-vous sûr de vouloir démarrer le modifieur ? L'action fermera ce programme !", "Confirmer", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    // On veut modifier les données => Lancement du modifieur (si trouvable)
+                    if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "ModifieurFermette.exe"))
+                    {
+                        Process p = new Process { StartInfo = new ProcessStartInfo("ModifieurFermette") };
+                        p.Start();
+                        this.Close(); // Indispensable de fermer ce programme après avoir lancé le modifieur vu qu'au sinon le mdf est indisponible vu que deux app essaient de s'y connecter en même temps
+                    }
+                    else
+                        MessageBox.Show("l'exécutable du modifieur est introuvable ! Veuillez le replacer dans le même dossier que ce programme...");
+                }
+            }
+            if (e.Key == Key.Escape)
 			{
 				// On veut quitter le programme
 				if (MessageBox.Show("Êtes-vous sûr de vouloir fermer l'application ?", "Confirmer", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -215,6 +231,18 @@ namespace AfficheurFermette
                 ProchainEvenements[num].Lieu,
                 ProchainEvenements[num].Description
             };
+        }
+
+        // Vérifie si une instance d'un des deux programmes n'existe pas déjà
+        static bool ExisteInstance()
+        {
+            Process actu = Process.GetCurrentProcess();
+            Process[] acti = Process.GetProcesses();
+            foreach (Process p in acti)
+                if (p.Id != actu.Id)
+                    if (p.ProcessName == "AfficheurFermette" || p.ProcessName == "ModifieurFermette")
+                        return true;
+            return false;
         }
     }
 }

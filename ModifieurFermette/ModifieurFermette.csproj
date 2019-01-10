@@ -29,7 +29,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,11 +75,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ViewModels\Dialogs\AddPersonneDialog.xaml">
+    <Page Include="Views\Dialogs\AddEvenementDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\AddMenuDuJourDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\AddPersonneDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -99,13 +103,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\GeneralComboBoxItem.cs" />
+    <Compile Include="ViewModels\Dialogs\AddEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\AddPersonneDialog.xaml.cs">
-      <DependentUpon>AddPersonneDialog.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModels\Dialogs\AddPersonneDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\Dialogs\AddEvenementDialog.xaml.cs">
+      <DependentUpon>AddEvenementDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\AddMenuDuJourDialog.xaml.cs">
       <DependentUpon>AddMenuDuJourDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AddPersonneDialog.xaml.cs">
+      <DependentUpon>AddPersonneDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
@@ -149,8 +159,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

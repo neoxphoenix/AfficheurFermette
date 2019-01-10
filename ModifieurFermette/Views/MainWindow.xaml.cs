@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using ModifieurFermette.ViewModels;
+using System.Diagnostics;
 
 // dll
 using Projet_AFFICHEURFERMETTE.MDF.Acces;
@@ -27,18 +28,25 @@ using ShowableData;
 
 namespace ModifieurFermette
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
         private MainWindowViewModel vm;
 
         public MainWindow()
-		{
-			InitializeComponent();
+        {
+            if (ExisteInstance())
+            {
+                MessageBox.Show("Une instance du modifieur ou de l'afficheur est déjà ouverte ! Veuillez fermer cette instance avant de relancer ce programme...");
+                this.Close();
+            }
+            InitializeComponent();
             vm = new MainWindowViewModel();
             this.DataContext = vm;
+            if (vm.CloseAction == null)
+                vm.CloseAction = new Action(() => this.Close()); // Permet de fermer la fenêtre depuis le ViewModel; solution de -> http://jkshay.com/closing-a-wpf-window-using-mvvm-and-minimal-code-behind/
             // On vérifie si le fichier de config existe
             if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"))
                 vm.config = ConfigClass.DeserializeFromFile(System.AppDomain.CurrentDomain.BaseDirectory + "config.xml"); // Si oui, on le charge
@@ -93,6 +101,18 @@ namespace ModifieurFermette
                 DGmenus.ItemsSource = vm.MenusAff;
 
             }
+        }
+
+        // Vérifie si une instance d'un des deux programmes n'existe pas déjà
+        static bool ExisteInstance()
+        {
+            Process actu = Process.GetCurrentProcess();
+            Process[] acti = Process.GetProcesses();
+            foreach (Process p in acti)
+                if (p.Id != actu.Id)
+                    if (p.ProcessName == "AfficheurFermette" || p.ProcessName == "ModifieurFermette")
+                        return true;
+            return false;
         }
     }
 }
