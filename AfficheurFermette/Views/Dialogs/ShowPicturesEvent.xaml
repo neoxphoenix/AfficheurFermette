@@ -9,19 +9,55 @@
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.CommandBindings>
-        <CommandBinding Command="{x:Static wpf:DialogHost.CloseDialogCommand}" />
-    </UserControl.CommandBindings>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <StackPanel VerticalAlignment="Stretch">
-            <GroupBox Header="Photos" Style="{DynamicResource MaterialDesignGroupBox}" FontSize="20" BorderThickness="0">
-                <TextBlock Text="fdsfdsf"/>
-            </GroupBox>
+    <!-- RESSOURCES -->
+    <UserControl.Resources>
+        <BitmapImage  x:Key="iconNext" UriSource="/AfficheurFermette;component/Resources/Images/nextpic.png" />
+        <BitmapImage  x:Key="iconPrev" UriSource="/AfficheurFermette;component/Resources/Images/prevpic.png" />
+    </UserControl.Resources>
+
+    <StackPanel VerticalAlignment="Stretch">
+            <GroupBox Header="{Binding titreEvent}" Style="{DynamicResource MaterialDesignGroupBox}" FontSize="20" BorderThickness="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="AUTO"/> <!-- COLONNE PHOTOS -->
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="AUTO"/> <!-- COLONNE POUR CLASSEMENT -->
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- BOUTON PREVIOUS PIC -->
+                <Button Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="110" Height="100" Margin="10" Command="{Binding Cmd_DisplayPrevPic}" Visibility="{Binding AfficherBtnPrev}">
+                    <StackPanel>
+                        <Image Grid.Column="0" Source="{StaticResource iconPrev}" Width="70" VerticalAlignment="Center"></Image>
+                    </StackPanel>
+                </Button>
+                
+                <!-- PHOTO -->
+                <Image Grid.Column="1" Source="{Binding photoToDisplay}" Width="600"></Image>
+                
+                <!-- BOUTON NEXT PIC -->
+                <Button Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="110" Height="100" Margin="10" Command="{Binding Cmd_DisplayNextPic}" Visibility="{Binding AfficherBtnNext}">
+                    <StackPanel>
+                        <Image Source="{StaticResource iconNext}" Width="70" VerticalAlignment="Center"></Image>
+                    </StackPanel>
+                </Button>
+                
+                <!-- CLASSEMENTS -->
+                <DataGrid Grid.Column="3" ItemsSource="{Binding ListePhotosEvenements}" Visibility="{Binding AfficherClassementDG}"
+                                      x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False"
+                                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" IsReadOnly="True" CanUserSortColumns="False" FontSize="20" Background="#FFE5E5E5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="CLASSEMENT" Binding="{Binding ID}" FontSize="30" FontFamily="Verdana"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </Grid>
+        </GroupBox>
         </StackPanel>
 
-    </Grid>
 </UserControl>

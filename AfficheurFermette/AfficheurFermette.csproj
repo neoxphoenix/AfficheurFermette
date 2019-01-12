@@ -126,8 +126,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\cake.png" />
-    <Resource Include="Resources\Images\paint.png" />
-    <Resource Include="Resources\Images\share.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -137,9 +135,6 @@
       <Project>{b94a7f89-eefd-4e49-bf8c-152f8872d016}</Project>
       <Name>ShowableData</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\event1.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\menu3.png" />
@@ -157,10 +152,28 @@
     <Resource Include="Resources\Images\OngletRepas3.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\OngletMeteo.png" />
+    <Resource Include="Resources\Images\OngletAnnversaire.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\OngletAnnversaire.jpg" />
+    <Resource Include="Resources\Images\OngletMeteo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\timeclock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\gallery.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\prevpic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\nextpic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\errorimg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

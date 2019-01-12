@@ -13,32 +13,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ShowableData;
+using System.Collections.ObjectModel; //pour ObservableData
 using AfficheurFermette.ViewModels.Dialogs;
 
 namespace AfficheurFermette.Views.Dialogs
 {
     public partial class ShowPicturesEvent : UserControl
     {
-        //ShowPicturesEventViewModel vm;
+        ShowPicturesEventViewModel vm;
 
-        public ShowPicturesEvent() //string Header_, string Message_
+        public ShowPicturesEvent(string sChConn, ShowViewEvenement EventSelected)
         {
             InitializeComponent();
-            //vm = new ConfirmDialogViewModel();
-            //this.DataContext = vm;
+            vm = new ShowPicturesEventViewModel(sChConn, EventSelected);
+            this.DataContext = vm;
         }
     }
-
-    //public class ConfirmDialogViewModel : ObservableData
-    //    {
-    //        private string _Header, _Message;
-    //        public ConfirmDialogViewModel(string Header_, string Message_)
-    //        {
-    //            Header = Header_;
-    //            Message = Message_;
-    //        }
-    //        public string Message { get => _Message; set { _Message = value; OnPropertyChanged("Message"); } }
-    //        public string Header { get => _Header; set { _Header = value; OnPropertyChanged("Header"); } }
-    //    }
-    //}
 }
