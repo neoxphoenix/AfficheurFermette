@@ -30,9 +30,9 @@ namespace AfficheurFermette.ViewModels.Dialogs
         public List<C_PhotoEvenement> ListePhotosEvenements { get; set; }
         public List<C_PersonnePos> GetEvenements { get; set; }
 
+        public int maxPic; //nombre max de photos dispo
 
-        public int maxPic;
-        private int _indexPic;
+        private int _indexPic; //index de la photo actuel
         public int indexPic
         {
             get { return _indexPic; }
@@ -46,15 +46,15 @@ namespace AfficheurFermette.ViewModels.Dialogs
             }
         }
 
-        private string _DGActu_SelectedItem;
-        public string DGActu_SelectedItem
+        private string _infosPicPos; //indique combien et sur quel photos l'on se trouve
+        public string infosPicPos
         {
-            get { return _DGActu_SelectedItem.ToUpper(); }
+            get { return _infosPicPos; }
             set
             {
-                if (_DGActu_SelectedItem != value)
+                if (_infosPicPos != value)
                 {
-                    _DGActu_SelectedItem = value;
+                    _infosPicPos = value;
                     OnPropertyChanged();
                 }
             }
@@ -74,7 +74,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
             }
         }
 
-        private BitmapImage _photoToDisplay;
+        private BitmapImage _photoToDisplay; //Bitmap de l'image à afficher
         public BitmapImage photoToDisplay
         {
             get { return _photoToDisplay; }
@@ -88,7 +88,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
             }
         }
 
-        private Visibility _AfficherBtnPrev;
+        private Visibility _AfficherBtnPrev; //visibilité ON ou OFF
         public Visibility AfficherBtnPrev
         {
             get
@@ -131,7 +131,6 @@ namespace AfficheurFermette.ViewModels.Dialogs
         }
 
         //<<< ICOMMAND >>>
-
         private ICommand _DisplayNextPic;
         public ICommand Cmd_DisplayNextPic
         {
@@ -154,6 +153,8 @@ namespace AfficheurFermette.ViewModels.Dialogs
             if (indexPic < maxPic - 1)
             {
                 indexPic++; //incrémente l'index
+                infosPicPos = (indexPic + 1).ToString() + "/" + maxPic.ToString();
+
                 if (File.Exists(ListePhotosEvenements[0].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[indexPic].Photo));
                 else
@@ -183,6 +184,8 @@ namespace AfficheurFermette.ViewModels.Dialogs
             if (indexPic > 0)
             {
                 indexPic--; //décrémente l'index
+                infosPicPos = (indexPic + 1).ToString() + "/" + maxPic.ToString();
+
                 if (File.Exists(ListePhotosEvenements[0].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[indexPic].Photo));
                 else
@@ -201,9 +204,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
             Cmd_DisplayNextPic = new RelayCommand(Exec => ICmd_ExecDisplayNextPic(), CanExec => true);
             Cmd_DisplayPrevPic = new RelayCommand(Exec => ICmd_ExecDisplayPrevPic(), CanExec => true);
 
-            titreEvent = EventSelected.Titre + "(" + EventSelected.ID + ")"; //configure le titre de la fenetre
-            DGActu_SelectedItem = EventSelected.Description;
-
+            titreEvent = EventSelected.Titre; //configure le titre de la fenetre
             
             //Photos
             ListePhotosEvenements = new G_ViewEvenement(sChConn).LirePhotosEvenement(EventSelected.ID);
@@ -219,6 +220,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
 
                 indexPic = 0;
                 maxPic = ListePhotosEvenements.Count();
+                infosPicPos = (indexPic+1).ToString() + "/" + maxPic.ToString();
             }
             else
             {
@@ -227,18 +229,11 @@ namespace AfficheurFermette.ViewModels.Dialogs
             }
 
             //Classement
-            //GetEvenements = new G_ViewEvenement(sChConn).LireClassementEvenement(3);
-
-            //if (GetEvenements.Count() > 0 && GetEvenements != null)
-            //{
-            //    AfficherClassementDG = Visibility.Visible;
-            //}
-
-            //else
-            //{
-            //    AfficherClassementDG = Visibility.Collapsed;
-            //}
-
+            GetEvenements = new G_ViewEvenement(sChConn).LireClassementEvenement(EventSelected.ID);
+            if (GetEvenements.Count() > 0)
+                AfficherClassementDG = Visibility.Visible;
+            else
+                AfficherClassementDG = Visibility.Collapsed;
         }
 
         //EVENT HANDLER qui signal un changement d'état

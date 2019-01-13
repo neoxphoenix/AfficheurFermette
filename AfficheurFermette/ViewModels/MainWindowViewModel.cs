@@ -97,7 +97,12 @@ namespace AfficheurFermette.ViewModels
         private string _repasEntreeDuJour;
         public string repasEntreeDuJour
         {
-            get { return _repasEntreeDuJour; }
+            get {
+                //if (_repasEntreeDuJour != null)
+                //    return _repasEntreeDuJour.ToUpper();
+                //else
+                    return _repasEntreeDuJour;
+            }
             set
             {
                 if (_repasEntreeDuJour != value)
@@ -146,7 +151,10 @@ namespace AfficheurFermette.ViewModels
             set
             {
                 if (_dateAjd != value)
+                {
                     _dateAjd = value;
+                    //ChargerDonneesDaily(); //On vérifie les données une fois par jour lors du changement de la date |>>>> FINALEMENT VERIFICATION TOUTES LES HEURES
+                }
                 OnPropertyChanged();
             }
         }
@@ -275,6 +283,7 @@ namespace AfficheurFermette.ViewModels
                 OnPropertyChanged();
             }
         }
+
         public string _affichageHeure;
         public string affichageHeure
         {
@@ -283,6 +292,12 @@ namespace AfficheurFermette.ViewModels
             {
                 _affichageHeure = value;
                 OnPropertyChanged();
+
+                //On recharge les données toutes les heures
+                if (string.Compare(_affichageHeure.Substring(3, 2), "00") == 0)
+                {
+                    ChargerDonneesDaily();
+                }
             }
         }
 
@@ -331,6 +346,50 @@ namespace AfficheurFermette.ViewModels
             }
         }
 
+        private BitmapImage _previsionMeteo1;
+        public BitmapImage previsionMeteo1
+        {
+            get
+            {
+                    return _previsionMeteo1;
+            }
+            set
+            {
+                _previsionMeteo1 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BitmapImage _previsionMeteo2;
+        public BitmapImage previsionMeteo2
+        {
+            get
+            {
+                return _previsionMeteo2;
+            }
+            set
+            {
+                _previsionMeteo2 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BitmapImage _photoToDisplay;
+        public BitmapImage photoToDisplay
+        {
+            get {
+                if (_photoToDisplay != null) 
+                    return _photoToDisplay;
+                else 
+                    return photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\gallery.png"));
+            }
+            set
+            {
+                _photoToDisplay = value;
+                OnPropertyChanged();
+            }
+        }
+
         //<<< ICOMMAND >>>
         //CanChange
         private bool ICmd_CanChangeTabByClick(object o)
@@ -352,8 +411,20 @@ namespace AfficheurFermette.ViewModels
         //ICmd_ExecShowPhotosEventClick Exec
         private async void ICmd_ExecShowPhotosEventClick()
         {
-            var Dialog = new Views.Dialogs.ShowPicturesEvent(config.sChConn, EvenementsAff[DGActu_SelectedItem]);
-            await DialogHost.Show(Dialog);
+            bool canOpenDialog = false;
+            List<C_PhotoEvenement> ListePhotosEvenements = new G_ViewEvenement(config.sChConn).LirePhotosEvenement(EvenementsAff[DGActu_SelectedItem].ID);
+            if (ListePhotosEvenements.Count() > 0)
+                canOpenDialog = true;
+
+            List<C_PersonnePos> GetEvenements = new G_ViewEvenement(config.sChConn).LireClassementEvenement(EvenementsAff[DGActu_SelectedItem].ID);
+            if (GetEvenements.Count() > 0)
+                canOpenDialog = true;
+
+            if (canOpenDialog == true)
+            {
+                var Dialog = new Views.Dialogs.ShowPicturesEvent(config.sChConn, EvenementsAff[DGActu_SelectedItem]);
+                await DialogHost.Show(Dialog);
+            }
         }
 
         //Récupère l'ID Index d'un événement séléctionné (onglet 1)
@@ -367,8 +438,38 @@ namespace AfficheurFermette.ViewModels
                 {
                     _DGActu_SelectedItem = value;
                     OnPropertyChanged();
+
+                    //Vérifie si photo à afficher ou non
+                    List<C_PhotoEvenement> ListePhotosEvenements = new G_ViewEvenement(config.sChConn).LirePhotosEvenement(EvenementsAff[DGActu_SelectedItem].ID);
+                    if (ListePhotosEvenements.Count() > 0)
+                    {
+                        if (File.Exists(ListePhotosEvenements[0].Photo))
+                            photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[0].Photo));
+                        else
+                            photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\gallery.png"));
+                    }
+                    else
+                        photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\gallery.png"));
                 }
             }
+        }
+
+        //TEST
+        private ICommand _Cmd_TestClick;
+        public ICommand Cmd_TestClick
+        {
+            get { return _Cmd_TestClick; }
+            set
+            {
+                if (_Cmd_TestClick != value)
+                    _Cmd_TestClick = value;
+            }
+        }
+
+        private void ICmd_ExecTestClick()
+        {
+            //ChargerDonneesDaily();
+            
         }
 
         #endregion
@@ -381,8 +482,8 @@ namespace AfficheurFermette.ViewModels
         public MainWindowViewModel()
         {
             ChangeTabByClick = new RelayCommand(ICmd_ExecChangeTabByClick, ICmd_CanChangeTabByClick);
-            //Cmd_ShowPhotosEvent = new RelayCommand(ICmd_ExecShowPhotosEventClick, ICmd_CanShowPhotosEventClick);
             Cmd_ShowPhotosEvent = new RelayCommand(Exec => ICmd_ExecShowPhotosEventClick(), CanExec => true);
+            Cmd_TestClick = new RelayCommand(Exec => ICmd_ExecTestClick(), CanExec => true); //commande test
 
             //Timer pour mise à jour de l'heure et la date
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -406,17 +507,12 @@ namespace AfficheurFermette.ViewModels
         // CHARGER DONNNES DU JOUR
         public void ChargerDonneesDaily()
         {
-            GetMenuDuJour();
-            CheckAnnifToday();
-            GenerationDesEvenementsExistant();
-
-            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("");
-
-            EvenementsAff = new ObservableCollection<ShowViewEvenement>();
-            foreach (C_ViewEvenement TmpEvenement in Evenements)
-            {
-                EvenementsAff.Add(new ShowViewEvenement(TmpEvenement));
-            }
+            GetMenuDuJour(); //Génération Menu du jour
+            CheckAnnifToday(); //Génération des Anniversaires
+            //GenerationDesEvenementsExistant();
+            GenerationEvenementsActu(); //Génération des événements affiché dans l'onglet ACTUALITES
+            previsionMeteo1 = new BitmapImage(new Uri("https://www.prevision-meteo.ch/uploads/widget/la-reid_0.png")); //charge bitmap prévision météo pour AJD
+            previsionMeteo2 = new BitmapImage(new Uri("https://www.prevision-meteo.ch/uploads/widget/la-reid_1.png")); //charge bitmap prévision météo pour DEMAIN
         }
 
         //Menu du jour
@@ -534,6 +630,16 @@ namespace AfficheurFermette.ViewModels
                 ProchainEvenements[num].Lieu,
                 ProchainEvenements[num].Description
             };
+        }
+
+        public void GenerationEvenementsActu()
+        {
+            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("");
+            EvenementsAff = new ObservableCollection<ShowViewEvenement>();
+            foreach (C_ViewEvenement TmpEvenement in Evenements)
+            {
+                EvenementsAff.Add(new ShowViewEvenement(TmpEvenement));
+            }
         }
 
         //Timer mise à jour de la date et de l'heure

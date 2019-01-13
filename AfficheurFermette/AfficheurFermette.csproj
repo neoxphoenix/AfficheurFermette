@@ -137,15 +137,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\menu3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\jogging.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\natation.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\OngletActu2.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\errorimg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\mealready.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

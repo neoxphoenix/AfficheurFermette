@@ -8,7 +8,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1200">
 
     <!-- RESSOURCES -->
     <UserControl.Resources>
@@ -24,6 +24,7 @@
                     <ColumnDefinition Width="AUTO"/> <!-- COLONNE PHOTOS -->
                     <ColumnDefinition Width="AUTO"/>
                     <ColumnDefinition Width="AUTO"/> <!-- COLONNE POUR CLASSEMENT -->
+                    <ColumnDefinition Width="AUTO"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -38,23 +39,44 @@
                 </Button>
                 
                 <!-- PHOTO -->
-                <Image Grid.Column="1" Source="{Binding photoToDisplay}" Width="600"></Image>
-                
+                <Grid Grid.Column="1" Visibility="{Binding AfficherClassementDG}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="AUTO"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Image Source="{Binding photoToDisplay}" Width="600"></Image>
+                    <TextBlock Grid.Row="1" Text="{Binding infosPicPos}" FontFamily="Verdana" FontSize="35" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="#FF49476A"></TextBlock>
+                </Grid>
                 <!-- BOUTON NEXT PIC -->
                 <Button Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="110" Height="100" Margin="10" Command="{Binding Cmd_DisplayNextPic}" Visibility="{Binding AfficherBtnNext}">
                     <StackPanel>
                         <Image Source="{StaticResource iconNext}" Width="70" VerticalAlignment="Center"></Image>
                     </StackPanel>
                 </Button>
-                
+
                 <!-- CLASSEMENTS -->
-                <DataGrid Grid.Column="3" ItemsSource="{Binding ListePhotosEvenements}" Visibility="{Binding AfficherClassementDG}"
+                            
+                   
+                    <DataGrid Grid.Column="3" ItemsSource="{Binding GetEvenements}"
                                       x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False"
                                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" IsReadOnly="True" CanUserSortColumns="False" FontSize="20" Background="#FFE5E5E5">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="CLASSEMENT" Binding="{Binding ID}" FontSize="30" FontFamily="Verdana"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="POSITION" Binding="{Binding Position}" FontSize="30" FontFamily="Verdana" SortDirection="Ascending"/>
+                            <DataGridTextColumn Header="NOM" Binding="{Binding Nom}" FontSize="30" FontFamily="Verdana"/>
+                            <DataGridTextColumn Header="PRENOM" Binding="{Binding Prenom}" FontSize="30" FontFamily="Verdana"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+   
+
+                <TextBlock Grid.Column="4" Text="CLASSEMENT" FontFamily="Verdana" FontSize="30" Margin="10" HorizontalAlignment="Center">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
 
             </Grid>
         </GroupBox>

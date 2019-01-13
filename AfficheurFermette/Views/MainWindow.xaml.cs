@@ -30,10 +30,10 @@ namespace AfficheurFermette
 
     public partial class MainWindow : Window
     {
-
         //Attributs
 		private string sChConn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.mdf;Integrated Security=True;Connect Timeout=30";
         private MainWindowViewModel vm;
+        private int _dateAjd;
 
         //Constructeur
         public MainWindow()
@@ -59,7 +59,15 @@ namespace AfficheurFermette
             string[] stab2 = stab[2].Split(';');
             OpenFileDialog dlgChargerDB = new OpenFileDialog();
 
+            //Charge les données météo au démarrage
+            dateAjd = DateTime.Now.Day; //rafraichissement météo une fois par jour
             BrowserMeteo.Navigate("https://www.prevision-meteo.ch/services/html/la-reid/horizontal?bg=ffffff&txtcol=000000&tmpmin=000000&tmpmax=378ADF");
+
+            //Timer pour mise à jour météo navigateur
+            System.Windows.Threading.DispatcherTimer CheckDay = new System.Windows.Threading.DispatcherTimer();
+            CheckDay.Tick += new EventHandler(CheckDay_Tick);
+            CheckDay.Interval = TimeSpan.FromSeconds(10);
+            CheckDay.Start();
 
             // Si le fichier n'existe pas on propose à l'utilisateur d'indiquer l'emplacement de la base de données
             if (!File.Exists(stab2[0]))
@@ -135,50 +143,7 @@ namespace AfficheurFermette
 			}
 		}
 
-        #region Effets sur les onglets (désactivé pour le moment)
-        private void EffetOnglet(Canvas ChoixCnv)
-        {
-            CnvOnglet1.Children.Clear();
-            CnvOnglet2.Children.Clear();
-            CnvOnglet3.Children.Clear();
-            CnvOnglet4.Children.Clear();
-
-            Rectangle EffetBordure = new Rectangle();
-            EffetBordure.Fill = Brushes.DarkBlue;
-            EffetBordure.Width = ImgOnglet2.ActualWidth; //les onglets ont tous la même taille, donc OK
-            EffetBordure.Height = 2;
-            EffetBordure.StrokeThickness = 2;
-
-            ChoixCnv.Children.Add(EffetBordure);
-            Canvas.SetLeft(EffetBordure, 0);
-            Canvas.SetTop(EffetBordure, 0);
-        }
-
-        private void ImgOnglet1_Click(object sender, RoutedEventArgs e)
-        {
-            EffetOnglet(CnvOnglet1);
-        }
-
-        private void ImgOnglet2_Click(object sender, RoutedEventArgs e)
-        {
-            EffetOnglet(CnvOnglet2);
-        }
-
-        private void ImgOnglet3_Click(object sender, RoutedEventArgs e)
-        {
-            EffetOnglet(CnvOnglet3);
-        }
-
-        private void ImgOnglet4_Click(object sender, RoutedEventArgs e)
-        {
-            EffetOnglet(CnvOnglet4);
-        }
-        #endregion
-
-        public string[] _prochainEvent1, _prochainEvent2, _prochainEvent3;
-        public List<ShowViewEvenement> ProchainEvenements = new List<ShowViewEvenement>();
-
-        #region DESACTIVER LE BROWSER APRES CHARGEMENT DES DONNEES METEO
+        #region CONFIG DU BROWSER + DESACTIVATION APRES CHARGEMENT DES DONNEES METEO UNE FOIS PAR JOUR
         bool BrowserIsLoaded = false;
         private void BrowserMeteo_LoadCompleted(object sender, NavigationEventArgs e)
         {
@@ -196,41 +161,39 @@ namespace AfficheurFermette
             if (BrowserIsLoaded)
                 e.Handled = true;
         }
-        #endregion
 
-        public void Button_Click(object sender, RoutedEventArgs e)
+        private void BrowserMeteoRefresh()
         {
-            List<C_ViewEvenement> Evenements = new G_ViewEvenement(vm.config.sChConn).Lire_DateNextEvents(DateTime.Now);
-            int nbreEventsFound = Evenements.Count(); //nombre d'Events récupéré
+            BrowserIsLoaded = false;
+            BrowserMeteo.Navigate("https://www.prevision-meteo.ch/services/html/la-reid/horizontal?bg=ffffff&txtcol=000000&tmpmin=000000&tmpmax=378ADF");
+        }
 
-            int nbreEventsWeWant = 3; //nombre d'Events que l'on veux afficher
-            foreach (C_ViewEvenement TmpEvent in Evenements)
+        public int dateAjd
+        {
+            get
             {
-                ProchainEvenements.Add(new ShowViewEvenement(TmpEvent));
-                if ((ProchainEvenements.Count() >= nbreEventsWeWant) || (nbreEventsFound <= 0))
-                    break;
+                return _dateAjd;
             }
-            if (nbreEventsFound > 0)
+            set
             {
-                _prochainEvent1 = ConstruitStringEvents(0);
-                tbTest.Text += _prochainEvent1[3];
-                if (nbreEventsFound > 1)
+                if (_dateAjd != value)
                 {
-                    _prochainEvent2 = ConstruitStringEvents(1);
-                    if (nbreEventsFound > 2)
-                        _prochainEvent3 = ConstruitStringEvents(2);
+                    _dateAjd = value;
+                    BrowserMeteoRefresh();
                 }
             }
         }
-        public string[] ConstruitStringEvents(int num)
+
+        public void CheckDay_Tick(object sender, EventArgs e)
         {
-            return new string[] {
-                ProchainEvenements[num].ID.ToString(),
-                ProchainEvenements[num].DateDebut.ToString(),
-                ProchainEvenements[num].Titre,
-                ProchainEvenements[num].Lieu,
-                ProchainEvenements[num].Description
-            };
+            dateAjd = DateTime.Now.Day;
+        }
+        #endregion
+
+
+        public void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         // Vérifie si une instance d'un des deux programmes n'existe pas déjà
