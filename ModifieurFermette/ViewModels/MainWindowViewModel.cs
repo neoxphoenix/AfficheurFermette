@@ -411,8 +411,8 @@ namespace ModifieurFermette.ViewModels
                 lock (EvenementsAffLock)
                 {
                     new G_Evenement(config.sChConn).Modifier(dg.vm.IDevenement, DateDebut, DateFin, dg.vm.Description, dg.vm.SelectedTypeEvenement, dg.vm.SelectedTitre.ID, dg.vm.SelectedLieu.ID);
-                    ShowViewEvenement TmpEvenement = EvenementsAff.First(item => item.ID == dg.vm.IDevenement);
-                    TmpEvenement = new ShowViewEvenement(new C_ViewEvenement(dg.vm.IDevenement, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description));
+                    int Index = EvenementsAff.IndexOf(EvenementsAff.First(item => item.ID == dg.vm.IDevenement));
+                    EvenementsAff[Index] = new ShowViewEvenement(new C_ViewEvenement(dg.vm.IDevenement, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description));
                 }
             });
 
