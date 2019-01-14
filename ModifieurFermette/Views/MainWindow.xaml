@@ -150,7 +150,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowViewEvenementCmd}">
@@ -159,15 +158,14 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="2">
+                            Grid.Column="2"
+                            Command="{Binding UpdateShowViewEvenementCmd}">
                             Modifier
                         </Button>
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowViewEvenementCmd}">
@@ -176,7 +174,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="6">
                             Détails
@@ -274,7 +271,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowPersonneCmd}">
@@ -283,7 +279,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="2">
                             Modifier
@@ -291,7 +286,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowPersonneCmd}">
@@ -300,7 +294,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="6">
                             Détails
@@ -402,7 +395,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowViewMenuDuJourCmd}">
@@ -411,7 +403,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="2">
                             Modifier
@@ -419,7 +410,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowViewMenuDuJourCmd}">
@@ -428,7 +418,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="6">
                             Détails

@@ -21,10 +21,16 @@ namespace ModifieurFermette.Views.Dialogs
     public partial class AddEvenementDialog : UserControl
     {
         public ViewModels.Dialogs.AddEvenementDialogViewModel vm;
-        public AddEvenementDialog(string sChConn)
+        public AddEvenementDialog(string sChConn) // Ajout
         {
             vm = new ViewModels.Dialogs.AddEvenementDialogViewModel(sChConn);
             InitializeComponent();
+            this.DataContext = vm;
+        }
+        public AddEvenementDialog(string sChConn, ShowableData.ShowViewEvenement evenement) // modification
+        {
+            InitializeComponent();
+            vm = new ViewModels.Dialogs.AddEvenementDialogViewModel(sChConn, evenement);
             this.DataContext = vm;
         }
     }

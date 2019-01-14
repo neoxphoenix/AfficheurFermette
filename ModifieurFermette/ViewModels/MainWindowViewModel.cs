@@ -50,6 +50,9 @@ namespace ModifieurFermette.ViewModels
         private ICommand _AddShowPersonneCmd;
         private ICommand _AddShowViewEvenementCmd;
         #endregion
+        #region Modification
+        private ICommand _UpdateShowViewEvenementCmd;
+        #endregion
         #endregion
         #endregion
 
@@ -65,20 +68,11 @@ namespace ModifieurFermette.ViewModels
             AddShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteAddShowViewMenuDuJour(), CanExec => true);
             AddShowPersonneCmd = new RelayCommand(Exec => ExecuteAddShowPersonne(), CanExec => true);
             AddShowViewEvenementCmd = new RelayCommand(Exec => ExecuteAddShowViewEvenement(), CanExec => true);
+
+            UpdateShowViewEvenementCmd = new RelayCommand(Exec => ExecuteUpdateShowViewEvenement(), CanExec => CanExecUpdateShowViewEvenement());
         }
 
         #region Méthodes
-        public void ExecuteOpenAff() // Démarre l'afficheur (si trouvable)
-        {
-            if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.exe"))
-            {
-                Process p = new Process { StartInfo = new ProcessStartInfo("AfficheurFermette") };
-                p.Start();
-                CloseAction(); // Indispensable de fermer ce programme après avoir lancé l'afficheur vu qu'au sinon le mdf est indisponible vu que deux app essaient de s'y connecter en même temps
-            }
-            else
-                System.Windows.MessageBox.Show("l'exécutable de l'afficheur est introuvable ! Veuillez le replacer dans le même dossier que ce programme...");
-        }
         public void ChargerDonnees()
         {
             // Extraction des données de la DB
@@ -156,17 +150,18 @@ namespace ModifieurFermette.ViewModels
             return false;
         }
         /// <summary>
-        /// Vérifie qu'au moins un Evenement est sélectionné
+        /// Retourne le nombre d'événements sélectionnés dans la datagrid
         /// </summary>
-        /// <returns>vrai si au moins un élément est sélectionné</returns>
-        private bool IsAtLeastOneShowViewEvenementSelected()
+        /// <returns>Ce nombre/returns>
+        private int HowManyShowViewEvenementSelected()
         {
+            int count = 0;
             foreach (ShowViewEvenement TmpEvenement in EvenementsAff)
             {
                 if (TmpEvenement.IsSelected)
-                    return true;
+                    count++;
             }
-            return false;
+            return count;
         }
         /// <summary>
         /// Vérifie qu'au moins une personne est sélectionnée
@@ -181,9 +176,21 @@ namespace ModifieurFermette.ViewModels
             }
             return false;
         }
+
         #endregion
         #region Commands
-            #region ShowViewMenuDuJour
+        public void ExecuteOpenAff() // Démarre l'afficheur (si trouvable)
+        {
+            if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "AfficheurFermette.exe"))
+            {
+                Process p = new Process { StartInfo = new ProcessStartInfo("AfficheurFermette") };
+                p.Start();
+                CloseAction(); // Indispensable de fermer ce programme après avoir lancé l'afficheur vu qu'au sinon le mdf est indisponible vu que deux app essaient de s'y connecter en même temps
+            }
+            else
+                System.Windows.MessageBox.Show("l'exécutable de l'afficheur est introuvable ! Veuillez le replacer dans le même dossier que ce programme...");
+        }
+        #region ShowViewMenuDuJour
                 #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
@@ -282,14 +289,17 @@ namespace ModifieurFermette.ViewModels
         /// </summary>
         private async void ExecuteDeleteShowViewEvenement()
         {
-            var ConfDialog = new Views.Dialogs.ConfirmDialog("Confirmer", "Confirmer la suppression ?");
+            var ConfDialog = new ConfirmDialog("Confirmer", "Confirmer la suppression ?");
 
             await DialogHost.Show(ConfDialog, ConfDeleteShowViewEvenementDialogClosing); // arg 1) le dialog, 2) l'événement de fermeture du dialog (on y intercepte le choix de l'utilisateur, OK ou Cancel)
 
         }
         private bool CanExecDeleteShowViewEvenement()
         {
-            return IsAtLeastOneShowViewEvenementSelected();
+            if (HowManyShowViewEvenementSelected() > 0)
+                return true;
+            else
+                return false;
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
@@ -363,6 +373,51 @@ namespace ModifieurFermette.ViewModels
 
             // Fermeture du Dialog
             await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
+                #region Modification
+        private async void ExecuteUpdateShowViewEvenement()
+        {
+            var Dialog = new AddEvenementDialog(config.sChConn, EvenementsAff.First(evenement => evenement.IsSelected)); // On envoie l'événement sélectionné
+
+            await DialogHost.Show(Dialog, UpdateShowViewModelClosing);
+        }
+        private bool CanExecUpdateShowViewEvenement()
+        {
+            if (HowManyShowViewEvenementSelected() == 1)
+                return true;
+            else
+                return false;
+        }
+        private async void UpdateShowViewModelClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddEvenementDialog dg = (AddEvenementDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task UpdatingItem = Task.Run(() =>
+            {
+                DateTime DateDebut = dg.vm.DateDebut.Add(dg.vm.TimeDebut.TimeOfDay);
+                DateTime DateFin = dg.vm.DateFin.Add(dg.vm.TimeFin.TimeOfDay);
+
+                // On vérifie les ID, si ils sont à 0 c'est que les items n'existent pas encore dans la DB => création
+                if (dg.vm.SelectedTitre.ID == 0)
+                    dg.vm.SelectedTitre.ID = new G_TitreEvenement(config.sChConn).Ajouter(dg.vm.SelectedTitre.Titre);
+                if (dg.vm.SelectedLieu.ID == 0)
+                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu);
+                lock (EvenementsAffLock)
+                {
+                    new G_Evenement(config.sChConn).Modifier(dg.vm.IDevenement, DateDebut, DateFin, dg.vm.Description, dg.vm.SelectedTypeEvenement, dg.vm.SelectedTitre.ID, dg.vm.SelectedLieu.ID);
+                    ShowViewEvenement TmpEvenement = EvenementsAff.First(item => item.ID == dg.vm.IDevenement);
+                    TmpEvenement = new ShowViewEvenement(new C_ViewEvenement(dg.vm.IDevenement, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description));
+                }
+            });
+
+            // Fermeture du Dialog
+            await UpdatingItem.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
@@ -596,6 +651,19 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _AddShowViewEvenementCmd = value;
+            }
+        }
+        #endregion
+            #region Modification
+        public ICommand UpdateShowViewEvenementCmd
+        {
+            get
+            {
+                return _UpdateShowViewEvenementCmd;
+            }
+            set
+            {
+                _UpdateShowViewEvenementCmd = value;
             }
         }
         #endregion

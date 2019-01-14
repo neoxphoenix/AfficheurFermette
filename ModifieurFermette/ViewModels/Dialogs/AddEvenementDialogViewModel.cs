@@ -27,17 +27,15 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private int _SelectedTypeEvenement;
         private string _Description;
 
+        public int IDevenement; // uniquement utilisé en cas de modification d'un événement existant
+
         /* ===== Validation ===== */
         private bool _Validated;
         private string _DateError; // Permet de définir la visibilité du message d'erreur; on alterne entre "Collapsed" (idem que caché mais ne prend pas de place) et "Visible"
 
-        public AddEvenementDialogViewModel(string sChConn)
+        public AddEvenementDialogViewModel(string sChConn) // Ajout
         {
-            // Chargement des données de la DB
-            Titres = new ObservableCollection<C_TitreEvenement>();
-            new G_TitreEvenement(sChConn).Lire("").ForEach(item => Titres.Add(item));
-            Lieus = new ObservableCollection<C_LieuEvenement>();
-            new G_LieuEvenement(sChConn).Lire("").ForEach(item => Lieus.Add(item));
+            LoadData(sChConn);
 
             // On met les dates à maintenant et maintenant + 1h pour la date de fin
             DateDebut = DateFin = DateTime.Now.Date;
@@ -45,6 +43,44 @@ namespace ModifieurFermette.ViewModels.Dialogs
             TimeFin = DateTime.Now.AddHours(1);
 
             DateError = "Collapsed"; // On cache le message d'erreur
+        }
+        public AddEvenementDialogViewModel(string sChConn, ShowViewEvenement evenement) // Modification
+        {
+            LoadData(sChConn);
+
+            // Pré-remplissage du dialog avec les données de l'événement à modifier
+            IDevenement = evenement.ID;
+            SelectedTitre = Titres.First(titre => titre.Titre == evenement.Titre); // Ne sélectionne pas réellement !?!
+            SelectedLieu = Lieus.First(lieu => lieu.Lieu == evenement.Lieu);
+            DateDebut = evenement.DateDebut.Date;
+            TimeDebut = evenement.DateDebut;
+            DateFin = evenement.DateFin.Date;
+            TimeFin = evenement.DateFin;
+            switch (evenement.TypeEvenement)
+            {
+                case "divers":
+                default:
+                    SelectedTypeEvenement = 0;
+                    break;
+                case "atelier":
+                    SelectedTypeEvenement = 1;
+                    break;
+                case "compétition":
+                    SelectedTypeEvenement = 2;
+                    break;
+            }
+            Description = evenement.Description;
+
+            DateError = "Collapsed"; // On cache le message d'erreur
+        }
+
+        private void LoadData(string sChConn)
+        {
+            // Chargement des données de la DB
+            Titres = new ObservableCollection<C_TitreEvenement>();
+            new G_TitreEvenement(sChConn).Lire("").ForEach(item => Titres.Add(item));
+            Lieus = new ObservableCollection<C_LieuEvenement>();
+            new G_LieuEvenement(sChConn).Lire("").ForEach(item => Lieus.Add(item));
         }
 
         private void IsAllItemsValid()
@@ -227,7 +263,8 @@ namespace ModifieurFermette.ViewModels.Dialogs
         {
             set
             {
-                if (!string.IsNullOrEmpty(value))
+                // On ajoute que si l'item n'existe pas encore
+                if (!string.IsNullOrEmpty(value) && Titres.FirstOrDefault(t => t.Titre == value) == null)
                 {
                     Titres.Add(new C_TitreEvenement(0, value));
                     SelectedTitre = Titres.Last();
@@ -238,7 +275,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
         {
             set
             {
-                if (!string.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value) && Lieus.FirstOrDefault(l => l.Lieu == value) == null)
                 {
                     Lieus.Add(new C_LieuEvenement(0, value));
                     SelectedLieu = Lieus.Last();
