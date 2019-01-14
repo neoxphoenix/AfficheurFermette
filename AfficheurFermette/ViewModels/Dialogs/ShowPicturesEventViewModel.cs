@@ -26,6 +26,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         /// ATTRIBUTS + ACCESSEURS
         //////////////////////////////////////////////////////////////////////////////////////////////////////
+        public string dossierResources = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\Images\";
 
         public List<C_PhotoEvenement> ListePhotosEvenements { get; set; }
         public List<C_PersonnePos> GetEvenements { get; set; }
@@ -158,7 +159,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
                 if (File.Exists(ListePhotosEvenements[0].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[indexPic].Photo));
                 else
-                    photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\errorimg.png"));
+                    photoToDisplay = new BitmapImage(new Uri(dossierResources + "errorimg.png"));
             }
         }
 
@@ -189,7 +190,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
                 if (File.Exists(ListePhotosEvenements[0].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[indexPic].Photo));
                 else
-                    photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\errorimg.png"));
+                    photoToDisplay = new BitmapImage(new Uri(dossierResources + "errorimg.png"));
             }
         }
 
@@ -216,7 +217,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
                 if (File.Exists(ListePhotosEvenements[0].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[0].Photo));
                 else
-                    photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\errorimg.png"));
+                    photoToDisplay = new BitmapImage(new Uri(dossierResources + "errorimg.png"));
 
                 indexPic = 0;
                 maxPic = ListePhotosEvenements.Count();
