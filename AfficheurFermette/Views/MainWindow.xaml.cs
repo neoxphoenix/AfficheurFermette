@@ -109,6 +109,7 @@ namespace AfficheurFermette
             if (File.Exists(stab2[0]) || File.Exists(dlgChargerDB.FileName))
             {
                 vm.ChargerDonneesDaily();
+                tbTest.Text = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\Images\";
             }
         }
 

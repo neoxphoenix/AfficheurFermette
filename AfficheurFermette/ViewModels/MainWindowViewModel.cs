@@ -28,6 +28,7 @@ namespace AfficheurFermette.ViewModels
         /// ATTRIBUTS + ACCESSEURS
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         public ConfigClass config;
+        public string dossierResources = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\Images\";
         private int _OngletChoisi = 0; //par défaut 0
         private string _ongletActuelDesc = "REPAS DU JOUR"; //Chaine de texte (description) de l'onglet actuel
         private string _aSonAnnifAjd1 = "", _aSonAnnifAjd2 = "", _aSonAnnifAjd3 = "";
@@ -381,7 +382,7 @@ namespace AfficheurFermette.ViewModels
                 if (_photoToDisplay != null) 
                     return _photoToDisplay;
                 else 
-                    return photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\gallery.png"));
+                    return photoToDisplay = new BitmapImage(new Uri(dossierResources + "gallery.png"));
             }
             set
             {
@@ -446,10 +447,10 @@ namespace AfficheurFermette.ViewModels
                         if (File.Exists(ListePhotosEvenements[0].Photo))
                             photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[0].Photo));
                         else
-                            photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\gallery.png"));
+                            photoToDisplay = new BitmapImage(new Uri(dossierResources + "gallery.png"));
                     }
                     else
-                        photoToDisplay = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\gallery.png"));
+                        photoToDisplay = new BitmapImage(new Uri(dossierResources + "gallery.png"));
                 }
             }
         }
@@ -559,7 +560,7 @@ namespace AfficheurFermette.ViewModels
                 if (File.Exists(ASonAnnifAjd[0].Photo))
                     ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(ASonAnnifAjd[0].Photo));
                 else
-                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\unknown.png"));
+                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(dossierResources + "unknown.png"));
             }
             else if (NbreAnnifAjd == 2)
             {
@@ -572,16 +573,16 @@ namespace AfficheurFermette.ViewModels
                 if (File.Exists(ASonAnnifAjd[0].Photo))
                     ImgSrcASonAnnifAjd1 = new BitmapImage(new Uri(ASonAnnifAjd[0].Photo));
                 else
-                    ImgSrcASonAnnifAjd1 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\unknown.png"));
+                    ImgSrcASonAnnifAjd1 = new BitmapImage(new Uri(dossierResources + "unknown.png"));
 
                 aSonAnnifAjd2 = "";
-                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\joyeuxanniversaire2.jpg"));
+                    ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(dossierResources + "joyeuxanniversaire2.jpg"));
 
                 aSonAnnifAjd3 = ASonAnnifAjd[1].Nom + " " + ASonAnnifAjd[1].Prenom;
                 if (File.Exists(ASonAnnifAjd[1].Photo))
                     ImgSrcASonAnnifAjd3 = new BitmapImage(new Uri(ASonAnnifAjd[1].Photo));
                 else
-                    ImgSrcASonAnnifAjd3 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\unknown.png"));
+                    ImgSrcASonAnnifAjd3 = new BitmapImage(new Uri(dossierResources + "unknown.png"));
             }
             else
             {
@@ -591,7 +592,7 @@ namespace AfficheurFermette.ViewModels
                 AfficherTextAnniv2 = Visibility.Hidden;
 
                 aSonAnnifAjd2 = "";
-                ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Images\nobirthdaytoday.jpg"));
+                ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(dossierResources + "nobirthdaytoday.jpg"));
             }
 
         }
