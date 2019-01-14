@@ -94,15 +94,15 @@
 
                             <!-- COLONNE ENTREE-->
                             <Border Margin="0 10 0 0" BorderBrush="SteelBlue" BorderThickness="3,5,3,3" CornerRadius="10">
-                            <StackPanel Orientation="Vertical" Grid.Column="0"  Background="#FFD0E2BA" >
-                                <Label Name="TitreEntree" Content="ENTRÉE" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="35" FontFamily="Verdana" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"/>
-                            </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Column="0"  Background="#FFD0E2BA" >
+                                    <Label Name="TitreEntree" Content="ENTRÉE" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="35" FontFamily="Verdana" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"/>
+                                </StackPanel>
                             </Border>
                             <Border Grid.Column="0" Grid.Row="1" BorderBrush="SteelBlue" BorderThickness="3,0,0,5" CornerRadius="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                 <TextBlock Grid.Row="1" Grid.Column="0" Name="Entree" Text="{Binding repasEntreeDuJour}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black"/>
                             </Border>
                             <Image Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="{StaticResource imgMenu1}" Width="200" Margin="10,0,0,10" Grid.ColumnSpan="2"></Image>
-                            
+
                             <!-- COLONNE PLAT-->
                             <Border Grid.Column="1" Margin="0 10 0 0" BorderBrush="SteelBlue" BorderThickness="3,5,3,3" CornerRadius="10">
                                 <StackPanel Orientation="Vertical" Grid.Column="1" Background="#FFD0E2BA">
@@ -250,7 +250,7 @@
                         </Grid>
                     </TabItem>
 
-                    <TabItem Header="TEST" Visibility="Collapsed">
+                    <TabItem Header="TEST">
                         <Grid Background="White">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="AUTO" />
@@ -261,8 +261,8 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <!-- TEST -->
-                            <TextBox Name="tbTest" HorizontalAlignment="Left" Height="24" TextWrapping="Wrap" Text="{Binding DGActu_SelectedItem}" VerticalAlignment="Top" Width="200"/>
-                            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Content="Test" Margin="96,30,0,0" Grid.Row="1" Click="Button_Click"/>
+                            <TextBox Name="tbTest" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" VerticalAlignment="Top" Width="468" Grid.RowSpan="2"/>
+                            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Content="Test" Margin="222,135,0,0" Grid.Row="1" Click="Button_Click"/>
                             <!--Command="{Binding Cmd_TestClick}"-->
                         </Grid>
                     </TabItem>

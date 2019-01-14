@@ -155,9 +155,6 @@
     <Resource Include="Resources\Images\calendar.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\gallery.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\prevpic.png" />
   </ItemGroup>
   <ItemGroup>
