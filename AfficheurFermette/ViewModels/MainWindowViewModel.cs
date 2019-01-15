@@ -28,7 +28,7 @@ namespace AfficheurFermette.ViewModels
         /// ATTRIBUTS + ACCESSEURS
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         public ConfigClass config;
-        public string dossierResources = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\Images\";
+        public string dossierResources = Directory.GetCurrentDirectory() + @"\Resources\Images\";
         private int _OngletChoisi = 0; //par défaut 0
         private string _ongletActuelDesc = "REPAS DU JOUR"; //Chaine de texte (description) de l'onglet actuel
         private string _aSonAnnifAjd1 = "", _aSonAnnifAjd2 = "", _aSonAnnifAjd3 = "";
