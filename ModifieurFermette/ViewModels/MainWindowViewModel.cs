@@ -51,7 +51,9 @@ namespace ModifieurFermette.ViewModels
         private ICommand _AddShowViewEvenementCmd;
         #endregion
         #region Modification
+        private ICommand _UpdateShowViewMenuDuJourCmd;
         private ICommand _UpdateShowViewEvenementCmd;
+        
         #endregion
         #endregion
         #endregion
@@ -69,6 +71,7 @@ namespace ModifieurFermette.ViewModels
             AddShowPersonneCmd = new RelayCommand(Exec => ExecuteAddShowPersonne(), CanExec => true);
             AddShowViewEvenementCmd = new RelayCommand(Exec => ExecuteAddShowViewEvenement(), CanExec => true);
 
+            UpdateShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteUpdateShowViewMenuDuJour(), CanExec => CanExecUpdateShowViewMenuDuJour());
             UpdateShowViewEvenementCmd = new RelayCommand(Exec => ExecuteUpdateShowViewEvenement(), CanExec => CanExecUpdateShowViewEvenement());
         }
 
@@ -137,17 +140,18 @@ namespace ModifieurFermette.ViewModels
             }
         }
         /// <summary>
-        /// Vérifie qu'au moins un Menu du jour est sélectionné
+        /// Retourne le nombre de menus sélectionnés dans la datagrid
         /// </summary>
-        /// <returns>vrai si au moins un élément est sélectionné</returns>
-        private bool IsAtLeastOneShowViewMenuDuJourSelected()
+        /// <returns>Ce nombre/returns>
+        private int HowManyShowViewMenusDuJourSelected()
         {
+            int count = 0;
             foreach (ShowViewMenuDuJour TmpMenu in MenusAff)
             {
                 if (TmpMenu.IsSelected)
-                    return true;
+                    count++;
             }
-            return false;
+            return count;
         }
         /// <summary>
         /// Retourne le nombre d'événements sélectionnés dans la datagrid
@@ -164,17 +168,18 @@ namespace ModifieurFermette.ViewModels
             return count;
         }
         /// <summary>
-        /// Vérifie qu'au moins une personne est sélectionnée
+        /// Retourne le nombre de personnes sélectionnés dans la datagrid
         /// </summary>
-        /// <returns>vrai si au moins un élément est sélectionné</returns>
-        private bool IsAtLeastOneShowPersonneSelected()
+        /// <returns>Ce nombre/returns>
+        private int HowManyShowPersonneSelected()
         {
+            int count = 0;
             foreach (ShowPersonne TmpPersonne in PersonnesAff)
             {
                 if (TmpPersonne.IsSelected)
-                    return true;
+                    count++;
             }
-            return false;
+            return count;
         }
 
         #endregion
@@ -204,7 +209,7 @@ namespace ModifieurFermette.ViewModels
         }
         private bool CanExecDeleteShowViewMenuDuJour()
         {
-            return IsAtLeastOneShowViewMenuDuJourSelected();
+            return HowManyShowViewMenusDuJourSelected() > 0;
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un menu du jour;
@@ -281,8 +286,51 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                #region Modification
+        private async void ExecuteUpdateShowViewMenuDuJour()
+        {
+            var Dialog = new AddMenuDuJourDialog(config.sChConn, MenusAff.First(menu => menu.IsSelected)); // On envoie le menu à modifier
+
+            await DialogHost.Show(Dialog, UpdateShowViewMenuDuJourDialogClosing);
+        }
+        private async void UpdateShowViewMenuDuJourDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddMenuDuJourDialog dg = (AddMenuDuJourDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task UpdatingItem = Task.Run(() =>
+            {
+                DateTime date = dg.vm.Date.Add(dg.vm.Time.TimeOfDay); // On récupère séparément la date et l'heure dans le dialog, on les recombine donc ici
+
+                // On vérifie si les ID sont à 0, auquel cas cela signifie que l'item doit être ajouté à la DB
+                if (dg.vm.SelectedPotage.ID == 0)
+                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type);
+                if (dg.vm.SelectedPlat.ID == 0)
+                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type);
+                if (dg.vm.SelectedDessert.ID == 0)
+                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type);
+                lock (MenusAffLock)
+                {
+                    new G_Menu(config.sChConn).Modifier(dg.vm.IDMenuDuJour, date, dg.vm.SelectedPotage.ID, dg.vm.SelectedPlat.ID, dg.vm.SelectedDessert.ID);
+                    int Index = MenusAff.IndexOf(MenusAff.First(item => item.ID == dg.vm.IDMenuDuJour));
+                    MenusAff[Index] = new ShowViewMenuDuJour(new C_ViewMenuDuJour(dg.vm.IDMenuDuJour, date, dg.vm.SelectedPotage.nom, dg.vm.SelectedPlat.nom, dg.vm.SelectedDessert.nom));
+                }
+            });
+
+            // Fermeture du Dialog
+            await UpdatingItem.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        private bool CanExecUpdateShowViewMenuDuJour()
+        {
+            return HowManyShowViewMenusDuJourSelected() == 1;
+        }
         #endregion
-            #region ShowViewEvenement
+        #endregion
+        #region ShowViewEvenement
                 #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
@@ -296,10 +344,7 @@ namespace ModifieurFermette.ViewModels
         }
         private bool CanExecDeleteShowViewEvenement()
         {
-            if (HowManyShowViewEvenementSelected() > 0)
-                return true;
-            else
-                return false;
+            return HowManyShowViewEvenementSelected() > 0;
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
@@ -385,10 +430,7 @@ namespace ModifieurFermette.ViewModels
         }
         private bool CanExecUpdateShowViewEvenement()
         {
-            if (HowManyShowViewEvenementSelected() == 1)
-                return true;
-            else
-                return false;
+            return HowManyShowViewEvenementSelected() == 1;
         }
         private async void UpdateShowViewModelClosing(object sender, DialogClosingEventArgs eventArgs)
         {
@@ -423,7 +465,7 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #endregion
         #region ShowPersonne
-        #region Suppression
+                #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -436,7 +478,7 @@ namespace ModifieurFermette.ViewModels
         }
         private bool CanExecDeleteShowPersonne()
         {
-            return IsAtLeastOneShowPersonneSelected();
+            return HowManyShowPersonneSelected() > 0;
         }
         /// <summary>
         /// Evenement déclenché par la fermeture du dialog de suppression d'un événement;
@@ -477,7 +519,7 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
-                    #region Ajout
+                #region Ajout
         private async void ExecuteAddShowPersonne()
         {
             var Dialog = new AddPersonneDialog();
@@ -655,6 +697,17 @@ namespace ModifieurFermette.ViewModels
         }
         #endregion
             #region Modification
+        public ICommand UpdateShowViewMenuDuJourCmd
+        {
+            get
+            {
+                return _UpdateShowViewMenuDuJourCmd;
+            }
+            set
+            {
+                _UpdateShowViewMenuDuJourCmd = value;
+            }
+        }
         public ICommand UpdateShowViewEvenementCmd
         {
             get

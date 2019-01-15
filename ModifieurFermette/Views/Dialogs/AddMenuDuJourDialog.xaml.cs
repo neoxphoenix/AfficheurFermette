@@ -31,5 +31,11 @@ namespace ModifieurFermette.Views.Dialogs
             InitializeComponent();
             this.DataContext = vm;
         }
+        public AddMenuDuJourDialog(string sChConn, ShowableData.ShowViewMenuDuJour menu)
+        {
+            InitializeComponent();
+            vm = new AddMenuDuJourDialogViewModel(sChConn, menu);
+            this.DataContext = vm;
+        }
     }
 }
