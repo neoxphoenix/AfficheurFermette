@@ -84,6 +84,7 @@ namespace ModifieurFermette.ViewModels
             UpdateShowPersonneCmd = new RelayCommand(Exec => ExecuteUpdateShowPersonne(), CanExec => CanExecUpdateShowPersonne());
 
             DetailsShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDetailsShowViewMenuDuJour(), CanExec => CanExecDetailsShowViewMenuDuJour());
+            DetailsShowPersonneCmd = new RelayCommand(Exec => ExecuteDetailsShowPersonne(), CanExec => CanExecDetailsShowPersonne());
 
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
         }
@@ -630,6 +631,19 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         private bool CanExecUpdateShowPersonne()
+        {
+            return HowManyShowPersonneSelected() == 1;
+        }
+        #endregion
+        #region Détails
+        private async void ExecuteDetailsShowPersonne()
+        {
+            var Dialog = new DetailsPersonneDialog(PersonnesAff.First(personne => personne.IsSelected));
+
+            await DialogHost.Show(Dialog);
+        }
+
+        private bool CanExecDetailsShowPersonne()
         {
             return HowManyShowPersonneSelected() == 1;
         }

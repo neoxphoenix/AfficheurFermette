@@ -25,7 +25,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Menu de navigation -->
-            <!-- TODO : Ajouter les commandes nécessaires aux items -->
             <Menu IsMainMenu="True"  Grid.Row="0"
                       Background="{DynamicResource PrimaryHueDarkBrush}" 
                       Foreground="White">
@@ -42,15 +41,48 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Evenements">
-                    
-                </MenuItem>
-                <MenuItem Header="Personnes">
-
-                </MenuItem>
-                <MenuItem Header="Menus">
-                    <MenuItem Header="Ajouter" Command="{Binding AddShowViewMenuDuJourCmd}">
+                    <MenuItem Header="Ajouter un événement" Command="{Binding AddShowViewEvenementCmd}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Retirer un  événement" Command="{Binding DeleteShowViewEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="MinusCircleOutline" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Gérer les participants" Command="{Binding ManagePartEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="AccountSupervisor" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Gérer les images" Command="{Binding ManagePicEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="FileImage" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Personnes">
+                    <MenuItem Header="Ajouter une personne" Command="{Binding AddShowPersonneCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Retirer une personne" Command="{Binding DeleteShowPersonneCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="MinusCircleOutline" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Menus">
+                    <MenuItem Header="Ajoute un menu" Command="{Binding AddShowViewMenuDuJourCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Retirer un menu" Command="{Binding DeleteShowViewMenuDuJourCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="MinusCircleOutline" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Gérer les plats" Command="{Binding ManagePlatsCmd}">
