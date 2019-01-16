@@ -41,18 +41,22 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Ajouter">
-                    <MenuItem Header="Evenement">
-                        <MenuItem Header="Nouvel événement"></MenuItem>
-                        <MenuItem Header="Nouveau titre"></MenuItem>
-                        <MenuItem Header="Nouveau lieu"></MenuItem>
+                <MenuItem Header="Evenements">
+                    
+                </MenuItem>
+                <MenuItem Header="Personnes">
+
+                </MenuItem>
+                <MenuItem Header="Menus">
+                    <MenuItem Header="Ajouter" Command="{Binding AddShowViewMenuDuJourCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Personne">
-                        <MenuItem Header="Nouvelle personne"></MenuItem>
-                    </MenuItem>
-                    <MenuItem Header="Menu">
-                        <MenuItem Header="Nouveau menu" Command="{Binding AddShowViewMenuDuJourCmd}"></MenuItem>
-                        <MenuItem Header="Nouveau plat"></MenuItem>
+                    <MenuItem Header="Gérer les plats" Command="{Binding ManagePlatsCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="Food" />
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>
@@ -175,7 +179,8 @@
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             Margin="5"
-                            Grid.Column="6">
+                            Grid.Column="6"
+                            Command="{Binding DetailsShowViewEvenementCmd}">
                             Détails
                         </Button>
                     </Grid>
@@ -296,7 +301,8 @@
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             Margin="5"
-                            Grid.Column="6">
+                            Grid.Column="6"
+                            Command="{Binding DetailsShowPersonneCmd}">
                             Détails
                         </Button>
                     </Grid>
@@ -421,7 +427,8 @@
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             Margin="5"
-                            Grid.Column="6">
+                            Grid.Column="6"
+                            Command="{Binding DetailsShowViewMenuDuJourCmd}">
                             Détails
                         </Button>
                     </Grid>

@@ -55,6 +55,14 @@ namespace ModifieurFermette.ViewModels
         private ICommand _UpdateShowPersonneCmd;
         private ICommand _UpdateShowViewEvenementCmd;
         #endregion
+        #region Détails
+        private ICommand _DetailsShowViewMenuDuJourCmd;
+        private ICommand _DetailsShowViewEvenementCmd;
+        private ICommand _DetailsShowPersonneCmd;
+        #endregion
+        #region Autres
+        private ICommand _ManagePlatsCmd;
+        #endregion
         #endregion
         #endregion
 
@@ -74,6 +82,10 @@ namespace ModifieurFermette.ViewModels
             UpdateShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteUpdateShowViewMenuDuJour(), CanExec => CanExecUpdateShowViewMenuDuJour());
             UpdateShowViewEvenementCmd = new RelayCommand(Exec => ExecuteUpdateShowViewEvenement(), CanExec => CanExecUpdateShowViewEvenement());
             UpdateShowPersonneCmd = new RelayCommand(Exec => ExecuteUpdateShowPersonne(), CanExec => CanExecUpdateShowPersonne());
+
+            DetailsShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDetailsShowViewMenuDuJour(), CanExec => CanExecDetailsShowViewMenuDuJour());
+
+            ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
         }
 
         #region Méthodes
@@ -330,6 +342,26 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewMenusDuJourSelected() == 1;
         }
         #endregion
+                #region Détails
+        private async void ExecuteDetailsShowViewMenuDuJour()
+        {
+            var Dialog = new DetailsMenuDuJourDialog(MenusAff.First(menu => menu.IsSelected));
+
+            await DialogHost.Show(Dialog, DetailsMenuDuJourDialogClosing);
+        }
+        private  void DetailsMenuDuJourDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur fermer, on arrête là
+
+            eventArgs.Cancel();
+            // A la fermeture de ce nouveau Dialog il repasse par cet eventHandler, c'est pourquoi il est important de set le paramètre de sortie à False pour ne pas avoir de boucle
+            eventArgs.Session.UpdateContent(new ManagePlatsDialog(config.sChConn));
+        }
+        private bool CanExecDetailsShowViewMenuDuJour()
+        {
+            return HowManyShowViewMenusDuJourSelected() == 1;
+        }
+        #endregion
         #endregion
         #region ShowViewEvenement
                 #region Suppression
@@ -555,7 +587,7 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
-        #region Modification
+                #region Modification
         private async void ExecuteUpdateShowPersonne()
         {
             var Dialog = new AddPersonneDialog(PersonnesAff.First(personne => personne.IsSelected));
@@ -602,6 +634,14 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowPersonneSelected() == 1;
         }
         #endregion
+        #endregion
+        #region Autres
+        private async void ExecuteManagePlats()
+        {
+            var Dialog = new ManagePlatsDialog(config.sChConn);
+
+            await DialogHost.Show(Dialog);
+        }
         #endregion
         #endregion
         #endregion
@@ -776,6 +816,54 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _UpdateShowPersonneCmd = value;
+            }
+        }
+        #endregion
+            #region Détails
+        public ICommand DetailsShowViewMenuDuJourCmd
+        {
+            get
+            {
+                return _DetailsShowViewMenuDuJourCmd;
+            }
+            set
+            {
+                _DetailsShowViewMenuDuJourCmd = value;
+            }
+        }
+        public ICommand DetailsShowViewEvenementCmd
+        {
+            get
+            {
+                return _DetailsShowViewEvenementCmd;
+            }
+            set
+            {
+                _DetailsShowViewEvenementCmd = value;
+            }
+        }
+        public ICommand DetailsShowPersonneCmd
+        {
+            get
+            {
+                return _DetailsShowPersonneCmd;
+            }
+            set
+            {
+                _DetailsShowPersonneCmd = value;
+            }
+        }
+        #endregion
+            #region Autres
+        public ICommand ManagePlatsCmd
+        {
+            get
+            {
+                return _ManagePlatsCmd;
+            }
+            set
+            {
+                _ManagePlatsCmd = value;
             }
         }
         #endregion
