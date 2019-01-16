@@ -121,7 +121,7 @@ namespace AfficheurFermette
 
 		private void Window_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Return)
+			if (e.Key == Key.F1)
 			{
                 if (MessageBox.Show("Êtes-vous sûr de vouloir démarrer le modifieur ? L'action fermera ce programme !", "Confirmer", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {

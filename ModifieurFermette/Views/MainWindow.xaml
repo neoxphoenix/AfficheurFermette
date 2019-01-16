@@ -280,7 +280,8 @@
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
                             Margin="5"
-                            Grid.Column="2">
+                            Grid.Column="2"
+                            Command="{Binding UpdateShowPersonneCmd}">
                             Modifier
                         </Button>
                         <Button

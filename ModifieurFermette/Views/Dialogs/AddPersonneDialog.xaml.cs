@@ -27,5 +27,11 @@ namespace ModifieurFermette.Views.Dialogs
             InitializeComponent();
             this.DataContext = vm;
         }
+        public AddPersonneDialog(ShowableData.ShowPersonne personne)
+        {
+            InitializeComponent();
+            vm = new ViewModels.Dialogs.AddPersonneDialogViewModel(personne);
+            this.DataContext = vm;
+        }
     }
 }

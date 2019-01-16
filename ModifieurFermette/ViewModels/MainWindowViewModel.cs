@@ -52,8 +52,8 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #region Modification
         private ICommand _UpdateShowViewMenuDuJourCmd;
+        private ICommand _UpdateShowPersonneCmd;
         private ICommand _UpdateShowViewEvenementCmd;
-        
         #endregion
         #endregion
         #endregion
@@ -73,6 +73,7 @@ namespace ModifieurFermette.ViewModels
 
             UpdateShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteUpdateShowViewMenuDuJour(), CanExec => CanExecUpdateShowViewMenuDuJour());
             UpdateShowViewEvenementCmd = new RelayCommand(Exec => ExecuteUpdateShowViewEvenement(), CanExec => CanExecUpdateShowViewEvenement());
+            UpdateShowPersonneCmd = new RelayCommand(Exec => ExecuteUpdateShowPersonne(), CanExec => CanExecUpdateShowPersonne());
         }
 
         #region Méthodes
@@ -426,13 +427,13 @@ namespace ModifieurFermette.ViewModels
         {
             var Dialog = new AddEvenementDialog(config.sChConn, EvenementsAff.First(evenement => evenement.IsSelected)); // On envoie l'événement sélectionné
 
-            await DialogHost.Show(Dialog, UpdateShowViewModelClosing);
+            await DialogHost.Show(Dialog, UpdateShowViewEvenementClosing);
         }
         private bool CanExecUpdateShowViewEvenement()
         {
             return HowManyShowViewEvenementSelected() == 1;
         }
-        private async void UpdateShowViewModelClosing(object sender, DialogClosingEventArgs eventArgs)
+        private async void UpdateShowViewEvenementClosing(object sender, DialogClosingEventArgs eventArgs)
         {
             if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
 
@@ -537,7 +538,7 @@ namespace ModifieurFermette.ViewModels
             {
                 // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
                 string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
                 Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
                 path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
                 File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
@@ -552,6 +553,53 @@ namespace ModifieurFermette.ViewModels
             // Fermeture du Dialog
             await AddingItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
                     TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
+        #region Modification
+        private async void ExecuteUpdateShowPersonne()
+        {
+            var Dialog = new AddPersonneDialog(PersonnesAff.First(personne => personne.IsSelected));
+
+            await DialogHost.Show(Dialog, UpdateShowPersonneDialogClosing);
+        }
+        private async void UpdateShowPersonneDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return; // Si l'utilisateur à appuyer sur annuler, on arrête là
+
+            eventArgs.Cancel(); // On empêche la fermeture
+            AddPersonneDialog dg = (AddPersonneDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+            eventArgs.Session.UpdateContent(new ProgressDialog()); // On remplace l'ancien dialogue par un nouveau avec une roue de chargement
+
+            Task UpdatingItem = Task.Run(() =>
+            {
+                string path;
+                if (dg.vm.PicFullPath != null) // On veut changer la photo de profil
+                {
+                    // Sauvegarde de la photo dans le dossier "~\Resources\Images\Personnes\"
+                    string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
+                    Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
+                    path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                    File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Resources\Images\Personnes\"
+                }
+                else
+                    path = dg.vm.OldPicPath;
+
+                lock (PersonnesAffLock)
+                {
+                    new G_Personne(config.sChConn).Modifier(dg.vm.IDpersonne, dg.vm.Nom, dg.vm.Prenom, dg.vm.Date, path, dg.vm.SelectedRole);
+                    int Index = PersonnesAff.IndexOf(PersonnesAff.First(item => item.ID == dg.vm.IDpersonne));
+                    PersonnesAff[Index] = new ShowPersonne(new C_Personne(dg.vm.IDpersonne, dg.vm.Nom, dg.vm.Prenom, dg.vm.Date, path, dg.vm.SelectedRole));
+                }
+            });
+
+            // Fermeture du Dialog
+            await UpdatingItem.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        private bool CanExecUpdateShowPersonne()
+        {
+            return HowManyShowPersonneSelected() == 1;
         }
         #endregion
         #endregion
@@ -717,6 +765,17 @@ namespace ModifieurFermette.ViewModels
             set
             {
                 _UpdateShowViewEvenementCmd = value;
+            }
+        }
+        public ICommand UpdateShowPersonneCmd
+        {
+            get
+            {
+                return _UpdateShowPersonneCmd;
+            }
+            set
+            {
+                _UpdateShowPersonneCmd = value;
             }
         }
         #endregion
