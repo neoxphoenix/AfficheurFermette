@@ -534,21 +534,19 @@ namespace AfficheurFermette.ViewModels
         //Check Anniversaire du jour
         public void CheckAnnifToday()
         {
-            int NbreAnnifAjd = 0;
             List<C_Personne> PersonnesList = new G_Personne(config.sChConn).Lire("");
             ASonAnnifAjd.Clear();
             foreach (C_Personne Beneficiaire in PersonnesList)
             {
-                string _annif = Beneficiaire.DateNaissance.ToString().Substring(0, 5);
+                DateTime _annif = Beneficiaire.DateNaissance;
 
-                if (string.Compare(_annif, DateTime.Now.ToString("dd/MM")) == 0)
+                if (_annif.Month == DateTime.Now.Month && _annif.Day == DateTime.Now.Day)
                 {
                     ASonAnnifAjd.Add(Beneficiaire);
-                    NbreAnnifAjd++;
                 }
-                if (NbreAnnifAjd == 2) break; //sort de la boucle si on en a 2
+                if (ASonAnnifAjd.Count == 2) break; //sort de la boucle si on en a 2
             }
-            if (NbreAnnifAjd == 1)
+            if (ASonAnnifAjd.Count == 1)
             {
                 AfficherAnniversaire1 = Visibility.Hidden;
                 AfficherAnniversaire2 = Visibility.Visible;
@@ -562,7 +560,7 @@ namespace AfficheurFermette.ViewModels
                 else
                     ImgSrcASonAnnifAjd2 = new BitmapImage(new Uri(dossierResources + "unknown.png"));
             }
-            else if (NbreAnnifAjd == 2)
+            else if (ASonAnnifAjd.Count == 2)
             {
                 AfficherAnniversaire1 = Visibility.Visible;
                 AfficherAnniversaire2 = Visibility.Visible;
