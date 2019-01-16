@@ -91,6 +91,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\DetailsEvenementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\DetailsMenuDuJourDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -119,6 +123,7 @@
     <Compile Include="ViewModels\Dialogs\AddEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddPersonneDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DetailsEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DetailsMenuDuJourDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DetailsPersonneDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ManagePlatsDialogViewModel.cs" />
@@ -134,6 +139,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DetailsEvenementDialog.xaml.cs">
+      <DependentUpon>DetailsEvenementDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\DetailsMenuDuJourDialog.xaml.cs">
       <DependentUpon>DetailsMenuDuJourDialog.xaml</DependentUpon>

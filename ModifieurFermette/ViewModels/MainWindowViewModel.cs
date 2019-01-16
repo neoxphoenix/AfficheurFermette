@@ -407,9 +407,7 @@ namespace ModifieurFermette.ViewModels
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
                         EvenementsAff.Remove(ItemsToRemove[i]); // Retiré localement
-                        new G_Evenement(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (uniquement l'événement)
-                        // TODO : suppression des PersonnesConcernees
-                        // TODO : suppression des classements
+                        new G_Evenement(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (supprime également les tables liées)
                     }
                 }
             });
@@ -541,9 +539,7 @@ namespace ModifieurFermette.ViewModels
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
                         PersonnesAff.Remove(ItemsToRemove[i]); // Retiré localement
-                        new G_Personne(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (uniquement l'événement)
-                        // TODO : suppression des PersonnesConcernees
-                        // TODO : suppression des classements
+                        new G_Personne(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (supprime également les tables liées)
                     }
                 }
             });
@@ -635,7 +631,7 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowPersonneSelected() == 1;
         }
         #endregion
-        #region Détails
+                #region Détails
         private async void ExecuteDetailsShowPersonne()
         {
             var Dialog = new DetailsPersonneDialog(PersonnesAff.First(personne => personne.IsSelected));
