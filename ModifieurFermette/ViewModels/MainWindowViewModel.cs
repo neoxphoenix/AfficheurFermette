@@ -84,6 +84,7 @@ namespace ModifieurFermette.ViewModels
             UpdateShowPersonneCmd = new RelayCommand(Exec => ExecuteUpdateShowPersonne(), CanExec => CanExecUpdateShowPersonne());
 
             DetailsShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDetailsShowViewMenuDuJour(), CanExec => CanExecDetailsShowViewMenuDuJour());
+            DetailsShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDetailsShowViewEvenement(), CanExec => CanExecDetailsShowViewEvenement());
             DetailsShowPersonneCmd = new RelayCommand(Exec => ExecuteDetailsShowPersonne(), CanExec => CanExecDetailsShowPersonne());
 
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
@@ -495,9 +496,25 @@ namespace ModifieurFermette.ViewModels
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
         #endregion
+                #region Détails
+        private async void ExecuteDetailsShowViewEvenement()
+        {
+            var Dialog = new DetailsEvenementDialog(EvenementsAff.First(evenement => evenement.IsSelected), config.sChConn);
+
+            await DialogHost.Show(Dialog, DetailsEvenementDialogClosing);
+        }
+        private void DetailsEvenementDialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((int)eventArgs.Parameter == 0) return; // Si l'utilisateur à appuyer sur fermer, on arrête là
+        }
+        private bool CanExecDetailsShowViewEvenement()
+        {
+            return HowManyShowViewEvenementSelected() == 1;
+        }
+        #endregion
         #endregion
         #region ShowPersonne
-                #region Suppression
+        #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>

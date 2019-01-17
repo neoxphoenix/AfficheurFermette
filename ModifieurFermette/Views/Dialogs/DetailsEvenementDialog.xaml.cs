@@ -20,9 +20,12 @@ namespace ModifieurFermette.Views.Dialogs
     /// </summary>
     public partial class DetailsEvenementDialog : UserControl
     {
-        public DetailsEvenementDialog()
+        ViewModels.Dialogs.DetailsEvenementDialogViewModel vm;
+        public DetailsEvenementDialog(ShowableData.ShowViewEvenement evenement, string sChConn)
         {
             InitializeComponent();
+            vm = new ViewModels.Dialogs.DetailsEvenementDialogViewModel(evenement, sChConn);
+            this.DataContext = vm;
         }
     }
 }
