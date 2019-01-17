@@ -250,7 +250,7 @@
                         </Grid>
                     </TabItem>
 
-                    <TabItem Header="TEST">
+                    <TabItem Header="TEST" Visibility="Collapsed">
                         <Grid Background="White">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="AUTO" />
