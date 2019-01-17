@@ -510,6 +510,20 @@ namespace ModifieurFermette.ViewModels
         private void DetailsEvenementDialogClosing(object sender, DialogClosingEventArgs eventArgs)
         {
             if ((int)eventArgs.Parameter == 0) return; // Si l'utilisateur à appuyer sur fermer, on arrête là
+
+            eventArgs.Cancel();
+            // Crash si le Dialog n'est pas celui de détails, mais ceux de gestion personnes et photos se ferment avec l'arg à 0, donc ne devraient pas arriver jusqu'ici
+            DetailsEvenementDialog dg = (DetailsEvenementDialog)eventArgs.Session.Content; // On récupère le dialog pour avoir accès à ses données
+
+            if ((int)eventArgs.Parameter == 1) // Ouverture de la gestion des participants
+            {
+                // On récupère l'événement des détails
+                eventArgs.Session.UpdateContent(new ManagePartEvenementDialog(dg.vm.Evenement, config.sChConn));
+            }
+            else if ((int)eventArgs.Parameter == 2) // Ouverture de la gestion des photos
+            {
+
+            }
         }
         private bool CanExecDetailsShowViewEvenement()
         {

@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 
 namespace ModifieurFermette.ViewModels.Dialogs
 {
-    class DetailsEvenementDialogViewModel : ObservableData
+    public class DetailsEvenementDialogViewModel : ObservableData
     {
         public ShowViewEvenement Evenement;
         private int _ID;
