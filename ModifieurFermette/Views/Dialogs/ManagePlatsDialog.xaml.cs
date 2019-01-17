@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModifieurFermette.ViewModels.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,21 +17,15 @@ using System.Windows.Shapes;
 namespace ModifieurFermette.Views.Dialogs
 {
     /// <summary>
-    /// Interaction logic for AddPersonneDialog.xaml
+    /// Interaction logic for ManagePlatsDialog.xaml
     /// </summary>
-    public partial class AddPersonneDialog : UserControl
+    public partial class ManagePlatsDialog : UserControl
     {
-        public ViewModels.Dialogs.AddPersonneDialogViewModel vm;
-        public AddPersonneDialog()
-        {
-            vm = new ViewModels.Dialogs.AddPersonneDialogViewModel();
-            InitializeComponent();
-            this.DataContext = vm;
-        }
-        public AddPersonneDialog(ShowableData.ShowPersonne personne)
+        private ManagePlatsDialogViewModel vm;
+        public ManagePlatsDialog(string sChConn)
         {
             InitializeComponent();
-            vm = new ViewModels.Dialogs.AddPersonneDialogViewModel(personne);
+            vm = new ManagePlatsDialogViewModel(sChConn);
             this.DataContext = vm;
         }
     }

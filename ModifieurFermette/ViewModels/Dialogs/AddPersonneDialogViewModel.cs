@@ -21,6 +21,9 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private DateTime _Date;
         private bool _SelectedRole;
 
+        public int IDpersonne;
+        public string OldPicPath;
+
         /* ===== Validation ===== */
         private bool _Validated;
 
@@ -29,9 +32,26 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         public AddPersonneDialogViewModel()
         {
-            SelectPic = new RelayCommand(Exec => ExecuteSelectPic());
+            LoadData();
             BtnPicText = "Sélectionner une photo de profil";
             Date = DateTime.Parse("1990-01-01");
+        }
+        public AddPersonneDialogViewModel(ShowPersonne personne)
+        {
+            LoadData();
+            IDpersonne = personne.ID;
+            OldPicPath = personne.Photo;
+            PicFullPath = null; // Normalement inutile, juste pour être sûr
+            BtnPicText = "Laissez vide pour garder la photo actuelle";
+            Date = DateTime.Parse(personne.DateNaissance);
+            SelectedRole = (personne.Role == "éducateur") ? true : false;
+            Nom = personne.Nom; // Ordre important vu qu'il trigger IsAllItemsValid() sur la fin pour qu'il valide les données entrées
+            Prenom = personne.Prenom;
+        }
+
+        private void LoadData()
+        {
+            SelectPic = new RelayCommand(Exec => ExecuteSelectPic());
         }
 
         private void ExecuteSelectPic()
@@ -49,7 +69,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private void IsAllItemsValid()
         {
-            if (String.IsNullOrWhiteSpace(Nom) || String.IsNullOrWhiteSpace(Prenom) || String.IsNullOrWhiteSpace(PicFullPath))
+            if (String.IsNullOrWhiteSpace(Nom) || String.IsNullOrWhiteSpace(Prenom) || (String.IsNullOrWhiteSpace(PicFullPath) && String.IsNullOrWhiteSpace(OldPicPath)))
                 Validated = false;
             else
                 Validated = true;

@@ -24,11 +24,33 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private C_Plat _SelectedDessert;
         private DateTime _Date;
         private DateTime _Time;
+
+        public int IDMenuDuJour; // uniquement utilisé en cas de modification d'un événement existant
+
         /* ===== Validation ===== */
         private bool _Validated;
 
         public AddMenuDuJourDialogViewModel(string sChConn)
         {
+            LoadData(sChConn);
+            Date = DateTime.Today;
+        }
+        public AddMenuDuJourDialogViewModel(string sChConn, ShowViewMenuDuJour menu)
+        {
+            LoadData(sChConn);
+
+            // Pré-remplissage du dialog avec les données du menu à modifier
+            IDMenuDuJour = menu.ID;
+            SelectedPotage = Potages.First(p => p.nom == menu.eNom);
+            SelectedPlat = Plats.First(p => p.nom == menu.pNom);
+            SelectedDessert = Desserts.First(d => d.nom == menu.dNom);
+            Date = DateTime.Parse(menu.Date);
+            
+        }
+
+        private void LoadData(string sChConn)
+        {
+            // Chargement des données de la DB
             Potages = new ObservableCollection<C_Plat>();
             Plats = new ObservableCollection<C_Plat>();
             Desserts = new ObservableCollection<C_Plat>();
@@ -48,7 +70,6 @@ namespace ModifieurFermette.ViewModels.Dialogs
                         break;
                 }
             }
-            Date = DateTime.Today;
         }
 
         private void IsAllItemsValid()

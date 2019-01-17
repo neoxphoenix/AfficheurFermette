@@ -25,7 +25,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Menu de navigation -->
-            <!-- TODO : Ajouter les commandes nécessaires aux items -->
             <Menu IsMainMenu="True"  Grid.Row="0"
                       Background="{DynamicResource PrimaryHueDarkBrush}" 
                       Foreground="White">
@@ -41,18 +40,55 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Ajouter">
-                    <MenuItem Header="Evenement">
-                        <MenuItem Header="Nouvel événement"></MenuItem>
-                        <MenuItem Header="Nouveau titre"></MenuItem>
-                        <MenuItem Header="Nouveau lieu"></MenuItem>
+                <MenuItem Header="Evenements">
+                    <MenuItem Header="Ajouter un événement" Command="{Binding AddShowViewEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Personne">
-                        <MenuItem Header="Nouvelle personne"></MenuItem>
+                    <MenuItem Header="Retirer un  événement" Command="{Binding DeleteShowViewEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="MinusCircleOutline" />
+                        </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Menu">
-                        <MenuItem Header="Nouveau menu" Command="{Binding AddShowViewMenuDuJourCmd}"></MenuItem>
-                        <MenuItem Header="Nouveau plat"></MenuItem>
+                    <MenuItem Header="Gérer les participants" Command="{Binding ManagePartEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="AccountSupervisor" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Gérer les images" Command="{Binding ManagePicEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="FileImage" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Personnes">
+                    <MenuItem Header="Ajouter une personne" Command="{Binding AddShowPersonneCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Retirer une personne" Command="{Binding DeleteShowPersonneCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="MinusCircleOutline" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Menus">
+                    <MenuItem Header="Ajoute un menu" Command="{Binding AddShowViewMenuDuJourCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Retirer un menu" Command="{Binding DeleteShowViewMenuDuJourCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="MinusCircleOutline" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Gérer les plats" Command="{Binding ManagePlatsCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="Food" />
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>
@@ -150,7 +186,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowViewEvenementCmd}">
@@ -159,15 +194,14 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="2">
+                            Grid.Column="2"
+                            Command="{Binding UpdateShowViewEvenementCmd}">
                             Modifier
                         </Button>
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowViewEvenementCmd}">
@@ -176,9 +210,9 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="6">
+                            Grid.Column="6"
+                            Command="{Binding DetailsShowViewEvenementCmd}">
                             Détails
                         </Button>
                     </Grid>
@@ -274,7 +308,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowPersonneCmd}">
@@ -283,15 +316,14 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="2">
+                            Grid.Column="2"
+                            Command="{Binding UpdateShowPersonneCmd}">
                             Modifier
                         </Button>
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowPersonneCmd}">
@@ -300,9 +332,9 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="6">
+                            Grid.Column="6"
+                            Command="{Binding DetailsShowPersonneCmd}">
                             Détails
                         </Button>
                     </Grid>
@@ -402,7 +434,6 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="0"
                             Command="{Binding AddShowViewMenuDuJourCmd}">
@@ -411,15 +442,14 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="2">
+                            Grid.Column="2"
+                            Command="{Binding UpdateShowViewMenuDuJourCmd}">
                             Modifier
                         </Button>
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
                             Grid.Column="4"
                             Command="{Binding DeleteShowViewMenuDuJourCmd}">
@@ -428,9 +458,9 @@
                         <Button
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Width="100"
-                            ToolTip="Resource name: MaterialDesignRaisedButton"
                             Margin="5"
-                            Grid.Column="6">
+                            Grid.Column="6"
+                            Command="{Binding DetailsShowViewMenuDuJourCmd}">
                             Détails
                         </Button>
                     </Grid>

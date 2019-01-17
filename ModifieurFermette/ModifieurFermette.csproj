@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -91,6 +91,26 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\DetailsEvenementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\DetailsMenuDuJourDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\DetailsPersonneDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ManagePartEvenementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ManagePlatsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ProgressDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +127,11 @@
     <Compile Include="ViewModels\Dialogs\AddEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddPersonneDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DetailsEvenementDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DetailsMenuDuJourDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DetailsPersonneDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ManagePartEvenementDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ManagePlatsDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\AddEvenementDialog.xaml.cs">
       <DependentUpon>AddEvenementDialog.xaml</DependentUpon>
@@ -119,6 +144,21 @@
     </Compile>
     <Compile Include="Views\Dialogs\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DetailsEvenementDialog.xaml.cs">
+      <DependentUpon>DetailsEvenementDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DetailsMenuDuJourDialog.xaml.cs">
+      <DependentUpon>DetailsMenuDuJourDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DetailsPersonneDialog.xaml.cs">
+      <DependentUpon>DetailsPersonneDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ManagePartEvenementDialog.xaml.cs">
+      <DependentUpon>ManagePartEvenementDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ManagePlatsDialog.xaml.cs">
+      <DependentUpon>ManagePlatsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>

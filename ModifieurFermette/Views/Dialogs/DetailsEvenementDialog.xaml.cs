@@ -16,21 +16,15 @@ using System.Windows.Shapes;
 namespace ModifieurFermette.Views.Dialogs
 {
     /// <summary>
-    /// Interaction logic for AddPersonneDialog.xaml
+    /// Interaction logic for DetailsEvenementDialog.xaml
     /// </summary>
-    public partial class AddPersonneDialog : UserControl
+    public partial class DetailsEvenementDialog : UserControl
     {
-        public ViewModels.Dialogs.AddPersonneDialogViewModel vm;
-        public AddPersonneDialog()
-        {
-            vm = new ViewModels.Dialogs.AddPersonneDialogViewModel();
-            InitializeComponent();
-            this.DataContext = vm;
-        }
-        public AddPersonneDialog(ShowableData.ShowPersonne personne)
+        public ViewModels.Dialogs.DetailsEvenementDialogViewModel vm;
+        public DetailsEvenementDialog(ShowableData.ShowViewEvenement evenement, string sChConn)
         {
             InitializeComponent();
-            vm = new ViewModels.Dialogs.AddPersonneDialogViewModel(personne);
+            vm = new ViewModels.Dialogs.DetailsEvenementDialogViewModel(evenement, sChConn);
             this.DataContext = vm;
         }
     }
