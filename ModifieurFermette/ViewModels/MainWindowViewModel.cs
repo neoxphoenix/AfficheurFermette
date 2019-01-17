@@ -62,6 +62,8 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #region Autres
         private ICommand _ManagePlatsCmd;
+        private ICommand _ManagePartEvenementCmd;
+        private ICommand _ManagePicEvenementCmd;
         #endregion
         #endregion
         #endregion
@@ -88,6 +90,8 @@ namespace ModifieurFermette.ViewModels
             DetailsShowPersonneCmd = new RelayCommand(Exec => ExecuteDetailsShowPersonne(), CanExec => CanExecDetailsShowPersonne());
 
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
+            // TODO : ManagePartEvenementCmd && ManagePicEvenementCmd
+            ManagePartEvenementCmd = new RelayCommand(Exec => ExecuteManagePartEvenement(), CanExec => CanExecDetailsShowViewEvenement());
         }
 
         #region Méthodes
@@ -514,7 +518,7 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #endregion
         #region ShowPersonne
-        #region Suppression
+                #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -666,6 +670,12 @@ namespace ModifieurFermette.ViewModels
         private async void ExecuteManagePlats()
         {
             var Dialog = new ManagePlatsDialog(config.sChConn);
+
+            await DialogHost.Show(Dialog);
+        }
+        private async void ExecuteManagePartEvenement()
+        {
+            var Dialog = new ManagePartEvenementDialog(EvenementsAff.First(item => item.IsSelected), config.sChConn);
 
             await DialogHost.Show(Dialog);
         }
@@ -893,6 +903,9 @@ namespace ModifieurFermette.ViewModels
                 _ManagePlatsCmd = value;
             }
         }
+
+        public ICommand ManagePartEvenementCmd { get => _ManagePartEvenementCmd; set => _ManagePartEvenementCmd = value; }
+        public ICommand ManagePicEvenementCmd { get => _ManagePicEvenementCmd; set => _ManagePicEvenementCmd = value; }
         #endregion
         #endregion
         #endregion

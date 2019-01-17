@@ -103,6 +103,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\ManagePartEvenementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ManagePlatsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,6 +130,7 @@
     <Compile Include="ViewModels\Dialogs\DetailsEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DetailsMenuDuJourDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DetailsPersonneDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ManagePartEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ManagePlatsDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\AddEvenementDialog.xaml.cs">
@@ -148,6 +153,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\DetailsPersonneDialog.xaml.cs">
       <DependentUpon>DetailsPersonneDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ManagePartEvenementDialog.xaml.cs">
+      <DependentUpon>ManagePartEvenementDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ManagePlatsDialog.xaml.cs">
       <DependentUpon>ManagePlatsDialog.xaml</DependentUpon>
