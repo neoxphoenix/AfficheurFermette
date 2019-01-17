@@ -64,9 +64,6 @@
                     <Image Source="{StaticResource imgClock}" Width="100" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10 10 10 0"></Image>
                     <TextBlock Text="{Binding affichageHeure}" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="48" Grid.Row="0" Foreground="#FF49476A" FontFamily="Verdana" Margin="0 5 40 0"  />
                 </StackPanel>
-
-
-
             </Grid>
 
             <!-- ROW 1, CORPS -->
