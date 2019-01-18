@@ -682,6 +682,9 @@ namespace ModifieurFermette.ViewModels
                     }
                     path = TestPath;
                     File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Resources\Images\Personnes\"
+
+                    // Suppression de l'ancienne photo
+                    File.Delete(dg.vm.OldPicPath);
                 }
                 else
                     path = dg.vm.OldPicPath;
