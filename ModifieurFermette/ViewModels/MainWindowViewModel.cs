@@ -64,6 +64,7 @@ namespace ModifieurFermette.ViewModels
         private ICommand _ManagePlatsCmd;
         private ICommand _ManagePartEvenementCmd;
         private ICommand _ManagePicEvenementCmd;
+        private ICommand _ManageTitreLieuCmd;
         #endregion
         #endregion
         #endregion
@@ -90,9 +91,9 @@ namespace ModifieurFermette.ViewModels
             DetailsShowPersonneCmd = new RelayCommand(Exec => ExecuteDetailsShowPersonne(), CanExec => CanExecDetailsShowPersonne());
 
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
-            // TODO : ManagePartEvenementCmd && ManagePicEvenementCmd
             ManagePartEvenementCmd = new RelayCommand(Exec => ExecuteManagePartEvenement(), CanExec => CanExecDetailsShowViewEvenement());
             ManagePicEvenementCmd = new RelayCommand(Exec => ExecuteManagePicEvenement(), CanExec => CanExecDetailsShowViewEvenement());
+            ManageTitreLieuCmd = new RelayCommand(Exec => ExecuteManageTitreLieu(), CanExec => true);
         }
 
         #region Méthodes
@@ -739,6 +740,12 @@ namespace ModifieurFermette.ViewModels
 
             await DialogHost.Show(Dialog);
         }
+        private async void ExecuteManageTitreLieu()
+        {
+            var Dialog = new ManageTitreLieuDialog(config.sChConn);
+
+            await DialogHost.Show(Dialog);
+        }
         #endregion
         #endregion
         #endregion
@@ -1002,6 +1009,7 @@ namespace ModifieurFermette.ViewModels
 
         public ICommand ManagePartEvenementCmd { get => _ManagePartEvenementCmd; set => _ManagePartEvenementCmd = value; }
         public ICommand ManagePicEvenementCmd { get => _ManagePicEvenementCmd; set => _ManagePicEvenementCmd = value; }
+        public ICommand ManageTitreLieuCmd { get => _ManageTitreLieuCmd; set => _ManageTitreLieuCmd = value; }
         #endregion
         #endregion
         #endregion

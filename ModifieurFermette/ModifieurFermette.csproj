@@ -115,6 +115,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\ManageTitreLieuDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ProgressDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,6 +142,7 @@
     <Compile Include="ViewModels\Dialogs\ManagePartEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ManagePicEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ManagePlatsDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ManageTitreLieuDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\AddEvenementDialog.xaml.cs">
       <DependentUpon>AddEvenementDialog.xaml</DependentUpon>
@@ -168,6 +173,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\ManagePlatsDialog.xaml.cs">
       <DependentUpon>ManagePlatsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ManageTitreLieuDialog.xaml.cs">
+      <DependentUpon>ManageTitreLieuDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
