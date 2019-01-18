@@ -23,9 +23,9 @@ namespace ModifieurFermette.ViewModels
     class MainWindowViewModel : ObservableData
     {
         #region Données membres
-        public ObservableCollection<ShowViewMenuDuJour> MenusAff;
-        public ObservableCollection<ShowViewEvenement> EvenementsAff;
-        public ObservableCollection<ShowPersonne> PersonnesAff;
+        public ObservableCollection<ShowViewMenuDuJour> _MenusAff;
+        public ObservableCollection<ShowViewEvenement> _EvenementsAff;
+        public ObservableCollection<ShowPersonne> _PersonnesAff;
         // Verrous utilisés pour les opérations cross-thread sur nos collections
         public object MenusAffLock = new object();
         public object EvenementsAffLock = new object();
@@ -724,6 +724,42 @@ namespace ModifieurFermette.ViewModels
 
         #region Accesseurs
         public Action CloseAction { get; set; } // Permet de fermer la fenêtre depuis le ViewModel; solution de -> http://jkshay.com/closing-a-wpf-window-using-mvvm-and-minimal-code-behind/
+        public ObservableCollection<ShowViewMenuDuJour> MenusAff
+        {
+            get => _MenusAff;
+            set
+            {
+                if (_MenusAff != value)
+                {
+                    _MenusAff = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<ShowViewEvenement> EvenementsAff
+        {
+            get => _EvenementsAff;
+            set
+            {
+                if (_EvenementsAff != value)
+                {
+                    _EvenementsAff = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<ShowPersonne> PersonnesAff
+        {
+            get => _PersonnesAff;
+            set
+            {
+                if (_PersonnesAff != value)
+                {
+                    _PersonnesAff = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #region Sélection DG
         public bool IsAllItemsEvenementsSelected
         {
