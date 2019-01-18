@@ -60,6 +60,10 @@ namespace ModifieurFermette.ViewModels
         private ICommand _DetailsShowViewEvenementCmd;
         private ICommand _DetailsShowPersonneCmd;
         #endregion
+        #region Copie
+        private ICommand _CopyShowViewEvenementCmd;
+        private ICommand _CopyShowViewMenuDuJourCmd;
+        #endregion
         #region Autres
         private ICommand _ManagePlatsCmd;
         private ICommand _ManagePartEvenementCmd;
@@ -89,6 +93,9 @@ namespace ModifieurFermette.ViewModels
             DetailsShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteDetailsShowViewMenuDuJour(), CanExec => CanExecDetailsShowViewMenuDuJour());
             DetailsShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDetailsShowViewEvenement(), CanExec => CanExecDetailsShowViewEvenement());
             DetailsShowPersonneCmd = new RelayCommand(Exec => ExecuteDetailsShowPersonne(), CanExec => CanExecDetailsShowPersonne());
+
+            CopyShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteCopyShowViewMenuDuJour(), CanExec => CanExecDeleteShowViewMenuDuJour());
+            CopyShowViewEvenementCmd = new RelayCommand(Exec => ExecuteCopyShowViewEvenement(), CanExec => CanExecDeleteShowViewEvenement());
 
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
             ManagePartEvenementCmd = new RelayCommand(Exec => ExecuteManagePartEvenement(), CanExec => CanExecDetailsShowViewEvenement());
@@ -370,6 +377,48 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewMenusDuJourSelected() == 1;
         }
         #endregion
+        #region Copie
+        private async void ExecuteCopyShowViewMenuDuJour()
+        {
+            var Dialog = new ProgressDialog();
+
+            await DialogHost.Show(Dialog, CopyShowViewMenuDuJourDialogOpening);
+        }
+        private async void CopyShowViewMenuDuJourDialogOpening(object sender, DialogOpenedEventArgs eventArgs)
+        {
+            Task CopyItems = Task.Run(() =>
+            {
+                lock (MenusAffLock) // verrou pour opération cross-thread
+                {
+                    List<C_Plat> TmpPlats = new G_Plat(config.sChConn).Lire("");
+                    List<ShowViewMenuDuJour> MenusToAdd = new List<ShowViewMenuDuJour>();
+                    foreach (ShowViewMenuDuJour menu in MenusAff)
+                    {
+                        if (menu.IsSelected) // C'est une menu qui doit être copié
+                        {
+                            // Récupération des infos
+                            DateTime Date = DateTime.Parse(menu.Date);
+                            int IDpotage = TmpPlats.First(p => p.nom == menu.eNom).ID;
+                            int IDplat = TmpPlats.First(p => p.nom == menu.pNom).ID;
+                            int IDdessert = TmpPlats.First(p => p.nom == menu.dNom).ID;
+
+                            // Ajout à la DB
+                            int ID = new G_Menu(config.sChConn).Ajouter(Date, IDpotage, IDplat, IDdessert);
+
+                            // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach
+                            MenusToAdd.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, Date, menu.eNom, menu.pNom, menu.dNom)));
+                        }
+                    }
+                    // Ajout local
+                    MenusToAdd.ForEach(item => MenusAff.Add(item));
+                }
+            });
+
+            // Fermeture du Dialog
+            await CopyItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
         #endregion
         #region ShowViewEvenement
                 #region Suppression
@@ -539,9 +588,31 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewEvenementSelected() == 1;
         }
         #endregion
+        #region Copie
+        private async void ExecuteCopyShowViewEvenement()
+        {
+            var Dialog = new ProgressDialog();
+
+            await DialogHost.Show(Dialog, CopyShowViewEvenementDialogOpening);
+        }
+        private async void CopyShowViewEvenementDialogOpening(object sender, DialogOpenedEventArgs eventArgs)
+        {
+            Task CopyItems = Task.Run(() =>
+            {
+                lock (EvenementsAffLock) // Verrou pour opérations cross-thread
+                {
+
+                }
+            });
+
+            // Fermeture du Dialog
+            await CopyItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
         #endregion
         #region ShowPersonne
-                #region Suppression
+        #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -993,6 +1064,10 @@ namespace ModifieurFermette.ViewModels
                 _DetailsShowPersonneCmd = value;
             }
         }
+        #endregion
+            #region Copie
+        public ICommand CopyShowViewEvenementCmd { get => _CopyShowViewEvenementCmd; set => _CopyShowViewEvenementCmd = value; }
+        public ICommand CopyShowViewMenuDuJourCmd { get => _CopyShowViewMenuDuJourCmd; set => _CopyShowViewMenuDuJourCmd = value; }
         #endregion
             #region Autres
         public ICommand ManagePlatsCmd

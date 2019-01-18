@@ -46,7 +46,12 @@
                             <materialDesign:PackIcon Kind="CirclesAdd" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Retirer un  événement" Command="{Binding DeleteShowViewEvenementCmd}">
+                    <MenuItem Header="Copier un événement" Command="{Binding CopyShowViewEvenementCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="ContentCopy" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Retirer un événement" Command="{Binding DeleteShowViewEvenementCmd}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="MinusCircleOutline" />
                         </MenuItem.Icon>
@@ -83,6 +88,11 @@
                     <MenuItem Header="Ajoute un menu" Command="{Binding AddShowViewMenuDuJourCmd}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="CirclesAdd" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copier un menu" Command="{Binding CopyShowViewMenuDuJourCmd}">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="ContentCopy" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Retirer un menu" Command="{Binding DeleteShowViewMenuDuJourCmd}">
