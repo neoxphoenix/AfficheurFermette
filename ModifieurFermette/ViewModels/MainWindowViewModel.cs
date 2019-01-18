@@ -412,6 +412,12 @@ namespace ModifieurFermette.ViewModels
                     }
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
+                        // Suppression des photos sur le disque dur
+                        new G_ViewEvenement(config.sChConn).LirePhotosEvenement(ItemsToRemove[i].ID).ForEach
+                        (
+                            Pic => File.Delete(Pic.Photo)
+                        );
+
                         EvenementsAff.Remove(ItemsToRemove[i]); // Retiré localement
                         new G_Evenement(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (supprime également les tables liées)
                     }
@@ -575,6 +581,9 @@ namespace ModifieurFermette.ViewModels
                     }
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
+                        // Suppression des photos sur le disque dur
+                        File.Delete(ItemsToRemove[i].Photo);
+
                         PersonnesAff.Remove(ItemsToRemove[i]); // Retiré localement
                         new G_Personne(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (supprime également les tables liées)
                     }
