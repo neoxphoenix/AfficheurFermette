@@ -595,7 +595,7 @@ namespace ModifieurFermette.ViewModels
 
             await DialogHost.Show(Dialog, CopyShowViewEvenementDialogOpening);
         }
-        // /!\ ON NE COPIE PAS LES PHOTOS /!\
+        // /!\ ON NE COPIE NI LES PHOTOS, NI LES PARTICIPANTS /!\
         private async void CopyShowViewEvenementDialogOpening(object sender, DialogOpenedEventArgs eventArgs)
         {
             Task CopyItems = Task.Run(() =>
