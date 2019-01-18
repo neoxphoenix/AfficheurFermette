@@ -405,7 +405,7 @@ namespace ModifieurFermette.ViewModels
                             // Ajout à la DB
                             int ID = new G_Menu(config.sChConn).Ajouter(Date, IDpotage, IDplat, IDdessert);
 
-                            // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach
+                            // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach)
                             MenusToAdd.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, Date, menu.eNom, menu.pNom, menu.dNom)));
                         }
                     }
@@ -595,13 +595,34 @@ namespace ModifieurFermette.ViewModels
 
             await DialogHost.Show(Dialog, CopyShowViewEvenementDialogOpening);
         }
+        // /!\ ON NE COPIE PAS LES PHOTOS /!\
         private async void CopyShowViewEvenementDialogOpening(object sender, DialogOpenedEventArgs eventArgs)
         {
             Task CopyItems = Task.Run(() =>
             {
                 lock (EvenementsAffLock) // Verrou pour opérations cross-thread
                 {
+                    List<C_TitreEvenement> TmpTitres = new G_TitreEvenement(config.sChConn).Lire("");
+                    List<C_LieuEvenement> TmpLieus = new G_LieuEvenement(config.sChConn).Lire("");
+                    List<ShowViewEvenement> EvenementsToAdd = new List<ShowViewEvenement>();
+                    foreach (ShowViewEvenement evenement in EvenementsAff)
+                    {
+                        if (evenement.IsSelected) // C'est un événement qui doit être copié
+                        {
+                            // Récupération des infos
+                            C_ViewEvenement TmpEvenement = evenement.GetOriginal();
+                            int IDtitre = TmpTitres.First(t => t.Titre == TmpEvenement.Titre).ID;
+                            int IDlieu = TmpLieus.First(l => l.Lieu == TmpEvenement.Lieu).ID;
 
+                            // Ajout à la DB
+                            int ID = new G_Evenement(config.sChConn).Ajouter(TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description, TmpEvenement.TypeEvenement, IDtitre, IDlieu);
+
+                            // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach)
+                            EvenementsToAdd.Add(new ShowViewEvenement(new C_ViewEvenement(ID, TmpEvenement.Titre, TmpEvenement.Lieu, TmpEvenement.TypeEvenement, TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description)));
+                        }
+                    }
+                    // Ajout local
+                    EvenementsToAdd.ForEach(item => EvenementsAff.Add(item));
                 }
             });
 
