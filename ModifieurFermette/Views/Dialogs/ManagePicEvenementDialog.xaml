@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="ModifieurFermette.Views.Dialogs.ManagePicEvenementDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModifieurFermette.Views.Dialogs"
+             mc:Ignorable="d" 
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:ModifieurFermette.Models.Converters">
+    <UserControl.Resources>
+        <converters:FullPathToFileNameConverter x:Key="ConvFileName"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical" Margin="7">
+        <!-- Liste des personne -->
+        <ListView
+            ItemsSource="{Binding PhotosEvenement}">
+            <ListView.View>
+                <GridView>
+                    <!-- Utiliser un converter pour n'afficher que le nom du fichier -->
+                    <GridViewColumn
+                        DisplayMemberBinding="{Binding Photo, Converter={StaticResource ConvFileName}}"
+                        Header="Nom des fichiers" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Ajout d'une photo -->
+        <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                Margin="5,10,5,5"
+                Command="{Binding AddPicCmd}">
+            Ajouter
+        </Button>
+        <!-- Retrait d'une photo -->
+        <Grid Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!-- Utiliser un converter pour n'afficher que le nom du fichier -->
+            <ComboBox Grid.Column="0"
+                MinWidth="100"
+                ItemsSource="{Binding PhotosEvenement}"
+                SelectedItem="{Binding SelectedPhotoToRemove}"
+                Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Photo, Converter={StaticResource ConvFileName}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+            <Button Grid.Column="1"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Width="100"
+                Margin="5"
+                Command="{Binding RemovePicCmd}">
+                Retirer
+            </Button>
+        </Grid>
+
+        <Button HorizontalAlignment="Center" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+            <Button.CommandParameter>
+                <system:Int32>0</system:Int32>
+                <!-- 0: Pas d'autres Dialog à ouvrir après -->
+            </Button.CommandParameter>
+            FERMER
+        </Button>
+    </StackPanel>
+</UserControl>

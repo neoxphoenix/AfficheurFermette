@@ -102,13 +102,18 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding NextPicCmd}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Column="0" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding PrevPicCmd}">
                 <materialDesign:PackIcon Kind="ArrowLeftBoldCircleOutline" />
             </Button>
             <Image Grid.Column="1" Source="{Binding Photo}" MaxWidth="720" MaxHeight="720"/>
-            <Button Grid.Column="2" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding PrevPicCmd}">
+            <Button Grid.Column="2" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding NextPicCmd}">
                 <materialDesign:PackIcon Kind="ArrowRightBoldCircleOutline" />
             </Button>
+            <TextBlock Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" Text="{Binding CountPicTxt}" FontWeight="Bold"/>
         </Grid>
 
         <Button Grid.ColumnSpan="2" Grid.Row="1" HorizontalAlignment="Center" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"

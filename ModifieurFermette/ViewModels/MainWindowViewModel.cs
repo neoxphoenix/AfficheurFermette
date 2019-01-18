@@ -92,6 +92,7 @@ namespace ModifieurFermette.ViewModels
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
             // TODO : ManagePartEvenementCmd && ManagePicEvenementCmd
             ManagePartEvenementCmd = new RelayCommand(Exec => ExecuteManagePartEvenement(), CanExec => CanExecDetailsShowViewEvenement());
+            ManagePicEvenementCmd = new RelayCommand(Exec => ExecuteManagePicEvenement(), CanExec => CanExecDetailsShowViewEvenement());
         }
 
         #region Méthodes
@@ -522,7 +523,8 @@ namespace ModifieurFermette.ViewModels
             }
             else if ((int)eventArgs.Parameter == 2) // Ouverture de la gestion des photos
             {
-
+                // On récupère l'événement des détails
+                eventArgs.Session.UpdateContent(new ManagePicEvenementDialog(dg.vm.Evenement, config.sChConn));
             }
         }
         private bool CanExecDetailsShowViewEvenement()
@@ -690,6 +692,12 @@ namespace ModifieurFermette.ViewModels
         private async void ExecuteManagePartEvenement()
         {
             var Dialog = new ManagePartEvenementDialog(EvenementsAff.First(item => item.IsSelected), config.sChConn);
+
+            await DialogHost.Show(Dialog);
+        }
+        private async void ExecuteManagePicEvenement()
+        {
+            var Dialog = new ManagePicEvenementDialog(EvenementsAff.First(item => item.IsSelected), config.sChConn);
 
             await DialogHost.Show(Dialog);
         }
