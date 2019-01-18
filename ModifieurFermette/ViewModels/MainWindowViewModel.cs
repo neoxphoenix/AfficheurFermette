@@ -611,12 +611,20 @@ namespace ModifieurFermette.ViewModels
 
             Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
             {
-                // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
-                string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
-                Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
-                path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
-                File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
+                string path;
+                if (!string.IsNullOrWhiteSpace(dg.vm.PicFullPath))
+                {
+                    // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
+                    string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
+                    Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
+                    path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                    File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
+                }
+                else // On a pas rentré de photo
+                {
+                    path = "NoPic";
+                }
 
                 lock (PersonnesAffLock)
                 {
