@@ -619,6 +619,15 @@ namespace ModifieurFermette.ViewModels
                     path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
                     Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
                     path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                    // Vérification qu'un fichier du même nom n'existe pas déjà
+                    string TestPath = path;
+                    int Count = 0;
+                    while (File.Exists(TestPath))
+                    {
+                        string tempFileName = string.Format("{0}({1})", Path.GetFileNameWithoutExtension(path), Count++);
+                        TestPath = Path.Combine(Path.GetDirectoryName(path), tempFileName + Path.GetExtension(path));
+                    }
+                    path = TestPath;
                     File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
                 }
                 else // On a pas rentré de photo
@@ -663,6 +672,15 @@ namespace ModifieurFermette.ViewModels
                     path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
                     Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
                     path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                    // Vérification qu'un fichier du même nom n'existe pas déjà
+                    string TestPath = path;
+                    int Count = 0;
+                    while (File.Exists(TestPath))
+                    {
+                        string tempFileName = string.Format("{0}({1})", Path.GetFileNameWithoutExtension(path), Count++);
+                        TestPath = Path.Combine(Path.GetDirectoryName(path), tempFileName + Path.GetExtension(path));
+                    }
+                    path = TestPath;
                     File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Resources\Images\Personnes\"
                 }
                 else
