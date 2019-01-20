@@ -19,10 +19,11 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private string _Titre, _Lieu, _DateDebut, _DateFin, _Description, _Type;
         private ObservableCollection<C_PersonnePos> _Classement;
 
-        private ICommand _NextPicCmd, PrevPicCmd;
+        private ICommand _NextPicCmd, _PrevPicCmd;
         private readonly List<C_PhotoEvenement> PicsPaths;
         private BitmapImage _Photo;
-        private int IndexPhoto;
+        private int _IndexPhoto;
+        private string _CountPicTxt;
 
         public DetailsEvenementDialogViewModel(ShowViewEvenement evenement, string sChConn)
         {
@@ -56,10 +57,10 @@ namespace ModifieurFermette.ViewModels.Dialogs
             if (PicsPaths.Count > 0)
             {
                 Photo = new BitmapImage(new Uri(PicsPaths.First().Photo)); // On charge la première photo
-                IndexPhoto = 0; // Index de la photo
             }
             else // Pas de photo
                 Photo = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
+            IndexPhoto = 0; // Index de la photo
 
             // Création des commandes
             NextPicCmd = new RelayCommand(Exec => ExecuteNextPic(), CanExec => CanExecNextPic());
@@ -70,24 +71,24 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private bool CanExecPrevPic()
         {
-            return IndexPhoto > 0;
+            return this.IndexPhoto > 0;
         }
 
         private void ExecutePrevPic()
         {
-            IndexPhoto--;
-            Photo = new BitmapImage(new Uri(PicsPaths[IndexPhoto].Photo));
+            this.IndexPhoto--;
+            Photo = new BitmapImage(new Uri(PicsPaths[this.IndexPhoto].Photo));
         }
 
         private bool CanExecNextPic()
         {
-            return IndexPhoto < PicsPaths.Count;
+            return this.IndexPhoto < (PicsPaths.Count - 1);
         }
 
         private void ExecuteNextPic()
         {
-            IndexPhoto++;
-            Photo = new BitmapImage(new Uri(PicsPaths[IndexPhoto].Photo));
+            this.IndexPhoto++;
+            Photo = new BitmapImage(new Uri(PicsPaths[this.IndexPhoto].Photo));
         }
 
         #region Accesseurs
@@ -203,8 +204,34 @@ namespace ModifieurFermette.ViewModels.Dialogs
             }
         }
 
+        public int IndexPhoto
+        {
+            get => _IndexPhoto;
+            set
+            {
+                _IndexPhoto = value;
+                OnPropertyChanged();
+                if (PicsPaths.Count > 0)
+                    CountPicTxt = (value + 1) + "/" + PicsPaths.Count;
+                else
+                    CountPicTxt = value + "/" + PicsPaths.Count;
+            }
+        }
+        public string CountPicTxt
+        {
+            get => _CountPicTxt;
+            set
+            {
+                if (_CountPicTxt != value)
+                {
+                    _CountPicTxt = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public ICommand NextPicCmd { get => _NextPicCmd; set => _NextPicCmd = value; }
-        public ICommand PrevPicCmd1 { get => PrevPicCmd; set => PrevPicCmd = value; }
+        public ICommand PrevPicCmd { get => _PrevPicCmd; set => _PrevPicCmd = value; }
         #endregion
     }
 }

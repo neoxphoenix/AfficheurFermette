@@ -23,9 +23,9 @@ namespace ModifieurFermette.ViewModels
     class MainWindowViewModel : ObservableData
     {
         #region Données membres
-        public ObservableCollection<ShowViewMenuDuJour> MenusAff;
-        public ObservableCollection<ShowViewEvenement> EvenementsAff;
-        public ObservableCollection<ShowPersonne> PersonnesAff;
+        public ObservableCollection<ShowViewMenuDuJour> _MenusAff;
+        public ObservableCollection<ShowViewEvenement> _EvenementsAff;
+        public ObservableCollection<ShowPersonne> _PersonnesAff;
         // Verrous utilisés pour les opérations cross-thread sur nos collections
         public object MenusAffLock = new object();
         public object EvenementsAffLock = new object();
@@ -60,10 +60,15 @@ namespace ModifieurFermette.ViewModels
         private ICommand _DetailsShowViewEvenementCmd;
         private ICommand _DetailsShowPersonneCmd;
         #endregion
+        #region Copie
+        private ICommand _CopyShowViewEvenementCmd;
+        private ICommand _CopyShowViewMenuDuJourCmd;
+        #endregion
         #region Autres
         private ICommand _ManagePlatsCmd;
         private ICommand _ManagePartEvenementCmd;
         private ICommand _ManagePicEvenementCmd;
+        private ICommand _ManageTitreLieuCmd;
         #endregion
         #endregion
         #endregion
@@ -89,9 +94,13 @@ namespace ModifieurFermette.ViewModels
             DetailsShowViewEvenementCmd = new RelayCommand(Exec => ExecuteDetailsShowViewEvenement(), CanExec => CanExecDetailsShowViewEvenement());
             DetailsShowPersonneCmd = new RelayCommand(Exec => ExecuteDetailsShowPersonne(), CanExec => CanExecDetailsShowPersonne());
 
+            CopyShowViewMenuDuJourCmd = new RelayCommand(Exec => ExecuteCopyShowViewMenuDuJour(), CanExec => CanExecDeleteShowViewMenuDuJour());
+            CopyShowViewEvenementCmd = new RelayCommand(Exec => ExecuteCopyShowViewEvenement(), CanExec => CanExecDeleteShowViewEvenement());
+
             ManagePlatsCmd = new RelayCommand(Exec => ExecuteManagePlats(), CanExec => true);
-            // TODO : ManagePartEvenementCmd && ManagePicEvenementCmd
             ManagePartEvenementCmd = new RelayCommand(Exec => ExecuteManagePartEvenement(), CanExec => CanExecDetailsShowViewEvenement());
+            ManagePicEvenementCmd = new RelayCommand(Exec => ExecuteManagePicEvenement(), CanExec => CanExecDetailsShowViewEvenement());
+            ManageTitreLieuCmd = new RelayCommand(Exec => ExecuteManageTitreLieu(), CanExec => true);
         }
 
         #region Méthodes
@@ -368,6 +377,48 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewMenusDuJourSelected() == 1;
         }
         #endregion
+        #region Copie
+        private async void ExecuteCopyShowViewMenuDuJour()
+        {
+            var Dialog = new ProgressDialog();
+
+            await DialogHost.Show(Dialog, CopyShowViewMenuDuJourDialogOpening);
+        }
+        private async void CopyShowViewMenuDuJourDialogOpening(object sender, DialogOpenedEventArgs eventArgs)
+        {
+            Task CopyItems = Task.Run(() =>
+            {
+                lock (MenusAffLock) // verrou pour opération cross-thread
+                {
+                    List<C_Plat> TmpPlats = new G_Plat(config.sChConn).Lire("");
+                    List<ShowViewMenuDuJour> MenusToAdd = new List<ShowViewMenuDuJour>();
+                    foreach (ShowViewMenuDuJour menu in MenusAff)
+                    {
+                        if (menu.IsSelected) // C'est une menu qui doit être copié
+                        {
+                            // Récupération des infos
+                            DateTime Date = DateTime.Parse(menu.Date);
+                            int IDpotage = TmpPlats.First(p => p.nom == menu.eNom).ID;
+                            int IDplat = TmpPlats.First(p => p.nom == menu.pNom).ID;
+                            int IDdessert = TmpPlats.First(p => p.nom == menu.dNom).ID;
+
+                            // Ajout à la DB
+                            int ID = new G_Menu(config.sChConn).Ajouter(Date, IDpotage, IDplat, IDdessert);
+
+                            // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach)
+                            MenusToAdd.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, Date, menu.eNom, menu.pNom, menu.dNom)));
+                        }
+                    }
+                    // Ajout local
+                    MenusToAdd.ForEach(item => MenusAff.Add(item));
+                }
+            });
+
+            // Fermeture du Dialog
+            await CopyItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
         #endregion
         #region ShowViewEvenement
                 #region Suppression
@@ -411,6 +462,12 @@ namespace ModifieurFermette.ViewModels
                     }
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
+                        // Suppression des photos sur le disque dur
+                        new G_ViewEvenement(config.sChConn).LirePhotosEvenement(ItemsToRemove[i].ID).ForEach
+                        (
+                            Pic => File.Delete(Pic.Photo)
+                        );
+
                         EvenementsAff.Remove(ItemsToRemove[i]); // Retiré localement
                         new G_Evenement(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (supprime également les tables liées)
                     }
@@ -522,7 +579,8 @@ namespace ModifieurFermette.ViewModels
             }
             else if ((int)eventArgs.Parameter == 2) // Ouverture de la gestion des photos
             {
-
+                // On récupère l'événement des détails
+                eventArgs.Session.UpdateContent(new ManagePicEvenementDialog(dg.vm.Evenement, config.sChConn));
             }
         }
         private bool CanExecDetailsShowViewEvenement()
@@ -530,9 +588,52 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewEvenementSelected() == 1;
         }
         #endregion
+        #region Copie
+        private async void ExecuteCopyShowViewEvenement()
+        {
+            var Dialog = new ProgressDialog();
+
+            await DialogHost.Show(Dialog, CopyShowViewEvenementDialogOpening);
+        }
+        // /!\ ON NE COPIE NI LES PHOTOS, NI LES PARTICIPANTS /!\
+        private async void CopyShowViewEvenementDialogOpening(object sender, DialogOpenedEventArgs eventArgs)
+        {
+            Task CopyItems = Task.Run(() =>
+            {
+                lock (EvenementsAffLock) // Verrou pour opérations cross-thread
+                {
+                    List<C_TitreEvenement> TmpTitres = new G_TitreEvenement(config.sChConn).Lire("");
+                    List<C_LieuEvenement> TmpLieus = new G_LieuEvenement(config.sChConn).Lire("");
+                    List<ShowViewEvenement> EvenementsToAdd = new List<ShowViewEvenement>();
+                    foreach (ShowViewEvenement evenement in EvenementsAff)
+                    {
+                        if (evenement.IsSelected) // C'est un événement qui doit être copié
+                        {
+                            // Récupération des infos
+                            C_ViewEvenement TmpEvenement = evenement.GetOriginal();
+                            int IDtitre = TmpTitres.First(t => t.Titre == TmpEvenement.Titre).ID;
+                            int IDlieu = TmpLieus.First(l => l.Lieu == TmpEvenement.Lieu).ID;
+
+                            // Ajout à la DB
+                            int ID = new G_Evenement(config.sChConn).Ajouter(TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description, TmpEvenement.TypeEvenement, IDtitre, IDlieu);
+
+                            // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach)
+                            EvenementsToAdd.Add(new ShowViewEvenement(new C_ViewEvenement(ID, TmpEvenement.Titre, TmpEvenement.Lieu, TmpEvenement.TypeEvenement, TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description)));
+                        }
+                    }
+                    // Ajout local
+                    EvenementsToAdd.ForEach(item => EvenementsAff.Add(item));
+                }
+            });
+
+            // Fermeture du Dialog
+            await CopyItems.ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        #endregion
         #endregion
         #region ShowPersonne
-                #region Suppression
+        #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -573,6 +674,9 @@ namespace ModifieurFermette.ViewModels
                     }
                     for (int i = 0; i < ItemsToRemove.Count; i++)
                     {
+                        // Suppression des photos sur le disque dur
+                        File.Delete(ItemsToRemove[i].Photo);
+
                         PersonnesAff.Remove(ItemsToRemove[i]); // Retiré localement
                         new G_Personne(config.sChConn).Supprimer(ItemsToRemove[i].ID); // Retiré dans la DB (supprime également les tables liées)
                     }
@@ -600,12 +704,29 @@ namespace ModifieurFermette.ViewModels
 
             Task AddingItems = Task.Run(() => // Lancement d'un thread pour l'ajout de l'élément
             {
-                // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
-                string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
-                Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
-                path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
-                File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
+                string path;
+                if (!string.IsNullOrWhiteSpace(dg.vm.PicFullPath))
+                {
+                    // Sauvegarde de la photo dans le dossier "~\Images\Personnes\"
+                    string FileName = Path.GetFileName(dg.vm.PicFullPath); // On récupère uniquement le nom du fichier et son extension du chemin entré dans le dialog
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
+                    Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
+                    path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                    // Vérification qu'un fichier du même nom n'existe pas déjà
+                    string TestPath = path;
+                    int Count = 0;
+                    while (File.Exists(TestPath))
+                    {
+                        string tempFileName = string.Format("{0}({1})", Path.GetFileNameWithoutExtension(path), Count++);
+                        TestPath = Path.Combine(Path.GetDirectoryName(path), tempFileName + Path.GetExtension(path));
+                    }
+                    path = TestPath;
+                    File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Images\Personnes\"
+                }
+                else // On a pas rentré de photo
+                {
+                    path = "NoPic";
+                }
 
                 lock (PersonnesAffLock)
                 {
@@ -644,7 +765,19 @@ namespace ModifieurFermette.ViewModels
                     path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\Images\\Personnes"); // On génère le chemin du dossier "~\Images\Personnes\"
                     Directory.CreateDirectory(path); // Si les dossiers n'existent pas encore, ils sont créés
                     path = Path.Combine(path, FileName); // On rajoute le nom du fichier au path
+                    // Vérification qu'un fichier du même nom n'existe pas déjà
+                    string TestPath = path;
+                    int Count = 0;
+                    while (File.Exists(TestPath))
+                    {
+                        string tempFileName = string.Format("{0}({1})", Path.GetFileNameWithoutExtension(path), Count++);
+                        TestPath = Path.Combine(Path.GetDirectoryName(path), tempFileName + Path.GetExtension(path));
+                    }
+                    path = TestPath;
                     File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Resources\Images\Personnes\"
+
+                    // Suppression de l'ancienne photo
+                    File.Delete(dg.vm.OldPicPath);
                 }
                 else
                     path = dg.vm.OldPicPath;
@@ -693,12 +826,60 @@ namespace ModifieurFermette.ViewModels
 
             await DialogHost.Show(Dialog);
         }
+        private async void ExecuteManagePicEvenement()
+        {
+            var Dialog = new ManagePicEvenementDialog(EvenementsAff.First(item => item.IsSelected), config.sChConn);
+
+            await DialogHost.Show(Dialog);
+        }
+        private async void ExecuteManageTitreLieu()
+        {
+            var Dialog = new ManageTitreLieuDialog(config.sChConn);
+
+            await DialogHost.Show(Dialog);
+        }
         #endregion
         #endregion
         #endregion
 
         #region Accesseurs
         public Action CloseAction { get; set; } // Permet de fermer la fenêtre depuis le ViewModel; solution de -> http://jkshay.com/closing-a-wpf-window-using-mvvm-and-minimal-code-behind/
+        public ObservableCollection<ShowViewMenuDuJour> MenusAff
+        {
+            get => _MenusAff;
+            set
+            {
+                if (_MenusAff != value)
+                {
+                    _MenusAff = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<ShowViewEvenement> EvenementsAff
+        {
+            get => _EvenementsAff;
+            set
+            {
+                if (_EvenementsAff != value)
+                {
+                    _EvenementsAff = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public ObservableCollection<ShowPersonne> PersonnesAff
+        {
+            get => _PersonnesAff;
+            set
+            {
+                if (_PersonnesAff != value)
+                {
+                    _PersonnesAff = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #region Sélection DG
         public bool IsAllItemsEvenementsSelected
         {
@@ -905,6 +1086,10 @@ namespace ModifieurFermette.ViewModels
             }
         }
         #endregion
+            #region Copie
+        public ICommand CopyShowViewEvenementCmd { get => _CopyShowViewEvenementCmd; set => _CopyShowViewEvenementCmd = value; }
+        public ICommand CopyShowViewMenuDuJourCmd { get => _CopyShowViewMenuDuJourCmd; set => _CopyShowViewMenuDuJourCmd = value; }
+        #endregion
             #region Autres
         public ICommand ManagePlatsCmd
         {
@@ -920,6 +1105,7 @@ namespace ModifieurFermette.ViewModels
 
         public ICommand ManagePartEvenementCmd { get => _ManagePartEvenementCmd; set => _ManagePartEvenementCmd = value; }
         public ICommand ManagePicEvenementCmd { get => _ManagePicEvenementCmd; set => _ManagePicEvenementCmd = value; }
+        public ICommand ManageTitreLieuCmd { get => _ManageTitreLieuCmd; set => _ManageTitreLieuCmd = value; }
         #endregion
         #endregion
         #endregion

@@ -69,7 +69,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private void IsAllItemsValid()
         {
-            if (String.IsNullOrWhiteSpace(Nom) || String.IsNullOrWhiteSpace(Prenom) || (String.IsNullOrWhiteSpace(PicFullPath) && String.IsNullOrWhiteSpace(OldPicPath)))
+            if (String.IsNullOrWhiteSpace(Nom) || String.IsNullOrWhiteSpace(Prenom))
                 Validated = false;
             else
                 Validated = true;

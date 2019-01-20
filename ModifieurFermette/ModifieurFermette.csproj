@@ -107,7 +107,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\ManagePicEvenementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ManagePlatsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ManageTitreLieuDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,6 +131,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\Converters\FullPathToFileNameConverter.cs" />
     <Compile Include="Models\GeneralComboBoxItem.cs" />
     <Compile Include="ViewModels\Dialogs\AddEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />
@@ -131,7 +140,9 @@
     <Compile Include="ViewModels\Dialogs\DetailsMenuDuJourDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DetailsPersonneDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ManagePartEvenementDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ManagePicEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ManagePlatsDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ManageTitreLieuDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\Dialogs\AddEvenementDialog.xaml.cs">
       <DependentUpon>AddEvenementDialog.xaml</DependentUpon>
@@ -157,8 +168,14 @@
     <Compile Include="Views\Dialogs\ManagePartEvenementDialog.xaml.cs">
       <DependentUpon>ManagePartEvenementDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\ManagePicEvenementDialog.xaml.cs">
+      <DependentUpon>ManagePicEvenementDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ManagePlatsDialog.xaml.cs">
       <DependentUpon>ManagePlatsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ManageTitreLieuDialog.xaml.cs">
+      <DependentUpon>ManageTitreLieuDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>

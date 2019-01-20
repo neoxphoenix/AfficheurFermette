@@ -29,6 +29,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private ShowPersonne _SelectedPersToRemove;
         private ICommand _RemovePersCmd;
 
+        // === Manipulation DB ===
         private readonly string sChConn;
         private readonly int IDevenement;
         private List<C_Classement> T_Classements; // Permet de ne charger qu'une fois toutes les tables de liaisons => sert à la suppression
