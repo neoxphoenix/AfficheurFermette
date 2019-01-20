@@ -127,6 +127,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             {
                 int ID = new G_Classement(sChConn).Ajouter(this.IDevenement, SelectedPersToAdd.ID, PosPersToAdd);
                 T_Classements.Add(new C_Classement(ID, this.IDevenement, SelectedPersToAdd.ID, PosPersToAdd));
+                SelectedPersToAdd.Position = PosPersToAdd;
             }
             else
             {
