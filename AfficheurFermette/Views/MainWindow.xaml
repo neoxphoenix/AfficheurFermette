@@ -130,16 +130,38 @@
                                 <ColumnDefinition Width="47*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <DataGrid ItemsSource="{Binding EvenementsAff}" SelectedIndex="{Binding DGActu_SelectedItem, Mode=TwoWay}" 
-                                      x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False"
+                                      x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False" VerticalScrollBarVisibility="Disabled"
                                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" IsReadOnly="True" CanUserSortColumns="False" Background="#FFE5E5E5" Grid.ColumnSpan="2">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="TITRE" Binding="{Binding Titre}" FontSize="35" FontFamily="Verdana"/>
-                                    <DataGridTextColumn Header="TITRE" Binding="{Binding Lieu}" FontSize="35" FontFamily="Verdana"/>
-                                    <DataGridTextColumn Header="DATE DE L'EVENEMENT" Binding="{Binding DateDebut}" FontSize="35" FontFamily="Verdana"/>
+                                    <DataGridTextColumn Header="TITRE" Binding="{Binding Titre}" FontSize="35" FontFamily="Verdana" Width="*">
+                                        <!-- Centre le contenu et active le wrapping du texte pour ne pas déborder -->
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="LIEU" Binding="{Binding Lieu}" FontSize="35" FontFamily="Verdana" Width="*">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="DATE DE L'EVENEMENT" Binding="{Binding DateDebut}" FontSize="35" FontFamily="Verdana" Width="215">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
                                     <!-- Photos -->
                                     <!--<DataGridTemplateColumn Header="PHOTOS">
                                         <DataGridTemplateColumn.CellTemplate>

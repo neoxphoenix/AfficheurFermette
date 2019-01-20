@@ -631,9 +631,24 @@ namespace AfficheurFermette.ViewModels
             };
         }
 
+        // On ne prend (si possible) que les 4 prochains événements à partir de la date d'ajd
         public void GenerationEvenementsActu()
         {
-            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("");
+            List<C_ViewEvenement> Evenements = new G_ViewEvenement(config.sChConn).Lire("DateDebut");
+            int count = 0;
+            int Index = -1;
+            do // On cherche à partir d'ajd et ensuite jusqu'au 7 prochains jours le prochain événement à venir
+            {
+                Index = Evenements.FindIndex(e => e.DateDebut.Day == DateTime.Now.AddDays(count).Day && e.DateDebut.Month == DateTime.Now.Month);
+                if (count >= 7 && Index == -1) // Si on n'a toujours rien trouvé après une semaine, on sort de la boucle
+                    break;
+            }
+            while (Index == -1); // Tant qu'on a pas trouvé d'événement se déroulant à la date cherchée
+            if (Index == -1) // On a rien trouvé
+                Evenements = Evenements.Skip(Evenements.Count - 5).ToList(); // On ne reprend que les 4 derniers
+            else
+                Evenements = Evenements.Skip(Index).Take(4).ToList();
+
             EvenementsAff = new ObservableCollection<ShowViewEvenement>();
             foreach (C_ViewEvenement TmpEvenement in Evenements)
             {
