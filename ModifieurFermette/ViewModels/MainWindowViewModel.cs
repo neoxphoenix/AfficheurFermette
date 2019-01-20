@@ -377,7 +377,7 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewMenusDuJourSelected() == 1;
         }
         #endregion
-        #region Copie
+                #region Copie
         private async void ExecuteCopyShowViewMenuDuJour()
         {
             var Dialog = new ProgressDialog();
@@ -588,7 +588,7 @@ namespace ModifieurFermette.ViewModels
             return HowManyShowViewEvenementSelected() == 1;
         }
         #endregion
-        #region Copie
+                #region Copie
         private async void ExecuteCopyShowViewEvenement()
         {
             var Dialog = new ProgressDialog();
@@ -633,7 +633,7 @@ namespace ModifieurFermette.ViewModels
         #endregion
         #endregion
         #region ShowPersonne
-        #region Suppression
+                #region Suppression
         /// <summary>
         /// Lance un dialog async pour confirmer la suppression
         /// </summary>
@@ -776,8 +776,12 @@ namespace ModifieurFermette.ViewModels
                     path = TestPath;
                     File.Copy(dg.vm.PicFullPath, path); // Et on copie le fichier sélectionné dans "~\Resources\Images\Personnes\"
 
-                    // Suppression de l'ancienne photo
-                    File.Delete(dg.vm.OldPicPath);
+                    try
+                    {
+                        // Suppression de l'ancienne photo
+                        File.Delete(dg.vm.OldPicPath);
+                    }
+                    catch { }
                 }
                 else
                     path = dg.vm.OldPicPath;
