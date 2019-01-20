@@ -83,8 +83,12 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private void ExecuteRemovePic()
         {
-            // Suppression dans le dossier
-            File.Delete(SelectedPhotoToRemove.Photo);
+            try
+            {
+                // Suppression dans le dossier
+                File.Delete(SelectedPhotoToRemove.Photo);
+            }
+            catch { }
             // MàJ DB
             new G_PhotoEvenement(sChConn).Supprimer(SelectedPhotoToRemove.ID);
             // MàJ locale
