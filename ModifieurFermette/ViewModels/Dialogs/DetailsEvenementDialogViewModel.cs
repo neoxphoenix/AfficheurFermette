@@ -4,6 +4,7 @@ using ShowableData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,7 +57,10 @@ namespace ModifieurFermette.ViewModels.Dialogs
             PicsPaths = new G_ViewEvenement(sChConn).LirePhotosEvenement(evenement.ID);
             if (PicsPaths.Count > 0)
             {
-                Photo = new BitmapImage(new Uri(PicsPaths.First().Photo)); // On charge la première photo
+                if (File.Exists(PicsPaths.First().Photo))
+                    Photo = new BitmapImage(new Uri(PicsPaths.First().Photo)); // On charge la première photo
+                else
+                    Photo = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
             }
             else // Pas de photo
                 Photo = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
@@ -77,7 +81,10 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private void ExecutePrevPic()
         {
             this.IndexPhoto--;
-            Photo = new BitmapImage(new Uri(PicsPaths[this.IndexPhoto].Photo));
+            if (File.Exists(PicsPaths[this.IndexPhoto].Photo))
+                Photo = new BitmapImage(new Uri(PicsPaths[this.IndexPhoto].Photo));
+            else
+                Photo = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
         }
 
         private bool CanExecNextPic()
@@ -88,7 +95,10 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private void ExecuteNextPic()
         {
             this.IndexPhoto++;
-            Photo = new BitmapImage(new Uri(PicsPaths[this.IndexPhoto].Photo));
+            if (File.Exists(PicsPaths[this.IndexPhoto].Photo))
+                Photo = new BitmapImage(new Uri(PicsPaths[this.IndexPhoto].Photo));
+            else
+                Photo = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
         }
 
         #region Accesseurs
