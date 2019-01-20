@@ -130,11 +130,11 @@
                                 <ColumnDefinition Width="47*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <DataGrid ItemsSource="{Binding EvenementsAff}" SelectedIndex="{Binding DGActu_SelectedItem, Mode=TwoWay}" 
-                                      x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False" VerticalScrollBarVisibility="Disabled"
+                                      x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False"
                                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" IsReadOnly="True" CanUserSortColumns="False" Background="#FFE5E5E5" Grid.ColumnSpan="2">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="TITRE" Binding="{Binding Titre}" FontSize="35" FontFamily="Verdana" Width="*">
