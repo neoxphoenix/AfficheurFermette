@@ -26,10 +26,13 @@ namespace AfficheurFermette.ViewModels.Dialogs
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         /// ATTRIBUTS + ACCESSEURS
         //////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string dossierResources = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Resources\Images\";
+        public string dossierResources = Directory.GetCurrentDirectory() + @"\Resources\Images\";
 
         public List<C_PhotoEvenement> ListePhotosEvenements { get; set; }
         public List<C_PersonnePos> GetEvenements { get; set; }
+
+        public ObservableCollection<C_PhotoEvenement> ListePhotosEvenementsAff { get; set; }
+        public ObservableCollection<C_PersonnePos> GetEvenementsAff { get; set; }
 
         public int maxPic; //nombre max de photos dispo
 
@@ -126,7 +129,23 @@ namespace AfficheurFermette.ViewModels.Dialogs
             }
             set
             {
-                _AfficherClassementDG = value;
+                if (_AfficherClassementDG != value)
+                    _AfficherClassementDG = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _AfficherAlbumPhotos;
+        public Visibility AfficherAlbumPhotos
+        {
+            get
+            {
+                return _AfficherAlbumPhotos;
+            }
+            set
+            {
+                if (_AfficherAlbumPhotos != value)
+                    _AfficherAlbumPhotos = value;
                 OnPropertyChanged();
             }
         }
@@ -156,7 +175,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
                 indexPic++; //incrémente l'index
                 infosPicPos = (indexPic + 1).ToString() + "/" + maxPic.ToString();
 
-                if (File.Exists(ListePhotosEvenements[0].Photo))
+                if (File.Exists(ListePhotosEvenements[indexPic].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[indexPic].Photo));
                 else
                     photoToDisplay = new BitmapImage(new Uri(dossierResources + "errorimg.png"));
@@ -187,7 +206,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
                 indexPic--; //décrémente l'index
                 infosPicPos = (indexPic + 1).ToString() + "/" + maxPic.ToString();
 
-                if (File.Exists(ListePhotosEvenements[0].Photo))
+                if (File.Exists(ListePhotosEvenements[indexPic].Photo))
                     photoToDisplay = new BitmapImage(new Uri(ListePhotosEvenements[indexPic].Photo));
                 else
                     photoToDisplay = new BitmapImage(new Uri(dossierResources + "errorimg.png"));
@@ -206,7 +225,7 @@ namespace AfficheurFermette.ViewModels.Dialogs
             Cmd_DisplayPrevPic = new RelayCommand(Exec => ICmd_ExecDisplayPrevPic(), CanExec => true);
 
             titreEvent = EventSelected.Titre; //configure le titre de la fenetre
-            
+
             //Photos
             ListePhotosEvenements = new G_ViewEvenement(sChConn).LirePhotosEvenement(EventSelected.ID);
             if (ListePhotosEvenements.Count() > 0)
@@ -219,19 +238,28 @@ namespace AfficheurFermette.ViewModels.Dialogs
                 else
                     photoToDisplay = new BitmapImage(new Uri(dossierResources + "errorimg.png"));
 
+                AfficherAlbumPhotos = Visibility.Visible;
+
                 indexPic = 0;
                 maxPic = ListePhotosEvenements.Count();
                 infosPicPos = (indexPic+1).ToString() + "/" + maxPic.ToString();
             }
             else
             {
-                AfficherBtnPrev = Visibility.Hidden;
-                AfficherBtnNext = Visibility.Hidden;
+                AfficherBtnPrev = Visibility.Collapsed;
+                AfficherBtnNext = Visibility.Collapsed;
+                AfficherAlbumPhotos = Visibility.Collapsed;
             }
 
             //Classement
             GetEvenements = new G_ViewEvenement(sChConn).LireClassementEvenement(EventSelected.ID);
-            if (GetEvenements.Count() > 0)
+            GetEvenementsAff = new ObservableCollection<C_PersonnePos>();
+            foreach (C_PersonnePos TmpEvenement in GetEvenements)
+            {
+                GetEvenementsAff.Add(TmpEvenement);
+            }
+
+            if (GetEvenementsAff.Count() > 0)
                 AfficherClassementDG = Visibility.Visible;
             else
                 AfficherClassementDG = Visibility.Collapsed;

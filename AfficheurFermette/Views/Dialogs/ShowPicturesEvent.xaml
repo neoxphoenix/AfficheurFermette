@@ -39,7 +39,7 @@
                 </Button>
                 
                 <!-- PHOTO -->
-                <Grid Grid.Column="1" Visibility="{Binding AfficherClassementDG}">
+                <Grid Grid.Column="1" Visibility="{Binding AfficherAlbumPhotos}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="AUTO"/>
                     </Grid.ColumnDefinitions>
@@ -59,9 +59,9 @@
                 </Button>
 
                 <!-- CLASSEMENTS -->
-                            
-                   
-                    <DataGrid Grid.Column="3" ItemsSource="{Binding GetEvenements}"
+
+
+                <DataGrid Grid.Column="3" ItemsSource="{Binding GetEvenements}" Visibility="{Binding AfficherClassementDG}"
                                       x:Name="DGEvents" AutoGenerateColumns="False" CanUserReorderColumns="False"
                                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeColumns="False" IsReadOnly="True" CanUserSortColumns="False" FontSize="20" Background="#FFE5E5E5">
                         <DataGrid.Columns>
@@ -70,9 +70,9 @@
                             <DataGridTextColumn Header="PRENOM" Binding="{Binding Prenom}" FontSize="30" FontFamily="Verdana"/>
                         </DataGrid.Columns>
                     </DataGrid>
-   
 
-                <TextBlock Grid.Column="4" Text="CLASSEMENT" FontFamily="Verdana" FontSize="30" Margin="10" HorizontalAlignment="Center">
+
+                <TextBlock Grid.Column="4" Text="CLASSEMENT" FontFamily="Verdana" FontSize="30" Margin="10" HorizontalAlignment="Center" Visibility="{Binding AfficherClassementDG}">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="90" />
                     </TextBlock.LayoutTransform>
