@@ -171,6 +171,11 @@
                                 MaxLength="100"
                                 EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
                             <materialDesign:MaterialDataGridTextColumn
+                                Binding="{Binding Adresse}"
+                                Header="Adresse"
+                                MaxLength="100"
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}" Width="*"/>
+                            <materialDesign:MaterialDataGridTextColumn
                                 Binding="{Binding TypeEvenement}"
                                 Header="Type"
                                 MaxLength="15"

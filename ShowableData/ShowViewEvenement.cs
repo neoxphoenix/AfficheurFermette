@@ -11,6 +11,7 @@ namespace ShowableData
         private int _ID;
         private string _Titre;
         private string _Lieu;
+        private string _Adresse;
         private string _TypeEvenement;
         private DateTime _DateDebut;
         private DateTime _DateFin;
@@ -23,6 +24,7 @@ namespace ShowableData
             ID = OriViewEvenement.ID;
             Titre = OriViewEvenement.Titre;
             Lieu = OriViewEvenement.Lieu;
+            Adresse = OriViewEvenement.Adresse;
             switch (OriViewEvenement.TypeEvenement)
             {
                 case 0:
@@ -57,7 +59,7 @@ namespace ShowableData
                     TypeEvenement_ = 2;
                     break;
             }
-            return new C_ViewEvenement(ID, Titre, Lieu, TypeEvenement_, DateDebut, DateFin, Description);
+            return new C_ViewEvenement(ID, Titre, Lieu, Adresse, TypeEvenement_, DateDebut, DateFin, Description);
         }
 
         #region Accesseurs
@@ -146,6 +148,17 @@ namespace ShowableData
                 if (this._IsSelected != value)
                 {
                     this._IsSelected = value;
+                    OnPropertyChanged("IsSelected");
+                }
+            }
+        }
+
+        public string Adresse { get => _Adresse;
+            set
+            {
+                if (this._Adresse != value)
+                {
+                    this._Adresse = value;
                     OnPropertyChanged("IsSelected");
                 }
             }

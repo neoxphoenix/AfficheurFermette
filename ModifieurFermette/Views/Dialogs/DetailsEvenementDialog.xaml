@@ -48,6 +48,14 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" TextDecorations="underline">Adresse :</TextBlock>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{Binding Adresse}"/>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" TextDecorations="underline">Date de début :</TextBlock>
                 <TextBlock Grid.Column="1" HorizontalAlignment="Right" Text="{Binding DateDebut}"/>
             </Grid>

@@ -44,6 +44,7 @@
                 </ItemsPanelTemplate>
             </ComboBox.ItemsPanel>
         </ComboBox>
+        <TextBox Text="{Binding Adresse, UpdateSourceTrigger=LostFocus}" Width="300" Margin="0,5,0,5" materialDesign:HintAssist.Hint="Adresse"/>
         <!-- DateTime début -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" MinWidth="300" Margin="0,5,0,5">
             <DatePicker

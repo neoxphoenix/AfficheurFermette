@@ -498,15 +498,17 @@ namespace ModifieurFermette.ViewModels
                 DateTime DateDebut = dg.vm.DateDebut.Add(dg.vm.TimeDebut.TimeOfDay);
                 DateTime DateFin = dg.vm.DateFin.Add(dg.vm.TimeFin.TimeOfDay);
 
+                dg.vm.SelectedLieu.Adresse = dg.vm.Adresse;
+
                 // On vérifie les ID, si ils sont à 0 c'est que les items n'existent pas encore dans la DB => création
                 if (dg.vm.SelectedTitre.ID == 0)
                     dg.vm.SelectedTitre.ID = new G_TitreEvenement(config.sChConn).Ajouter(dg.vm.SelectedTitre.Titre);
                 if (dg.vm.SelectedLieu.ID == 0)
-                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu);
+                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu, dg.vm.SelectedLieu.Adresse);
                 lock (EvenementsAffLock) // Verrouillage de l'ObservableCollection pour modif
                 {
                     int ID = new G_Evenement(config.sChConn).Ajouter(DateDebut, DateFin, dg.vm.Description, dg.vm.SelectedTypeEvenement, dg.vm.SelectedTitre.ID, dg.vm.SelectedLieu.ID);
-                    EvenementsAff.Add(new ShowViewEvenement(new C_ViewEvenement(ID, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description)));
+                    EvenementsAff.Add(new ShowViewEvenement(new C_ViewEvenement(ID, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedLieu.Adresse, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description)));
                 }
             });
 
@@ -539,16 +541,18 @@ namespace ModifieurFermette.ViewModels
                 DateTime DateDebut = dg.vm.DateDebut.Add(dg.vm.TimeDebut.TimeOfDay);
                 DateTime DateFin = dg.vm.DateFin.Add(dg.vm.TimeFin.TimeOfDay);
 
+                dg.vm.SelectedLieu.Adresse = dg.vm.Adresse;
+
                 // On vérifie les ID, si ils sont à 0 c'est que les items n'existent pas encore dans la DB => création
                 if (dg.vm.SelectedTitre.ID == 0)
                     dg.vm.SelectedTitre.ID = new G_TitreEvenement(config.sChConn).Ajouter(dg.vm.SelectedTitre.Titre);
                 if (dg.vm.SelectedLieu.ID == 0)
-                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu);
+                    dg.vm.SelectedLieu.ID = new G_LieuEvenement(config.sChConn).Ajouter(dg.vm.SelectedLieu.Lieu, dg.vm.SelectedLieu.Adresse);
                 lock (EvenementsAffLock)
                 {
                     new G_Evenement(config.sChConn).Modifier(dg.vm.IDevenement, DateDebut, DateFin, dg.vm.Description, dg.vm.SelectedTypeEvenement, dg.vm.SelectedTitre.ID, dg.vm.SelectedLieu.ID);
                     int Index = EvenementsAff.IndexOf(EvenementsAff.First(item => item.ID == dg.vm.IDevenement));
-                    EvenementsAff[Index] = new ShowViewEvenement(new C_ViewEvenement(dg.vm.IDevenement, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description));
+                    EvenementsAff[Index] = new ShowViewEvenement(new C_ViewEvenement(dg.vm.IDevenement, dg.vm.SelectedTitre.Titre, dg.vm.SelectedLieu.Lieu, dg.vm.SelectedLieu.Adresse, dg.vm.SelectedTypeEvenement, DateDebut, DateFin, dg.vm.Description));
                 }
             });
 
@@ -618,7 +622,7 @@ namespace ModifieurFermette.ViewModels
                             int ID = new G_Evenement(config.sChConn).Ajouter(TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description, TmpEvenement.TypeEvenement, IDtitre, IDlieu);
 
                             // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach)
-                            EvenementsToAdd.Add(new ShowViewEvenement(new C_ViewEvenement(ID, TmpEvenement.Titre, TmpEvenement.Lieu, TmpEvenement.TypeEvenement, TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description)));
+                            EvenementsToAdd.Add(new ShowViewEvenement(new C_ViewEvenement(ID, TmpEvenement.Titre, TmpEvenement.Lieu, TmpEvenement.Adresse, TmpEvenement.TypeEvenement, TmpEvenement.DateDebut, TmpEvenement.DateFin, TmpEvenement.Description)));
                         }
                     }
                     // Ajout local

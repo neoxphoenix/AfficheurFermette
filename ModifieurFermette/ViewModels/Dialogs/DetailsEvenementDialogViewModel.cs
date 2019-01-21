@@ -17,7 +17,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
     {
         public ShowViewEvenement Evenement;
         private int _ID;
-        private string _Titre, _Lieu, _DateDebut, _DateFin, _Description, _Type;
+        private string _Titre, _Lieu, _Adresse, _DateDebut, _DateFin, _Description, _Type;
         private ObservableCollection<C_PersonnePos> _Classement;
 
         private ICommand _NextPicCmd, _PrevPicCmd;
@@ -34,6 +34,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             ID = evenement.ID;
             Titre = evenement.Titre;
             Lieu = evenement.Lieu;
+            Adresse = evenement.Adresse;
             DateDebut = evenement.DateDebut.ToShortDateString() + " " + evenement.DateDebut.ToShortTimeString();
             DateFin = evenement.DateFin.ToShortDateString() + " " + evenement.DateFin.ToShortTimeString();
             Description = evenement.Description;
@@ -135,6 +136,18 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 if (_Lieu != value)
                 {
                     _Lieu = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public string Adresse
+        {
+            get => _Adresse;
+            set
+            {
+                if (_Adresse != value)
+                {
+                    _Adresse = value;
                     OnPropertyChanged();
                 }
             }

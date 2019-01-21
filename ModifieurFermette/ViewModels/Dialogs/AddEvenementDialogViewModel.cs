@@ -26,6 +26,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
         private DateTime _TimeFin;
         private int _SelectedTypeEvenement;
         private string _Description;
+        private string _Adresse;
 
         public int IDevenement; // uniquement utilisé en cas de modification d'un événement existant
 
@@ -85,7 +86,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private void IsAllItemsValid()
         {
-            if (!IsDateDebutBeforeDateFin() || SelectedTitre == null || SelectedLieu == null)
+            if (!IsDateDebutBeforeDateFin() || SelectedTitre == null || SelectedLieu == null || string.IsNullOrWhiteSpace(Adresse))
                 Validated = false;
             else
                 Validated = true;
@@ -256,6 +257,19 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 }
             }
         }
+        public string Adresse
+        {
+            get => _Adresse;
+            set
+            {
+                if (this._Adresse != value)
+                {
+                    this._Adresse = value;
+                    OnPropertyChanged();
+                    IsAllItemsValid();
+                }
+            }
+        }
 
         // Utilisés en cas d'ajout dans les combobox
         // On sait qu'un nouvel item devra être ajouté à la DB grâce à son ID de 0
@@ -277,7 +291,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             {
                 if (!string.IsNullOrEmpty(value) && Lieus.FirstOrDefault(l => l.Lieu == value) == null)
                 {
-                    Lieus.Add(new C_LieuEvenement(0, value));
+                    Lieus.Add(new C_LieuEvenement(0, value, null));
                     SelectedLieu = Lieus.Last();
                 }
             }
