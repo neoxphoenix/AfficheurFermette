@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AfficheurFermette"
         mc:Ignorable="d"
         Title="Ecran Fermette" Height="650" Width="1000" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded" KeyDown="Window_KeyDown"
+        xml:lang="fr-BE"
 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -154,7 +155,7 @@
                                             </Style>
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Header="DATE DE L'EVENEMENT" Binding="{Binding DateDebut}" FontSize="35" FontFamily="Verdana" Width="215">
+                                    <DataGridTextColumn Header="DATE DE L'EVENEMENT" Binding="{Binding DateDebut, StringFormat='dddd dd MMMM'}" FontSize="35" FontFamily="Verdana" Width="215">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style>
                                                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>

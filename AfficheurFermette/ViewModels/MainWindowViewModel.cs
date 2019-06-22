@@ -624,7 +624,7 @@ namespace AfficheurFermette.ViewModels
         {
             return new string[] {
                 ProchainEvenements[num].ID.ToString(),
-                ProchainEvenements[num].DateDebut.ToString(),
+                ProchainEvenements[num].DateDebut.ToString("dddd dd MMMM"),
                 ProchainEvenements[num].Titre,
                 ProchainEvenements[num].Lieu,
                 ProchainEvenements[num].Description
