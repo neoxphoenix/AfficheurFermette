@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AfficheurFermette"
         mc:Ignorable="d"
         Title="Ecran Fermette" Height="650" Width="1000" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded" KeyDown="Window_KeyDown"
+        xml:lang="fr-BE"
 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -96,9 +97,12 @@
                                 </StackPanel>
                             </Border>
                             <Border Grid.Column="0" Grid.Row="1" BorderBrush="SteelBlue" BorderThickness="3,0,0,5" CornerRadius="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                <TextBlock Grid.Row="1" Grid.Column="0" Name="Entree" Text="{Binding repasEntreeDuJour}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Name="Entree" Text="{Binding repasEntreeDuJour}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black"/>
+                                    <Image Source="{Binding PhotoEntreeDuJour}" Margin="15" Stretch="Uniform" />
+                                </StackPanel>
                             </Border>
-                            <Image Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="{StaticResource imgMenu1}" Width="200" Margin="10,0,0,10" Grid.ColumnSpan="2"></Image>
+                            <!-- <Image Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="{StaticResource imgMenu1}" Width="200" Margin="10,0,0,10" Grid.ColumnSpan="2"></Image> -->
 
                             <!-- COLONNE PLAT-->
                             <Border Grid.Column="1" Margin="0 10 0 0" BorderBrush="SteelBlue" BorderThickness="3,5,3,3" CornerRadius="10">
@@ -107,7 +111,10 @@
                                 </StackPanel>
                             </Border>
                             <Border Grid.Column="1" Grid.Row="1" BorderBrush="SteelBlue" BorderThickness="3,0,3,5" CornerRadius="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                                <TextBlock Grid.Column="1" Grid.Row="1" Name="Plat" Text="{Binding repasPlatDuJour}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Name="Plat" Text="{Binding repasPlatDuJour}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black"/>
+                                    <Image Source="{Binding PhotoPlatDuJour}" Margin="15" Stretch="Uniform"/>
+                                </StackPanel>
                             </Border>
 
                             <!-- COLONNE DESSERT-->
@@ -117,7 +124,10 @@
                                 </StackPanel>
                             </Border>
                             <Border Grid.Column="2" Grid.Row="1" BorderBrush="SteelBlue" BorderThickness="0,0,3,5" CornerRadius="10">
-                                <TextBlock Grid.Column="2" Grid.Row="1" Name="Dessert" Text="{Binding repasDessertDuJour}" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black" d:IsLocked="True"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Name="Dessert" Text="{Binding repasDessertDuJour}" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="40" FontFamily="Verdana" Foreground="Black"/>
+                                    <Image Source="{Binding PhotoDessertDuJour}" Margin="15" Stretch="Uniform"/>
+                                </StackPanel>
                             </Border>
                         </Grid>
                     </TabItem>
@@ -154,7 +164,7 @@
                                             </Style>
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Header="DATE DE L'EVENEMENT" Binding="{Binding DateDebut}" FontSize="35" FontFamily="Verdana" Width="215">
+                                    <DataGridTextColumn Header="DATE DE L'EVENEMENT" Binding="{Binding DateDebut, StringFormat='dddd dd MMMM'}" FontSize="35" FontFamily="Verdana" Width="215">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style>
                                                 <Setter Property="TextBlock.TextAlignment" Value="Center"/>

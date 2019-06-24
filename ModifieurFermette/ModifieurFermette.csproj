@@ -132,6 +132,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\Converters\FullPathToFileNameConverter.cs" />
+    <Compile Include="Models\ExtendedPlat.cs" />
     <Compile Include="Models\GeneralComboBoxItem.cs" />
     <Compile Include="ViewModels\Dialogs\AddEvenementDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\AddMenuDuJourDialogViewModel.cs" />

@@ -297,15 +297,15 @@ namespace ModifieurFermette.ViewModels
 
                 // On vérifie si les ID sont à 0, auquel cas cela signifie que l'item doit être ajouté à la DB
                 if (dg.vm.SelectedPotage.ID == 0)
-                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type);
+                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type, null);
                 if (dg.vm.SelectedPlat.ID == 0)
-                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type);
+                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type, null);
                 if (dg.vm.SelectedDessert.ID == 0)
-                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type);
+                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type, null);
                 lock (MenusAffLock) // Verrouillage de l'ObservableCollection pour modif
                 {
                     int ID = new G_Menu(config.sChConn).Ajouter(date, dg.vm.SelectedPotage.ID, dg.vm.SelectedPlat.ID, dg.vm.SelectedDessert.ID); // Insertion dans la DB
-                    MenusAff.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, date, dg.vm.SelectedPotage.nom, dg.vm.SelectedPlat.nom, dg.vm.SelectedDessert.nom))); // Insertion de la liste affichée
+                    MenusAff.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, date, dg.vm.SelectedPotage.nom, null, dg.vm.SelectedPlat.nom, null, dg.vm.SelectedDessert.nom, null))); // Insertion de la liste affichée
                 }
             });
 
@@ -335,16 +335,16 @@ namespace ModifieurFermette.ViewModels
 
                 // On vérifie si les ID sont à 0, auquel cas cela signifie que l'item doit être ajouté à la DB
                 if (dg.vm.SelectedPotage.ID == 0)
-                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type);
+                    dg.vm.SelectedPotage.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPotage.nom, dg.vm.SelectedPotage.Type, null);
                 if (dg.vm.SelectedPlat.ID == 0)
-                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type);
+                    dg.vm.SelectedPlat.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedPlat.nom, dg.vm.SelectedPlat.Type, null);
                 if (dg.vm.SelectedDessert.ID == 0)
-                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type);
+                    dg.vm.SelectedDessert.ID = new G_Plat(config.sChConn).Ajouter(dg.vm.SelectedDessert.nom, dg.vm.SelectedDessert.Type, null);
                 lock (MenusAffLock)
                 {
                     new G_Menu(config.sChConn).Modifier(dg.vm.IDMenuDuJour, date, dg.vm.SelectedPotage.ID, dg.vm.SelectedPlat.ID, dg.vm.SelectedDessert.ID);
                     int Index = MenusAff.IndexOf(MenusAff.First(item => item.ID == dg.vm.IDMenuDuJour));
-                    MenusAff[Index] = new ShowViewMenuDuJour(new C_ViewMenuDuJour(dg.vm.IDMenuDuJour, date, dg.vm.SelectedPotage.nom, dg.vm.SelectedPlat.nom, dg.vm.SelectedDessert.nom));
+                    MenusAff[Index] = new ShowViewMenuDuJour(new C_ViewMenuDuJour(dg.vm.IDMenuDuJour, date, dg.vm.SelectedPotage.nom, null, dg.vm.SelectedPlat.nom, null, dg.vm.SelectedDessert.nom, null));
                 }
             });
 
@@ -406,7 +406,7 @@ namespace ModifieurFermette.ViewModels
                             int ID = new G_Menu(config.sChConn).Ajouter(Date, IDpotage, IDplat, IDdessert);
 
                             // Ajout dans une liste tampon (on ne peut pas directement ajouter dans la liste principale depuis son foreach)
-                            MenusToAdd.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, Date, menu.eNom, menu.pNom, menu.dNom)));
+                            MenusToAdd.Add(new ShowViewMenuDuJour(new C_ViewMenuDuJour(ID, Date, menu.eNom, null, menu.pNom, null, menu.dNom, null))); // TODO: add photos to ShowViewMenuDuJour ?
                         }
                     }
                     // Ajout local
