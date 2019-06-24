@@ -14,8 +14,8 @@ namespace ModifieurFermette.ViewModels.Dialogs
 {
     class ManagePlatsDialogViewModel : ObservableData
     {
-        private ObservableCollection<C_Plat> _Plats;
-        private C_Plat _SelectedPlat;
+        private ObservableCollection<ExtendedPlat> _Plats;
+        private ExtendedPlat _SelectedPlat;
         private ICommand _DeletePlatCmd;
         private readonly string sChConn;
 
@@ -25,21 +25,11 @@ namespace ModifieurFermette.ViewModels.Dialogs
             this.sChConn = sChConn;
             List<C_Plat> TmpPlats = new G_Plat(sChConn).Lire("");
             List<C_Menu> TmpMenus = new G_Menu(sChConn).Lire("");
-            Plats = new ObservableCollection<C_Plat>();
-            // On ajoute que les plats qui ne sont pas utilisés (oui, c'est assez lourd comme méthode, mais modifier la DB aurait pris trop de temps)
+            Plats = new ObservableCollection<ExtendedPlat>();
             foreach(C_Plat plat in TmpPlats)
             {
-                bool IsUsed = false;
-                foreach (C_Menu menu in TmpMenus)
-                {
-                    if (menu.IDpotage == plat.ID || menu.IDplat == plat.ID || menu.IDdessert == plat.ID)
-                    {
-                        IsUsed = true;
-                        break;
-                    }
-                }
-                if (!IsUsed)
-                    Plats.Add(plat);
+                // Ajoute les plats à l'observableCollection en précisant si ce plat est utilisé ou non dans un menu
+                Plats.Add(new ExtendedPlat(plat, TmpMenus.Any(menu => menu.IDpotage == plat.ID || menu.IDplat == plat.ID || menu.IDdessert == plat.ID)));
             }
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
 
@@ -48,7 +38,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
 
         private bool CanExecDeletePlat()
         {
-            return SelectedPlat != null;
+            return SelectedPlat != null && !SelectedPlat.IsUsed;
         }
 
         private void ExecuteDeletePlat()
@@ -58,7 +48,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             SelectedPlat = null;
         }
 
-        public ObservableCollection<C_Plat> Plats
+        public ObservableCollection<ExtendedPlat> Plats
         {
             get { return _Plats; }
             set
@@ -70,7 +60,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
                 }
             }
         }
-        public C_Plat SelectedPlat
+        public ExtendedPlat SelectedPlat
         {
             get { return _SelectedPlat; }
             set

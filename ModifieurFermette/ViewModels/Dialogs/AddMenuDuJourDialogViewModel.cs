@@ -203,7 +203,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    Potages.Add(new C_Plat(0, value, 1));
+                    Potages.Add(new C_Plat(0, value, 1, null));
                     SelectedPotage = Potages.Last();
                 }
             }
@@ -214,7 +214,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    Plats.Add(new C_Plat(0, value, 2));
+                    Plats.Add(new C_Plat(0, value, 2, null));
                     SelectedPlat = Plats.Last();
                 }
             }
@@ -225,7 +225,7 @@ namespace ModifieurFermette.ViewModels.Dialogs
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    Desserts.Add(new C_Plat(0, value,3));
+                    Desserts.Add(new C_Plat(0, value,3, null));
                     SelectedDessert = Desserts.Last();
                 }
             }
