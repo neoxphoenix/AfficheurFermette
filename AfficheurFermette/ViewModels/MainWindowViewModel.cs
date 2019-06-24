@@ -133,6 +133,45 @@ namespace AfficheurFermette.ViewModels
                 OnPropertyChanged();
             }
         }
+        private BitmapImage _PhotoEntreeDuJour;
+        public BitmapImage PhotoEntreeDuJour
+        {
+            get { return _PhotoEntreeDuJour; }
+            set
+            {
+                if (_PhotoEntreeDuJour != value)
+                {
+                    _PhotoEntreeDuJour = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private BitmapImage _PhotoPlatDuJour;
+        public BitmapImage PhotoPlatDuJour
+        {
+            get { return _PhotoPlatDuJour; }
+            set
+            {
+                if (_PhotoPlatDuJour != value)
+                {
+                    _PhotoPlatDuJour = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private BitmapImage _PhotoDessertDuJour;
+        public BitmapImage PhotoDessertDuJour
+        {
+            get { return _PhotoDessertDuJour; }
+            set
+            {
+                if (_PhotoDessertDuJour != value)
+                {
+                    _PhotoDessertDuJour = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         private string _jourAjd;
         public string jourAjd
         {
@@ -525,6 +564,19 @@ namespace AfficheurFermette.ViewModels
                 repasEntreeDuJour = MenuDuJour.eNom.ToString();
                 repasPlatDuJour = MenuDuJour.pNom.ToString();
                 repasDessertDuJour = MenuDuJour.dNom.ToString();
+
+                if (!String.IsNullOrEmpty(MenuDuJour.ePhoto) && File.Exists(MenuDuJour.ePhoto))
+                    PhotoEntreeDuJour = new BitmapImage(new Uri(MenuDuJour.ePhoto));
+                else
+                    PhotoEntreeDuJour = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
+                if (!String.IsNullOrEmpty(MenuDuJour.pPhoto) && File.Exists(MenuDuJour.pPhoto))
+                    PhotoPlatDuJour = new BitmapImage(new Uri(MenuDuJour.pPhoto));
+                else
+                    PhotoPlatDuJour = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
+                if (!String.IsNullOrEmpty(MenuDuJour.dPhoto) && File.Exists(MenuDuJour.dPhoto))
+                    PhotoDessertDuJour = new BitmapImage(new Uri(MenuDuJour.dPhoto));
+                else
+                    PhotoDessertDuJour = new BitmapImage(new Uri(System.AppDomain.CurrentDomain.BaseDirectory + @"Resources\Images\errorimg.png"));
             }
             else
             {

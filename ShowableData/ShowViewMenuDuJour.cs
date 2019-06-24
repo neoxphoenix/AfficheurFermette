@@ -30,7 +30,7 @@ namespace ShowableData
 
         public C_ViewMenuDuJour GetOriginal()
         {
-            return new C_ViewMenuDuJour(ID, DateTime.Parse(Date), eNom, pNom, dNom);
+            return new C_ViewMenuDuJour(ID, DateTime.Parse(Date), eNom, null, pNom, null, dNom, null);
         }
 
         public bool ToggleIsSelected()
