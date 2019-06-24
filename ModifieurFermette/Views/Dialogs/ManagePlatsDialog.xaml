@@ -8,9 +8,9 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-        <StackPanel Orientation="Vertical" Margin="5">
+    <StackPanel Orientation="Vertical" Margin="5">
         <TextBlock HorizontalAlignment="Center" FontWeight="ExtraBold" TextDecorations="underline">Gestion des plats</TextBlock>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <ComboBox
           materialDesign:HintAssist.Hint="Plats"
           MinWidth="100"
@@ -32,6 +32,14 @@
                 Supprimer
             </Button>
         </StackPanel>
+        <Image Source="{Binding Photo}"
+               Margin="5"
+               MaxWidth="360" 
+               MaxHeight="360"/>
+        <Button Margin="5" Command="{Binding ChangePicCmd}"
+                HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Content="{Binding ChangePicTxt}"/>
         <Button HorizontalAlignment="Center"
                 Style="{StaticResource MaterialDesignRaisedButton}"
                 Width="100"
